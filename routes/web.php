@@ -7,4 +7,9 @@ Route::get('/', function () {
     return redirect(route('login'));
 })->name('front');
 
-Route::get('/home', 'HomeController@index')->name('home');
+// dibawah ini dibutuhkan akses autitentifikasi
+Route::group(['middleware' => 'auth'], function () { 
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/kantor-cabang/{id}/delete', 'KantorCabangController@delete');
+	Route::resource('/kantor-cabang', 'KantorCabangController');
+});

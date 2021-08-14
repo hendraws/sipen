@@ -4,15 +4,31 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<title>@yield('title') | Sistem Informasi Perkembangan Perusahaan </title>
 
-	<!-- Font Awesome Icons -->
-	<link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css')}}">
+	<link rel="stylesheet" href="{{ asset('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
+	<link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css')}}">
+	<link rel="stylesheet" href="{{ asset('vendors/toastr/toastr.min.css')}}">
 	<!-- Google Font: Source Sans Pro -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">	 
+	@yield('css')
+	@toastr_css
+	<!-- REQUIRED SCRIPTS -->
+
+	<!-- jQuery -->
+	<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+	<!-- Bootstrap 4 -->
+	<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+	<!-- AdminLTE App -->
+	<script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
+	<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+	<script src="{{ asset('vendors/toastr/toastr.min.js') }}"></script>
+	<script src="{{ asset('js/custom.js') }}"></script>
+	@yield('js')
+
 </head>
 <body class="hold-transition sidebar-mini">
 	<div class="wrapper">
@@ -23,9 +39,14 @@
 			<!-- Right navbar links -->
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item dropdown">
-					<a class="nav-link" data-toggle="dropdown" href="#">
+					<a class="nav-link" data-toggle="dropdown" href="{{ route('logout') }}"  onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
 						<i class="far fa-bell"></i> Logout
 					</a>
+
+	                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+	                    @csrf
+	                </form>
 				</li>
 			</nav>
 			<!-- /.navbar -->
@@ -34,7 +55,7 @@
 			<aside class="main-sidebar sidebar-dark-primary elevation-4">
 				<!-- Brand Logo -->
 				<a href="index3.html" class="brand-link">
-					<img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+					<img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
 					<span class="brand-text font-weight-light">SIPERAN</span>
 				</a>
 
@@ -79,14 +100,43 @@
 			</footer>
 		</div>
 		<!-- ./wrapper -->
-
-		<!-- REQUIRED SCRIPTS -->
-
-		<!-- jQuery -->
-		<script src="plugins/jquery/jquery.min.js"></script>
-		<!-- Bootstrap 4 -->
-		<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-		<!-- AdminLTE App -->
-		<script src="dist/js/adminlte.min.js"></script>
+		@toastr_js
+		@toastr_render
+		<script>
+			@if(count($errors) > 0)
+			@foreach($errors->all() as $error)
+			toastr.error("{{ $error }}");
+			@endforeach
+			@endif
+		</script>
+		{{-- modal --}}
+		<div class="modal fade" id="ModalFormSm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-content-form"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="ModalForm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" >
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-content-form"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="ModalFormLg" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-content-form"></div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="ModalFormXl" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-content-form"></div>
+				</div>
+			</div>
+		</div>
 	</body>
 	</html>

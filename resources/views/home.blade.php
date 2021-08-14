@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
-@section('title', 'title')
-@section('content-title', 'title')
+@section('title', 'Dashboard')
+@section('content-title', 'Dashboard')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
