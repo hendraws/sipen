@@ -3,7 +3,7 @@
 	<nav class="mt-2">
 		<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 			<li class="nav-item">
-				<a href="#" class="nav-link">
+				<a href="{{ url('/home') }}" class="nav-link">
 					<i class="nav-icon fa fa-tachometer-alt"></i>
 					<p>
 						Dashboard
@@ -11,7 +11,7 @@
 				</a>
 			</li>		
 			<li class="nav-item">
-				<a href="#" class="nav-link">
+				<a href="{{ url('/perkembangan') }}" class="nav-link">
 					<i class="nav-icon fa fa-chart-line"></i>
 					<p>
 						Perkembangan
@@ -19,7 +19,7 @@
 				</a>
 			</li>
 			<li class="nav-item">
-				<a href="#" class="nav-link">
+				<a href="{{ url('/program-kerja') }}" class="nav-link">
 					<i class="nav-icon fas fa-list-ul"></i>
 					<p>
 						Program Kerja
@@ -36,7 +36,7 @@
 				</a>
 				<ul class="nav nav-treeview" style="display: none;">
 					<li class="nav-item">
-						<a href="pages/charts/chartjs.html" class="nav-link">
+						<a href="{{ action('ReportController@index') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Report</p>
 						</a>
@@ -50,7 +50,7 @@
 				</ul>
 			</li>
 			<li class="nav-item">
-				<a href="#" class="nav-link">
+				<a href="{{ url('/data-pengguna') }}" class="nav-link">
 					<i class="nav-icon fas fa-users"></i>
 					<p>
 						Data Pengguna

@@ -11,5 +11,9 @@ Route::get('/', function () {
 Route::group(['middleware' => 'auth'], function () { 
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('/kantor-cabang/{id}/delete', 'KantorCabangController@delete');
+	Route::resource('/report', 'ReportController');
 	Route::resource('/kantor-cabang', 'KantorCabangController');
+	Route::get('/perkembangan', 'HomeController@underContraction');
+	Route::get('/program-kerja', 'HomeController@underContraction');
+	Route::get('/data-pengguna', 'HomeController@underContraction');
 });
