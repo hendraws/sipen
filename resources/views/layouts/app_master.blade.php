@@ -27,7 +27,7 @@
 	<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 	<script src="{{ asset('vendors/toastr/toastr.min.js') }}"></script>
 	<script src="{{ asset('js/custom.js') }}"></script>
-	@yield('js')
+
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -35,108 +35,113 @@
 
 		<!-- Navbar -->
 		<nav class="main-header navbar navbar-expand navbar-white navbar-light">
-
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+				</li>
+			</ul>
 			<!-- Right navbar links -->
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item dropdown">
 					<a class="nav-link" data-toggle="dropdown" href="{{ route('logout') }}"  onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-						<i class="far fa-bell"></i> Logout
-					</a>
-
-	                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-	                    @csrf
-	                </form>
-				</li>
-			</nav>
-			<!-- /.navbar -->
-
-			<!-- Main Sidebar Container -->
-			<aside class="main-sidebar sidebar-dark-primary elevation-4">
-				<!-- Brand Logo -->
-				<a href="index3.html" class="brand-link">
-					<img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-					<span class="brand-text font-weight-light">SIPERAN</span>
+					document.getElementById('logout-form').submit();">
+					<i class="far fa-bell"></i> Logout
 				</a>
 
-				<!-- Sidebar -->
-				@include('layouts.partial.sidebar')
-				<!-- /.sidebar -->
-			</aside>
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+					@csrf
+				</form>
+			</li>
+		</nav>
+		<!-- /.navbar -->
 
-			<!-- Content Wrapper. Contains page content -->
-			<div class="content-wrapper">
-				<!-- Content Header (Page header) -->
-				<div class="content-header">
-					<div class="container-fluid">
-						<div class="row mb-2">
-							<div class="col-sm-6">
-								<h1 class="m-0 text-dark">@yield('content-title')</h1>
-							</div><!-- /.col -->
-						</div><!-- /.row -->
-					</div><!-- /.container-fluid -->
-				</div>
-				<!-- /.content-header -->
+		<!-- Main Sidebar Container -->
+		<aside class="main-sidebar sidebar-dark-primary elevation-4">
+			<!-- Brand Logo -->
+			<a href="index3.html" class="brand-link">
+				<img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+				<span class="brand-text font-weight-light">SIPERAN</span>
+			</a>
 
-				<!-- Main content -->
-				<div class="content">
-					<div class="container-fluid">
-						@yield('content')
-					</div><!-- /.container-fluid -->
-				</div>
-				<!-- /.content -->
+			<!-- Sidebar -->
+			@include('layouts.partial.sidebar')
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<div class="content-header">
+				<div class="container-fluid">
+					<div class="row mb-2">
+						<div class="col-sm-6">
+							<h1 class="m-0 text-dark">@yield('content-title')</h1>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container-fluid -->
 			</div>
-			<!-- /.content-wrapper -->
+			<!-- /.content-header -->
+
+			<!-- Main content -->
+			<div class="content">
+				<div class="container-fluid">
+					@yield('content')
+				</div><!-- /.container-fluid -->
+			</div>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
 
 
-			<!-- Main Footer -->
-			<footer class="main-footer">
-				<!-- To the right -->
-				<div class="float-right d-none d-sm-inline">
-					Sistem Informasi Perkembangan Perusahaan
-				</div>
-				<!-- Default to the left -->
-				<strong>Copyright &copy; {{ date('Y') }}</strong> 
-			</footer>
-		</div>
-		<!-- ./wrapper -->
-		@toastr_js
-		@toastr_render
-		<script>
-			@if(count($errors) > 0)
-			@foreach($errors->all() as $error)
-			toastr.error("{{ $error }}");
-			@endforeach
-			@endif
-		</script>
-		{{-- modal --}}
-		<div class="modal fade" id="ModalFormSm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-content-form"></div>
-				</div>
+		<!-- Main Footer -->
+		<footer class="main-footer">
+			<!-- To the right -->
+			<div class="float-right d-none d-sm-inline">
+				Sistem Informasi Perkembangan Perusahaan
+			</div>
+			<!-- Default to the left -->
+			<strong>Copyright &copy; {{ date('Y') }}</strong> 
+		</footer>
+	</div>
+	<!-- ./wrapper -->
+		@yield('js')
+	@toastr_js
+	@toastr_render
+	<script>
+		@if(count($errors) > 0)
+		@foreach($errors->all() as $error)
+		toastr.error("{{ $error }}");
+		@endforeach
+		@endif
+	</script>
+	{{-- modal --}}
+	<div class="modal fade" id="ModalFormSm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-content-form"></div>
 			</div>
 		</div>
-		<div class="modal fade" id="ModalForm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" >
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-content-form"></div>
-				</div>
+	</div>
+	<div class="modal fade" id="ModalForm" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-content-form"></div>
 			</div>
 		</div>
-		<div class="modal fade" id="ModalFormLg" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-content-form"></div>
-				</div>
+	</div>
+	<div class="modal fade" id="ModalFormLg" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-content-form"></div>
 			</div>
 		</div>
-		<div class="modal fade" id="ModalFormXl" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-content-form"></div>
-				</div>
+	</div>
+	<div class="modal fade" id="ModalFormXl" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-content-form"></div>
 			</div>
 		</div>
-	</body>
-	</html>
+	</div>
+</body>
+</html>

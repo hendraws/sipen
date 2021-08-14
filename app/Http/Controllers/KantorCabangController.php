@@ -54,6 +54,7 @@ class KantorCabangController extends Controller
      */
     public function create()
     {
+ 
     	return view('backend.kantor_cabang.create');
     }
 

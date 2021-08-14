@@ -11,17 +11,17 @@ class Report extends Model
 
 	protected $fillable = ['cabang','tanggal','drop','storting','psp','drop_tunda','storting_tunda','tkp','sisa_kas','created_by','updated_by'];
 
-	public function cabang()
+	public function Cabang()
 	{
 		return $this->belongsTo(KantorCabang::class,  'cabang', 'id' );
 	}
 
-	public function dibuatOleh()
+	public function DibuatOleh()
 	{
 		return $this->belongsTo(User::class,  'created_by', 'id' );
 	}
 
-	public function dieditOleh()
+	public function DieditOleh()
 	{
 		return $this->belongsTo(User::class, 'updated_by', 'id');
 	}
