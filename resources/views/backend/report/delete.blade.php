@@ -1,4 +1,4 @@
-<form action="{{ action('KantorCabangController@destroy', $data->id) }}" method="POST" id="kantorCabangForm">
+<form action="{{ action('ReportController@destroy', $data->id) }}" method="POST" id="kantorCabangForm">
 	<div class="modal-header ">
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>
@@ -8,10 +8,10 @@
 		@csrf
 		@method('DELETE')
 		<div class="form-group row">
-			<div class="col-md-12 text center">
-				<h5>
-					Apakah Anda Yakin Mengkapus Cabang {{ $data->cabang }} ?
-				</h5>
+			<div class="col-md-12 text center align-center">
+				<h5 class="text-center mx-auto">
+					Apakah Anda Yakin Menghapus Data ?
+				</h5>				
 			</div>
 		</div>
 	</div>

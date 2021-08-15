@@ -9,6 +9,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		$('body').addClass('sidebar-mini sidebar-collapse');
 
 		function reloadData() {
 			$('.table').DataTable().ajax.reload();
@@ -19,26 +20,27 @@
 			serverSide: true,
 			ajax: "{{ url()->full() }}",
 			pageLength: 25,
-			autoWidth: false,
+			responsive: true,
+			autoWidth : false,
 			scrollX: "100%",
 			scrollCollapse:false,
 			columnDefs: [
-			{targets: [0,2,3,], className: "text-center",},
-			{targets: 0, width: "15px"},
+			{targets: [2,3,4,5,6,7,8], className: "text-right",},
+			{targets: 0, width: "10px"},
 			],
 			columns: [
 
 			{data: 'DT_RowIndex', name: 'DT_RowIndex', title: '#'},
 			{data: 'cabang', name: 'cabang', title: 'Kantor Cabang'},
+			{data: 'tanggal', name: 'tanggal', title: 'Tanggal'},
 			{data: 'drop', name: 'drop', title: 'Drop'},
 			{data: 'storting', name: 'storting', title: 'Storting'},
-			{data: 'psp', name: 'psp', title: 'psp'},
+			{data: 'psp', name: 'psp', title: 'PSP'},
 			{data: 'drop_tunda', name: 'drop_tunda', title: 'Drop Tunda'},
 			{data: 'storting_tunda', name: 'storting_tunda', title: 'Storting Tunda'},
-			{data: 'tkp', name: 'tkp', title: 'tkp'},
+			{data: 'tkp', name: 'tkp', title: 'TKP'},
 			{data: 'sisa_kas', name: 'sisa_kas', title: 'Sisa Kas'},
 			{data: 'created_by', name: 'created_by', title: 'Created By'},
-			{data: 'updated_by', name: 'updated_by', title: 'Updated By'},
 			{data: 'action', name: 'action', orderable: false, searchable: false},
 			]
 		});
@@ -59,8 +61,11 @@
 		<a href="{{ action('ReportController@create') }}" class="btn btn-primary btn-sm float-right">Tambah Data</a>
 	</div>
 	<div class="card-body">
-		<table id="data-table" class="table table-bordered table-striped">
-		</table>
+		<div class="table-responsive">
+			
+			<table id="data-table" class="table table-bordered table-striped table-sm">
+			</table>
+		</div>
 	</div>
 </div>
 

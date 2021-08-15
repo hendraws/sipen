@@ -19,12 +19,16 @@ class ReportController extends Controller
     public function index(Request $request)
     {
     	if ($request->ajax()) {
-    		$data = Report::get();
+    		$data = Report::orderBy('id', 'desc')->orderBy('tanggal', 'desc')->get();
     		return Datatables::of($data)
     		->addIndexColumn()
     		->addColumn('cabang', function ($row) {
     			$cabang = $row->Cabang->cabang;
     			return $cabang;
+    		})     		
+    		->addColumn('tanggal', function ($row) {
+    			$tanggal = date('d-m-Y', strtotime($row->tanggal));
+    			return $tanggal;
     		})     	
     		->addColumn('drop', function ($row) {
     			$drop = $row->drop;
@@ -63,7 +67,8 @@ class ReportController extends Controller
     			return $updated_by;
     		})     
     		->addColumn('action', function ($row) {
-    			$action =  '<a class="btn btn-sm btn-warning" href="'. action('ReportController@edit', $row->id) .'" >Edit</a>';
+    			$action =  '<a class="btn btn-xs btn-warning" href="'. action('ReportController@edit', $row->id) .'" >Edit</a>';
+    			$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ReportController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Hapus</a>';
     			return $action;
     		})
     		->rawColumns(['action'])
@@ -93,28 +98,28 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+    	$request->validate([
     		'cabang' => 'required',
     		'tanggal' => 'required',
     	]);
 
-        DB::beginTransaction();
-        try {
-        	Report::Create(
-        		[
-        			"cabang" => $request->cabang,
-        			"tanggal" => $request->tanggal,
-        			"drop" => $request->drop,
-        			"storting" => $request->storting,
-        			"psp" => $request->psp,
-        			"drop_tunda" => $request->drop_tunda,
-        			"storting_tunda" => $request->storting_tunda,
-        			"tkp" => $request->tkp,
-        			"sisa_kas" => $request->sisa_kas,
-        			'created_by' => auth()->user()->id,
-        			'updated_by' => auth()->user()->id,
-        		]
-        	);
+    	DB::beginTransaction();
+    	try {
+    		Report::Create(
+    			[
+    				"cabang" => $request->cabang,
+    				"tanggal" => $request->tanggal,
+    				"drop" => $request->drop,
+    				"storting" => $request->storting,
+    				"psp" => $request->psp,
+    				"drop_tunda" => $request->drop_tunda,
+    				"storting_tunda" => $request->storting_tunda,
+    				"tkp" => $request->tkp,
+    				"sisa_kas" => $request->sisa_kas,
+    				'created_by' => auth()->user()->id,
+    				'updated_by' => auth()->user()->id,
+    			]
+    		);
 
     	} catch (\Exception $e) {
     		DB::rollback();
@@ -148,9 +153,12 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function edit(Report $report)
+    public function edit($id)
     {
-        //
+    	$today =  date('Y-m-d');
+    	$cabang  = KantorCabang::pluck('cabang','id');
+    	$data  = Report::find($id);
+    	return view('backend.report.edit', compact('data', 'today','cabang'));
     }
 
     /**
@@ -160,9 +168,41 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Report $report)
+    public function update(Request $request, $id)
     {
-        //
+    	$request->validate([
+    		'tanggal' => 'required',
+    		'cabang' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+    		Report::whereId($id)->update([
+    			"cabang" => $request->cabang,
+    			"tanggal" => $request->tanggal,
+    			"drop" => $request->drop,
+    			"storting" => $request->storting,
+    			"psp" => $request->psp,
+    			"drop_tunda" => $request->drop_tunda,
+    			"storting_tunda" => $request->storting_tunda,
+    			"tkp" => $request->tkp,
+    			"sisa_kas" => $request->sisa_kas,
+    			'updated_by' => auth()->user()->id,
+    		]);
+
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah Diubah', 'Berhasil');
+    	return redirect(action('ReportController@index'));
     }
 
     /**
@@ -171,8 +211,18 @@ class ReportController extends Controller
      * @param  \App\Report  $report
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Report $report)
+    public function destroy($id)
     {
-        //
+    	$data = Report::find($id);
+    	$data->delete();
+    	toastr()->success('Data telah hapus', 'Berhasil');
+    	return back();
+    }
+
+
+    public function delete($id)
+    {
+    	$data = Report::find($id);
+    	return view('backend.report.delete', compact('data'));
     }
 }
