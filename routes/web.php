@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/kantor-cabang', 'KantorCabangController');
 
 	// coming soon
-	Route::get('/perkembangan', 'HomeController@underContraction');
+	Route::get('/perkembangan', 'ReportController@perkembangan');
 	Route::get('/data-pengguna', 'HomeController@underContraction');
 
 	// command
