@@ -19,14 +19,22 @@
 				</a>
 			</li>
 			<li class="nav-item">
-				<a href="{{ url('/program-kerja') }}" class="nav-link">
+				<a href="{{ action('ProgramKerjaController@index') }}" class="nav-link">
 					<i class="nav-icon fas fa-list-ul"></i>
 					<p>
 						Program Kerja
 					</p>
 				</a>
+			</li>		
+			<li class="nav-item">
+				<a href="{{ action('KantorCabangController@index') }}" class="nav-link">
+					<i class="nav-icon fas fa-database"></i>
+					<p>
+						Master
+					</p>
+				</a>
 			</li>
-			<li class="nav-item has-treeview">
+			{{-- <li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 					<i class="nav-icon fas fa-database"></i>
 					<p>
@@ -48,7 +56,7 @@
 						</a>
 					</li>
 				</ul>
-			</li>
+			</li> --}}
 			<li class="nav-item">
 				<a href="{{ url('/data-pengguna') }}" class="nav-link">
 					<i class="nav-icon fas fa-users"></i>
