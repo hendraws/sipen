@@ -1,5 +1,10 @@
 <?php
 
+use App\KantorCabang;
+use App\ProgramKerja;
+use Illuminate\Support\Carbon;
+
+
 
 Auth::routes();
 
@@ -20,4 +25,58 @@ Route::group(['middleware' => 'auth'], function () {
 	// coming soon
 	Route::get('/perkembangan', 'HomeController@underContraction');
 	Route::get('/data-pengguna', 'HomeController@underContraction');
+
+	// command
+	Route::get('/command/artisan/migrate', function(){
+		Artisan::call('migrate');
+		return 'Migrated';
+	});
+
+	Route::get('/command/artisan/clear-cache', function(){
+		Artisan::call('cache:clear');
+		Artisan::call('config:clear');
+		Artisan::call('view:clear');
+
+		return 'Clear Cache';
+	});
+
+	Route::get('/command/artisan/generate', function(){
+		// Laravel Carbon subtract days from current date
+		// $date = Carbon::now()->subDays(0);
+		
+		$jumlah = 150;
+
+		for ($i=0; $i < $jumlah ; $i++) { 
+			$tanggal = Carbon::now()->subDays($i);
+			$cabang = KantorCabang::get();
+			foreach ($cabang as $value) {
+				$cabang = $value->id;
+				$drop = rand(10000,100000);
+				$storting = rand(100000,500000);
+				$psp = rand(5000,50000);
+				$drop_tunda = rand(1000,75000);
+				$storting_tunda = rand(1000,75000);
+				$tkp = $storting - ($drop / 100 * 91) - $psp;
+				$sisa_kas = rand(1000,250000);
+				ProgramKerja::Create(
+    			[
+    				"cabang" => $cabang,
+    				"tanggal" => $tanggal,
+    				"drop" => $drop,
+    				"storting" => $storting,
+    				"psp" => $psp,
+    				"drop_tunda" => $drop_tunda,
+    				"storting_tunda" => $storting_tunda,
+    				"tkp" => $tkp,
+    				"sisa_kas" => $sisa_kas,
+    				'created_by' => auth()->user()->id,
+    				'updated_by' => auth()->user()->id,
+    			]
+    		);
+			}
+		}
+
+
+		return 'berhasil generate';
+	});
 });
