@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/kantor-cabang', 'KantorCabangController');
 
 	// coming soon
-	Route::get('/perkembangan', 'ReportController@perkembangan');
+	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 	Route::get('/data-pengguna', 'HomeController@underContraction');
 
 	// command
@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 		// Laravel Carbon subtract days from current date
 		// $date = Carbon::now()->subDays(0);
 		
-		$jumlah = 150;
+		$jumlah = 500;
 
 		for ($i=0; $i < $jumlah ; $i++) { 
 			$tanggal = Carbon::now()->subDays($i);
@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth'], function () {
     			[
     				"cabang" => $cabang,
     				"tanggal" => $tanggal,
-    				"drop" => $drop,
+    				"drops" => $drop,
     				"storting" => $storting,
     				"psp" => $psp,
     				"drop_tunda" => $drop_tunda,

@@ -9,7 +9,7 @@ class ProgramKerja extends Model
 {
    use SoftDeletes;
 
-	protected $fillable = ['cabang','tanggal','drop','storting','psp','drop_tunda','storting_tunda','tkp','sisa_kas','created_by','updated_by'];
+	protected $fillable = ['cabang','tanggal','drops','storting','psp','drop_tunda','storting_tunda','tkp','sisa_kas','created_by','updated_by'];
 
 	public function Cabang()
 	{

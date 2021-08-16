@@ -19,7 +19,7 @@ class ProgramKerjaController extends Controller
     public function index(Request $request)
     {
     	if ($request->ajax()) {
-    		$data = ProgramKerja::orderBy('id', 'desc')->orderBy('tanggal', 'desc')->get();
+    		$data = ProgramKerja::with('Cabang')->get();
     		return Datatables::of($data)
     		->addIndexColumn()
     		->addColumn('cabang', function ($row) {
@@ -31,7 +31,7 @@ class ProgramKerjaController extends Controller
     			return $tanggal;
     		})     	
     		->addColumn('drop', function ($row) {
-    			$drop = $row->drop;
+    			$drop = $row->drops;
     			return $drop;
     		})         		
     		->addColumn('storting', function ($row) {
@@ -109,7 +109,7 @@ class ProgramKerjaController extends Controller
     			[
     				"cabang" => $request->cabang,
     				"tanggal" => $request->tanggal,
-    				"drop" => $request->drop,
+    				"drops" => $request->drop,
     				"storting" => $request->storting,
     				"psp" => $request->psp,
     				"drop_tunda" => $request->drop_tunda,
@@ -180,7 +180,7 @@ class ProgramKerjaController extends Controller
     		ProgramKerja::whereId($id)->update([
     			"cabang" => $request->cabang,
     			"tanggal" => $request->tanggal,
-    			"drop" => $request->drop,
+    			"drops" => $request->drop,
     			"storting" => $request->storting,
     			"psp" => $request->psp,
     			"drop_tunda" => $request->drop_tunda,

@@ -13,13 +13,159 @@ use Yajra\DataTables\DataTables;
 
 class ReportController extends Controller
 {
-	public function perkembangan()
+	public function perkembangan(Request $request)
 	{
-		$data = ProgramKerja::whereIn(DB::raw('MONTH(tanggal)'),['07','08'])->get();
+		$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+		$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+		if($request->ajax())
+		{
+			$labels = [];
+			$data = ProgramKerja::selectRaw('
+						sum(drops) as sum_drop, 
+						sum(psp) as sum_psp,
+						sum(storting) as sum_storting,
+						sum(drop_tunda) as sum_drop_tunda, 
+						sum(storting_tunda) as sum_storting_tunda, 
+						sum(tkp) as sum_tkp, 
+						sum(sisa_kas) as sum_sisa_kas, 
+						tanggal, 
+						cabang, 
+						MONTH(tanggal) as bulan, 
+						DAY(tanggal) as hari  ')
+			->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+			->whereYear('tanggal', date('Y'))
+			->groupBy('cabang')
+			->groupBy('tanggal')
+			->get();
+			$labels = $data->mapWithKeys(function ($item, $key) {
+				return ['hari ke ' . $item->hari => $item->sum_drop];
+			});
+			$labels = $labels->keys();
 
+			if($request->graphic == 'dropChart'){ 
+				
+				$mapDrop = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_drop];
+				});
+
+				foreach ($mapDrop as $key => $value) {
+					$drops[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($drops);
+
+				return view('backend.perkembangan.drop', compact('labels', 'data'));
+			}
+
+			if($request->graphic == 'stortingChart'){ 
+
+				$mapStorting = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_storting];
+				});
+
+				foreach ($mapStorting as $key => $value) {
+					$storting[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($storting);
+
+				return view('backend.perkembangan.storting', compact('labels', 'data'));
+			}			
+
+			if($request->graphic == 'pspChart'){ 
+
+				$mapPsp = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_psp];
+				});
+
+				foreach ($mapPsp as $key => $value) {
+					$psp[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($psp);
+
+				return view('backend.perkembangan.psp', compact('labels', 'data'));
+			}
+
+			if($request->graphic == 'dropTundaChart'){ 
+
+				$mapDropTunda = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_drop_tunda];
+				});
+
+				foreach ($mapDropTunda as $key => $value) {
+					$dropTunda[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($dropTunda);
+
+				return view('backend.perkembangan.drop_tunda', compact('labels', 'data'));
+			}
+			
+			if($request->graphic == 'stortingTundaChart'){ 
+
+				$mapStortingTunda = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_storting_tunda];
+				});
+
+				foreach ($mapStortingTunda as $key => $value) {
+					$stortingTunda[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($stortingTunda);
+
+				return view('backend.perkembangan.storting_tunda', compact('labels', 'data'));
+			}
+
+			if($request->graphic == 'tkpChart'){ 
+
+				$mapTkp = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_tkp];
+				});
+
+				foreach ($mapTkp as $key => $value) {
+					$tkp[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($tkp);
+
+				return view('backend.perkembangan.tkp', compact('labels', 'data'));
+			}
+
+			if($request->graphic == 'sisaKasChart'){ 
+
+				$mapSisaKas = $data->mapToGroups(function ($item, $key) {
+					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_sisa_kas];
+				});
+
+				foreach ($mapSisaKas as $key => $value) {
+					$sisaKas[] = [ 
+						'label' => $key , 
+						'data' => $value->toArray(), 
+					];
+				}
+				$data = json_encode($sisaKas);
+
+				return view('backend.perkembangan.sisa_kas', compact('labels', 'data'));
+			}
+
+		} //tutup ajax
+
+		
 		return view('backend.perkembangan.index');
-		return $data;
-		return Carbon::now()->subMonth(12)->format('m');
+		// return Carbon::now()->subMonth(12)->format('m');
 		
 	}
 }

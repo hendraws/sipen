@@ -75,7 +75,7 @@ class KantorCabangController extends Controller
     		KantorCabang::Create(
     			[
     				'cabang' => $request->cabang,
-    				'slug' => Str::slug($request->slug),
+    				'slug' => Str::slug($request->cabang),
     				'created_by' => auth()->user()->id,
     				'updated_by' => auth()->user()->id,
     			]
@@ -136,7 +136,7 @@ class KantorCabangController extends Controller
     	try {
     		KantorCabang::whereId($id)->update([
     			'cabang' => $request->cabang,
-    			'slug' => Str::slug($request->slug),
+    			'slug' => Str::slug($request->cabang),
     			'updated_by' => auth()->user()->id,
     		]);
 
