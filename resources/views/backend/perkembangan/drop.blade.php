@@ -33,7 +33,6 @@
 	$(document).ready(function () {
 		var dataset  = <?= $data ?>;
 		var label  = <?= $labels ?>;
-		console.log(label);
 		const data = {
 			labels:label,
 			datasets: dataset,

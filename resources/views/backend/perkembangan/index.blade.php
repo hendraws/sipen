@@ -14,7 +14,9 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+
 	function getGraphic(target){
+		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		$.ajax({
 			{{-- url: "{{ url()->current() }}?startdate="+startDate+"&enddate="+endDate+"&graphic="+target, --}}
 			url: "{{ url()->current() }}?graphic="+target,
@@ -28,8 +30,9 @@
 			Swal.fire({html: 'No response from server', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 10000, timerProgressBar: true,});
 		});
 	}
-
+	
 	$(document).ready(function () {
+		Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		getGraphic('dropChart');
 		getGraphic('stortingChart');
 		getGraphic('pspChart');
