@@ -19,7 +19,7 @@ class ProgramKerjaController extends Controller
     public function index(Request $request)
     {
     	if ($request->ajax()) {
-    		$data = ProgramKerja::with('Cabang')->get();
+    		$data = ProgramKerja::with('Cabang');
     		return Datatables::of($data)
     		->addIndexColumn()
     		->addColumn('cabang', function ($row) {

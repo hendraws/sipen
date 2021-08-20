@@ -30,7 +30,10 @@
 			],
 			columns: [
 
-			{data: 'DT_RowIndex', name: 'DT_RowIndex', title: '#'},
+			{"data": 'DT_RowIndex',
+                    orderable: false, 
+                    searchable: false},
+			 // { data: 'DT_Row_Index', name: 'DT_Row_Index' },
 			{data: 'cabang', name: 'cabang', title: 'Kantor Cabang'},
 			{data: 'tanggal', name: 'tanggal', title: 'Tanggal'},
 			{data: 'drop', name: 'drop', title: 'Drop'},
