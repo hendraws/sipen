@@ -19,11 +19,20 @@
 			<thead>
 				<tr>
 					<th scope="col">#</th>
-					<th scope="col">First</th>
-					<th scope="col">Last</th>
-					<th scope="col">Handle</th>
+					@foreach ($table as $k => $v)
+						<th scope="col">{{ $k }}</th>						
+					@endforeach
 				</tr>
 			</thead>
+			<tbody>
+				<tr>
+				@foreach ($table as $k => $v)
+					@foreach ($v as $val)
+					<th scope="col">{{ $val }}</th>						
+					@endforeach
+				@endforeach
+				</tr>
+			</tbody>
 		</table>
 	</div> --}}
 </div>
@@ -33,6 +42,7 @@
 	$(document).ready(function () {
 		var dataset  = <?= $data ?>;
 		var label  = <?= $labels ?>;
+		console.table(dataset);
 		const data = {
 			labels:label,
 			datasets: dataset,
@@ -46,7 +56,17 @@
 						tension: 0,
 						fill: false
 					}
-				}
+				},
+				tooltips: {
+					mode: 'index',
+					bodySpacing : 10,
+					callbacks: {
+						label: function(tooltipItem, data) {
+                        	// console.log(tooltipItem);
+							return 'Rp.'+number_format(tooltipItem.yLabel);
+						}
+					}
+				},
 			}
 		};
 		var drop = new Chart(

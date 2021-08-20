@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// coming soon
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
+	// Route::match(['get','post'],'/perkembangan', 'ReportController@perbandinganGlobal');
 	Route::get('/data-pengguna', 'HomeController@underContraction');
 
 	// command
@@ -40,11 +41,11 @@ Route::group(['middleware' => 'auth'], function () {
 		return 'Clear Cache';
 	});
 
-	Route::get('/command/artisan/generate', function(){
+	Route::get('/command/artisan/generate/{jml}', function($jml){
 		// Laravel Carbon subtract days from current date
 		// $date = Carbon::now()->subDays(0);
 		
-		$jumlah = 500;
+		$jumlah = $jml;
 
 		for ($i=0; $i < $jumlah ; $i++) { 
 			$tanggal = Carbon::now()->subDays($i);

@@ -1,20 +1,22 @@
 <div class="card card-info card-outline col-md-12 collapsed-card">
 	<div class="card-header text-center">
-		 <h3 class="card-title">TKP</h3>
+		<h3 class="card-title">TKP</h3>
 
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-              <i class="fas fa-plus"></i></button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-              <i class="fas fa-times"></i></button>
-          </div>
+		<div class="card-tools">
+			<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+				<i class="fas fa-plus"></i>
+			</button>
+			<button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+				<i class="fas fa-times"></i>
+			</button>
+		</div>
 	</div>
 	<div class="card-body">
 		<div>
 			<canvas id="tkp"></canvas>
 		</div>
 	</div>
-	{{-- <div class="card-footer">
+{{-- 	<div class="card-footer">
 		<table class="table table-sm">
 			<thead>
 				<tr>
@@ -47,12 +49,22 @@
 						tension: 0,
 						fill: false
 					}
-				}
-			}
-		};
-		var tkp = new Chart(
-			$('#tkp'),
-			config
-			);
-	});
+				},
+				tooltips: {
+					mode: 'index',
+					bodySpacing : 10,
+					callbacks: {
+						label: function(tooltipItem, data) {
+                        	// console.log(tooltipItem);
+                        	return 'Rp.'+number_format(tooltipItem.yLabel);
+                        }
+                    }
+                },
+            }
+        };
+        var tkp = new Chart(
+        	$('#tkp'),
+        	config
+        	);
+    });
 </script>

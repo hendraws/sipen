@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
 @section('title', 'Perkembangan')
-@section('content-title', 'Perkembangan')
+@section('content-title', 'Grafik Perbandingan Perkembangan')
 @section('css')
 @endsection
 @section('js')
@@ -9,12 +9,15 @@
 <script src="{{ asset('vendors/chartjs/chartjs-plugin-datalabels.js') }}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 <script type="text/javascript">
+	$('body').addClass('sidebar-mini sidebar-collapse');
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-
+	function number_format(x) {
+		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
+	}
 	function getGraphic(target){
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		$.ajax({
@@ -56,13 +59,13 @@
 	</div>
 </div> --}}
 <div class="row">
-	<div id="dropChart" class="col-md-12"></div>
-	<div id="stortingChart" class="col-md-12"></div>
-	<div id="pspChart" class="col-md-12"></div>
-	<div id="dropTundaChart" class="col-md-12"></div>
-	<div id="stortingTundaChart" class="col-md-12"></div>
-	<div id="tkpChart" class="col-md-12"></div>
-	<div id="sisaKasChart" class="col-md-12"></div>
+	<div id="dropChart" class="col-md-6"></div>
+	<div id="stortingChart" class="col-md-6"></div>
+	<div id="pspChart" class="col-md-6"></div>
+	<div id="dropTundaChart" class="col-md-6"></div>
+	<div id="stortingTundaChart" class="col-md-6"></div>
+	<div id="tkpChart" class="col-md-6"></div>
+	<div id="sisaKasChart" class="col-md-6"></div>
 </div>
 
 @endsection

@@ -17,26 +17,34 @@ class ReportController extends Controller
 	{
 		$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
 		$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+		$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+		$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+		if($jmlHariKemarin >= $jmlHariSekarang )
+		{
+			$maxHari = $jmlHariKemarin; 
+		}else{
+			$maxHari = $jmlHariSekarang; 
+		}
+
 		if($request->ajax())
 		{
 			$labels = [];
 			$data = ProgramKerja::selectRaw('
-						sum(drops) as sum_drop, 
-						sum(psp) as sum_psp,
-						sum(storting) as sum_storting,
-						sum(drop_tunda) as sum_drop_tunda, 
-						sum(storting_tunda) as sum_storting_tunda, 
-						sum(tkp) as sum_tkp, 
-						sum(sisa_kas) as sum_sisa_kas, 
-						tanggal, 
-						cabang, 
-						MONTH(tanggal) as bulan, 
-						DAY(tanggal) as hari  ')
+				sum(drops) as sum_drop, 
+				sum(psp) as sum_psp,
+				sum(storting) as sum_storting,
+				sum(drop_tunda) as sum_drop_tunda, 
+				sum(storting_tunda) as sum_storting_tunda, 
+				sum(tkp) as sum_tkp, 
+				sum(sisa_kas) as sum_sisa_kas, 
+				tanggal, 
+				MONTH(tanggal) as bulan, 
+				DAY(tanggal) as hari  ')
 			->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
 			->whereYear('tanggal', date('Y'))
-			->groupBy('cabang')
 			->groupBy('tanggal')
 			->get();
+
 			$labels = $data->mapWithKeys(function ($item, $key) {
 				return ['hari ke ' . $item->hari => $item->sum_drop];
 			});
@@ -45,7 +53,8 @@ class ReportController extends Controller
 			if($request->graphic == 'dropChart'){ 
 				
 				$mapDrop = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_drop];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_drop];
 				});
 
 				foreach ($mapDrop as $key => $value) {
@@ -54,15 +63,16 @@ class ReportController extends Controller
 						'data' => $value->toArray(), 
 					];
 				}
-				$data = json_encode($drops);
 
+				$data = json_encode($drops);
 				return view('backend.perkembangan.drop', compact('labels', 'data'));
 			}
 
 			if($request->graphic == 'stortingChart'){ 
 
 				$mapStorting = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_storting];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_storting];
 				});
 
 				foreach ($mapStorting as $key => $value) {
@@ -79,7 +89,8 @@ class ReportController extends Controller
 			if($request->graphic == 'pspChart'){ 
 
 				$mapPsp = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_psp];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_psp];
 				});
 
 				foreach ($mapPsp as $key => $value) {
@@ -96,7 +107,8 @@ class ReportController extends Controller
 			if($request->graphic == 'dropTundaChart'){ 
 
 				$mapDropTunda = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_drop_tunda];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_drop_tunda];
 				});
 
 				foreach ($mapDropTunda as $key => $value) {
@@ -113,7 +125,8 @@ class ReportController extends Controller
 			if($request->graphic == 'stortingTundaChart'){ 
 
 				$mapStortingTunda = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_storting_tunda];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->storting_tunda];
 				});
 
 				foreach ($mapStortingTunda as $key => $value) {
@@ -130,7 +143,8 @@ class ReportController extends Controller
 			if($request->graphic == 'tkpChart'){ 
 
 				$mapTkp = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_tkp];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_tkp];
 				});
 
 				foreach ($mapTkp as $key => $value) {
@@ -147,7 +161,8 @@ class ReportController extends Controller
 			if($request->graphic == 'sisaKasChart'){ 
 
 				$mapSisaKas = $data->mapToGroups(function ($item, $key) {
-					return [ $item->Cabang->cabang.'(Bulan'.$item->bulan.')' => $item->sum_sisa_kas];
+					$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+					return [ $bulan  => $item->sum_sisa_kas];
 				});
 
 				foreach ($mapSisaKas as $key => $value) {
@@ -161,6 +176,56 @@ class ReportController extends Controller
 				return view('backend.perkembangan.sisa_kas', compact('labels', 'data'));
 			}
 
+		} //tutup ajax
+
+		
+		return view('backend.perkembangan.index');
+		// return Carbon::now()->subMonth(12)->format('m');
+		
+	}
+
+	public function perbandinganGlobal(Request $request)
+	{
+		$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+		$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+		if($request->ajax())
+		{
+			$labels = [];
+			$data = ProgramKerja::selectRaw('
+				sum(drops) as sum_drop, 
+				sum(psp) as sum_psp,
+				sum(storting) as sum_storting,
+				sum(drop_tunda) as sum_drop_tunda, 
+				sum(storting_tunda) as sum_storting_tunda, 
+				sum(tkp) as sum_tkp, 
+				sum(sisa_kas) as sum_sisa_kas, 
+				tanggal, 
+				MONTH(tanggal) as bulan, 
+				DAY(tanggal) as hari  ')
+			->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+			->whereYear('tanggal', date('Y'))
+			->groupBy('tanggal')
+			->get();
+
+			$labels = $data->mapWithKeys(function ($item, $key) {
+				return ['hari ke ' . $item->hari => $item->sum_drop];
+			});
+			$labels = $labels->keys();
+
+			$mapDrop = $data->mapToGroups(function ($item, $key) {
+				$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+				return [ $bulan  => $item->sum_drop];
+			});
+			
+			foreach ($mapDrop as $key => $value) {
+				$drops[] = [ 
+					'label' => $key , 
+					'data' => $value->toArray(), 
+				];
+			}
+			$data = json_encode($drops);
+
+			return view('backend.perkembangan.drop', compact('labels', 'data'));
 		} //tutup ajax
 
 		

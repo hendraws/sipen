@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Cabang;
+use App\ProgramKerja;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -21,9 +25,71 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('home');
+    	$data = ProgramKerja::selectRaw('
+				sum(drops) as sum_drop, 
+				sum(psp) as sum_psp,
+				sum(storting) as sum_storting,
+				sum(drop_tunda) as sum_drop_tunda, 
+				sum(storting_tunda) as sum_storting_tunda, 
+				sum(tkp) as sum_tkp
+			')
+			->first();
+
+		if($request->ajax())
+		{
+			$labels = [];
+			$chart = ProgramKerja::selectRaw('
+						sum(drops) as sum_drop, 
+						sum(psp) as sum_psp,
+						sum(storting) as sum_storting,
+						sum(drop_tunda) as sum_drop_tunda, 
+						sum(storting_tunda) as sum_storting_tunda, 
+						sum(tkp) as sum_tkp, 
+						sum(sisa_kas) as sum_sisa_kas, 
+						tanggal, 
+						cabang, 
+						MONTH(tanggal) as bulan, 
+						DAY(tanggal) as hari  ')
+			->where('tanggal', date("Y-m-d",strtotime("-1 days")))
+			->groupBy('cabang')
+			->groupBy('tanggal')
+			->get();
+			
+			$labels = $chart->mapWithKeys(function ($item, $key) {
+				return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+			});
+			$labels = $labels->keys();
+
+			// $mapDrop = $chart->mapToGroups(function ($item, $key) {
+			// 	return [ ucfirst($item->Cabang->cabang)  => $item->sum_drop];
+			// });
+			// dd($chart->toArray());
+			// foreach($chart as $k => $v){
+			// 	$chartset[] = $chart
+			// }
+			foreach ($chart as $key => $value) {
+				$m['drop'][] = $value->sum_drop;
+				$m['storting'][]=$value->sum_storting;
+				$m['psp'][]=$value->sum_psp;
+				$m['tkp'][]=$value->sum_tkp;
+				$m['drop_tunda'][]=$value->sum_drop_tunda;
+				$m['storting_tunda'][]=$value->sum_storting_tunda;
+			}
+			$dataset=[];
+			foreach ($m as $key => $value) {
+					$dataset[] = [ 
+						'label' => $key, 
+						'data' => $value,  
+					];
+			}
+
+			$dataset = json_encode($dataset);
+
+			return view('dashboard.drop', compact('labels', 'dataset'));
+		} //tutup ajax
+        return view('home', compact('data'));
     }
 
     public function underContraction()

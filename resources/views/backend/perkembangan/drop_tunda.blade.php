@@ -46,7 +46,17 @@
 						tension: 0,
 						fill: false
 					}
-				}
+				},
+				tooltips: {
+					mode: 'index',
+					bodySpacing : 10,
+					callbacks: {
+						label: function(tooltipItem, data) {
+                        	// console.log(tooltipItem);
+							return 'Rp.'+number_format(tooltipItem.yLabel);
+						}
+					}
+				},
 			}
 		};
 		var dropTunda = new Chart(
