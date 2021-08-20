@@ -17,7 +17,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+    	$this->middleware('auth');
     }
 
     /**
@@ -28,39 +28,39 @@ class HomeController extends Controller
     public function index(Request $request)
     {
     	$data = ProgramKerja::selectRaw('
-				sum(drops) as sum_drop, 
-				sum(psp) as sum_psp,
-				sum(storting) as sum_storting,
-				sum(drop_tunda) as sum_drop_tunda, 
-				sum(storting_tunda) as sum_storting_tunda, 
-				sum(tkp) as sum_tkp
-			')
-			->first();
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp
+    		')
+    	->first();
 
-		if($request->ajax())
-		{
-			$labels = [];
-			$chart = ProgramKerja::selectRaw('
-						sum(drops) as sum_drop, 
-						sum(psp) as sum_psp,
-						sum(storting) as sum_storting,
-						sum(drop_tunda) as sum_drop_tunda, 
-						sum(storting_tunda) as sum_storting_tunda, 
-						sum(tkp) as sum_tkp, 
-						sum(sisa_kas) as sum_sisa_kas, 
-						tanggal, 
-						cabang, 
-						MONTH(tanggal) as bulan, 
-						DAY(tanggal) as hari  ')
-			->where('tanggal', date("Y-m-d",strtotime("-1 days")))
-			->groupBy('cabang')
-			->groupBy('tanggal')
-			->get();
-			
-			$labels = $chart->mapWithKeys(function ($item, $key) {
-				return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
-			});
-			$labels = $labels->keys();
+    	if($request->ajax())
+    	{
+    		$labels = [];
+    		$chart = ProgramKerja::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas, 
+    			tanggal, 
+    			cabang, 
+    			MONTH(tanggal) as bulan, 
+    			DAY(tanggal) as hari  ')
+    		->where('tanggal', date("Y-m-d"))
+    		->groupBy('cabang')
+    		->groupBy('tanggal')
+    		->get();
+
+    		$labels = $chart->mapWithKeys(function ($item, $key) {
+    			return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+    		});
+    		$labels = $labels->keys();
 
 			// $mapDrop = $chart->mapToGroups(function ($item, $key) {
 			// 	return [ ucfirst($item->Cabang->cabang)  => $item->sum_drop];
@@ -69,31 +69,33 @@ class HomeController extends Controller
 			// foreach($chart as $k => $v){
 			// 	$chartset[] = $chart
 			// }
-			foreach ($chart as $key => $value) {
-				$m['drop'][] = $value->sum_drop;
-				$m['storting'][]=$value->sum_storting;
-				$m['psp'][]=$value->sum_psp;
-				$m['tkp'][]=$value->sum_tkp;
-				$m['drop_tunda'][]=$value->sum_drop_tunda;
-				$m['storting_tunda'][]=$value->sum_storting_tunda;
-			}
-			$dataset=[];
-			foreach ($m as $key => $value) {
-					$dataset[] = [ 
-						'label' => $key, 
-						'data' => $value,  
-					];
-			}
+			$kategori = [];
+    		foreach ($chart as $key => $value) {
+    			$kategori['drop'][] = $value->sum_drop;
+    			$kategori['storting'][]=$value->sum_storting;
+    			$kategori['psp'][]=$value->sum_psp;
+    			$kategori['tkp'][]=$value->sum_tkp;
+    			$kategori['drop_tunda'][]=$value->sum_drop_tunda;
+    			$kategori['storting_tunda'][]=$value->sum_storting_tunda;
+    		}
+    		$dataset=[];
+    		foreach ($kategori as $key => $value) {
+    			$dataset[] = [ 
+    				'label' => $key, 
+    				'data' => $value,  
+    				'maxBarThickness' => 50,
+    			];
+    		}
 
-			$dataset = json_encode($dataset);
+    		$dataset = json_encode($dataset);
 
-			return view('dashboard.drop', compact('labels', 'dataset'));
+    		return view('dashboard.drop', compact('labels', 'dataset'));
 		} //tutup ajax
-        return view('home', compact('data'));
-    }
+		return view('home', compact('data'));
+	}
 
-    public function underContraction()
-    {
-    	return view('under_contraction');
-    }
+	public function underContraction()
+	{
+		return view('under_contraction');
+	}
 }
