@@ -22,7 +22,7 @@
 			pageLength: 25,
 			responsive: true,
 			autoWidth : false,
-			scrollX: "100%",
+			// scrollX: "100%",
 			scrollCollapse:false,
 			columnDefs: [
 			{targets: [2,3,4,5,6,7,8], className: "text-right",},
