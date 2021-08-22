@@ -20,13 +20,13 @@
 				</a>
 				<ul class="nav nav-treeview" style="display: none;">
 					<li class="nav-item">
-						<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+						<a href="{{ action('KantorCabangController@index') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Kantor Cabang</p>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+						<a href="{{ action('ProgramKerjaController@index') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Program Kerja</p>
 						</a>
