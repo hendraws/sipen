@@ -25,7 +25,8 @@ Route::group(['middleware' => 'auth'], function () {
 	// coming soon
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 	// Route::match(['get','post'],'/perkembangan', 'ReportController@perbandinganGlobal');
-	Route::get('/data-pengguna', 'HomeController@underContraction');
+	// Route::get('/data-pengguna', 'HomeController@underContraction');
+	Route::get('/under-contraction', 'HomeController@underContraction');
 
 	// command
 	Route::get('/command/artisan/migrate', function(){
