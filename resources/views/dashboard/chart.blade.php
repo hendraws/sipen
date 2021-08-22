@@ -8,6 +8,37 @@
 			<canvas id="drop"></canvas>
 		</div>
 	</div>
+	<div class="card-footer">
+		<div class="table-responsive">
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th scope="col">UNIT</th>
+						<th scope="col">DROP</th>
+						<th scope="col">STORTING</th>
+						<th scope="col">PSP</th>
+						<th scope="col">TKP</th>
+						<th scope="col">DROP TUNDA</th>
+						<th scope="col">STORTING TUNDA</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($chart as $k => $val)
+					<tr>
+						<td>{{ $val->Cabang->cabang }}</td>
+						<td>{{ number_format($val->sum_drop) }}</td>
+						<td>{{ number_format($val->sum_storting) }}</td>
+						<td>{{ number_format($val->sum_psp) }}</td>
+						<td>{{ number_format($val->sum_tkp) }}</td>
+						<td>{{ number_format($val->sum_drop_tunda) }}</td>
+						<td>{{ number_format($val->sum_storting_tunda) }}</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">

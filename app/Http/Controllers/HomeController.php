@@ -69,8 +69,9 @@ class HomeController extends Controller
 			// foreach($chart as $k => $v){
 			// 	$chartset[] = $chart
 			// }
-			$kategori = [];
+    		$kategori = [];
     		foreach ($chart as $key => $value) {
+    			$kategori['unit'][] = $value->Cabang->cabang;
     			$kategori['drop'][] = $value->sum_drop;
     			$kategori['storting'][]=$value->sum_storting;
     			$kategori['psp'][]=$value->sum_psp;
@@ -80,16 +81,18 @@ class HomeController extends Controller
     		}
     		$dataset=[];
     		foreach ($kategori as $key => $value) {
-    			$dataset[] = [ 
-    				'label' => $key, 
-    				'data' => $value,  
-    				'maxBarThickness' => 50,
-    			];
+    			if($key != 'unit'){
+    				$dataset[] = [ 
+    					'label' => $key, 
+    					'data' => $value,  
+    					'maxBarThickness' => 50,
+    				];
+    			}
     		}
 
     		$dataset = json_encode($dataset);
 
-    		return view('dashboard.drop', compact('labels', 'dataset'));
+    		return view('dashboard.chart', compact('labels', 'dataset','kategori','chart'));
 		} //tutup ajax
 		return view('home', compact('data'));
 	}
