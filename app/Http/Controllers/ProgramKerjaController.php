@@ -19,63 +19,54 @@ class ProgramKerjaController extends Controller
     public function index(Request $request)
     {
     	if ($request->ajax()) {
-    		$data = ProgramKerja::with('Cabang')->orderBy('tanggal','desc');
+    		$data = ProgramKerja::with('Cabang')
+    		->whereMonth('tanggal',date('m'))
+    		->whereYear('tanggal',date('Y'))
+    		->orderBy('tanggal','desc');
     		return Datatables::of($data)
     		->addIndexColumn()
     		->addColumn('cabang', function ($row) {
     			$cabang = $row->Cabang->cabang;
     			return $cabang;
-    		})     		
-    		->addColumn('tanggal', function ($row) {
-    			$tanggal = date('d-m-Y', strtotime($row->tanggal));
-    			return $tanggal;
-    		})     	
+    		})     			
     		->addColumn('drop', function ($row) {
-    			$drop = $row->drops;
+    			$drop = number_format($row->drops);
     			return $drop;
     		})         		
     		->addColumn('storting', function ($row) {
-    			$storting = $row->storting;
+    			$storting = number_format($row->storting);
     			return $storting;
     		})     	
-    		->addColumn('psp', function ($row) {
-    			$psp = $row->psp;
-    			return $psp;
-    		})         		
+    		->addColumn('tkp', function ($row) {
+    			$tkp = number_format($row->tkp);
+    			return $tkp;
+    		})         		     		
     		->addColumn('drop_tunda', function ($row) {
-    			$drop_tunda = $row->drop_tunda;
+    			$drop_tunda = number_format($row->drop_tunda);
     			return $drop_tunda;
     		})         		
     		->addColumn('storting_tunda', function ($row) {
-    			$storting_tunda = $row->storting_tunda;
+    			$storting_tunda = number_format($row->storting_tunda);
     			return $storting_tunda;
     		})         		
-    		->addColumn('tkp', function ($row) {
-    			$tkp = $row->tkp;
-    			return $tkp;
-    		})         		
-    		->addColumn('sisa_kas', function ($row) {
-    			$sisa_kas = $row->sisa_kas;
-    			return $sisa_kas;
-    		})     
-    		->addColumn('created_by', function ($row) {
-    			$created_by = $row->DibuatOleh->name;
-    			return $created_by;
-    		})     
-    		->addColumn('updated_by', function ($row) {
-    			$updated_by = $row->DieditOleh->name;
-    			return $updated_by;
-    		})     
     		->addColumn('action', function ($row) {
     			$action =  '<a class="btn btn-xs btn-warning" href="'. action('ProgramKerjaController@edit', $row->id) .'" >Edit</a>';
-    			$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ProgramKerjaController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Hapus</a>';
+    			$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ProgramKerjaController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>';
     			return $action;
     		})
     		->rawColumns(['action'])
     		->make(true);
     	}
-
-    	return view('backend.program_kerja.index');
+    	$globalData = ProgramKerja::selectRaw('sum(drops) as sum_drop, 
+			    		sum(psp) as sum_psp,
+			    		sum(storting) as sum_storting,
+			    		sum(drop_tunda) as sum_drop_tunda, 
+			    		sum(storting_tunda) as sum_storting_tunda, 
+			    		sum(tkp) as sum_tkp')
+			    	->whereMonth('tanggal',date('m'))
+			    	->whereYear('tanggal',date('Y'))
+			    	->first();
+    	return view('backend.program_kerja.index', compact('globalData'));
     }
 
     /**

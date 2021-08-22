@@ -3,6 +3,21 @@
 @section('content-title', 'Program Kerja')
 @section('css')
 <link href="{{ asset('vendors/DataTables/datatables.min.css') }}" rel="stylesheet">
+<style type="text/css">
+	.table thead th {
+		text-align: center;
+		vertical-align: middle;
+	}
+
+	table tr th {
+		text-align: center;
+		vertical-align: middle;
+	}	
+	table tr td {
+		text-align: right;
+		vertical-align: middle;
+	}
+</style>
 @endsection
 @section('js')
 <script src="{{ asset('vendors/DataTables/datatables.min.js') }}"></script>
@@ -12,10 +27,10 @@
 		$('body').addClass('sidebar-mini sidebar-collapse');
 
 		function reloadData() {
-			$('.table').DataTable().ajax.reload();
+			$('#data-table').DataTable().ajax.reload();
 		}
 
-		let table = $('.table').DataTable({
+		let table = $('#data-table').DataTable({
 			processing: true,
 			serverSide: true,
 			ajax: "{{ url()->full() }}",
@@ -25,28 +40,25 @@
 			// scrollX: "100%",
 			scrollCollapse:false,
 			columnDefs: [
-			{targets: [2,3,4,5,6,7,8], className: "text-right",},
+			{targets: [7], className: "text-center"},
+			{targets: [0,1], className: "text-left"},
+			{targets: [2,3,4,5,6], className: "text-right"},
 			{targets: 0, width: "10px"},
 			],
 			columns: [
 
 			{"data": 'DT_RowIndex',
-                    orderable: false, 
-                    searchable: false},
-			 // { data: 'DT_Row_Index', name: 'DT_Row_Index' },
-			{data: 'cabang', name: 'cabang', title: 'Kantor Cabang'},
-			{data: 'tanggal', name: 'tanggal', title: 'Tanggal'},
-			{data: 'drop', name: 'drop', title: 'Drop'},
-			{data: 'storting', name: 'storting', title: 'Storting'},
-			{data: 'psp', name: 'psp', title: 'PSP'},
-			{data: 'drop_tunda', name: 'drop_tunda', title: 'Drop Tunda'},
-			{data: 'storting_tunda', name: 'storting_tunda', title: 'Storting Tunda'},
-			{data: 'tkp', name: 'tkp', title: 'TKP'},
-			{data: 'sisa_kas', name: 'sisa_kas', title: 'Sisa Kas'},
-			{data: 'created_by', name: 'created_by', title: 'Created By'},
-			{data: 'action', name: 'action', orderable: false, searchable: false},
-			]
-		});
+			orderable: false, 
+			searchable: false},
+			 {data: 'cabang', name: 'cabang'},
+			 {data: 'drop', name: 'drop'},
+			 {data: 'storting', name: 'storting'},
+			 {data: 'tkp', name: 'tkp'},
+			 {data: 'drop_tunda', name: 'drop_tunda'},
+			 {data: 'storting_tunda', name: 'storting_tunda'},
+			 {data: 'action', name: 'action', orderable: false, searchable: false},
+			 ]
+			});
 
 		$.ajaxSetup({
 			headers: {
@@ -65,10 +77,44 @@
 	</div>
 	<div class="card-body">
 		<div class="table-responsive">
-			
 			<table id="data-table" class="table table-bordered table-striped table-sm">
+				<thead>
+					<tr>
+						<th rowspan="2" class="text-center">No</th>
+						<th rowspan="2">Kantor Cabang</th>
+						<th colspan="5">Program Kerja</th>
+						<th rowspan="2">Aksi</th>
+					</tr>
+					<tr>
+						<th>Drop</th>
+						<th>Storting</th>
+						<th>TKP</th>
+						<th>Drop Tunda</th>
+						<th>Storting Tunda</th>
+					</tr>
+				</thead>
 			</table>
-		</div>
+		</div>		
+	</div>
+	<div class="card-footer">
+		<table class="table table-bordered table-striped table-sm">
+			<tr>
+				<th colspan="2" rowspan="2" style="		vertical-align: middle;">Rencana Kerja Global</th>
+				<th>Drop</th>
+				<th>Storting</th>
+				<th>TKP</th>
+				<th>Drop Tunda</th>
+				<th>Storting Tunda</th>
+			</tr>
+			<tr>
+				<td>{{ number_format($globalData->sum_drop) }}</td>
+				<td>{{ number_format($globalData->sum_storting) }}</td>
+				<td>{{ number_format($globalData->sum_tkp) }}</td>
+				<td>{{ number_format($globalData->sum_drop_tunda) }}</td>
+				<td>{{ number_format($globalData->sum_storting_tunda) }}</td>
+			</tr>
+		</table>
+
 	</div>
 </div>
 
