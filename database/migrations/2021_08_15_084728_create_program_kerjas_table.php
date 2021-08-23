@@ -17,7 +17,7 @@ class CreateProgramKerjasTable extends Migration
          	$table->bigIncrements('id');
     		$table->date('tanggal');
     		$table->integer('cabang')->nullable();
-    		$table->biginteger('drop')->nullable();
+    		$table->biginteger('drops')->nullable();
     		$table->biginteger('storting')->nullable();
     		$table->biginteger('psp')->nullable();
     		$table->biginteger('drop_tunda')->nullable();

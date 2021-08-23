@@ -70,7 +70,7 @@
 						}
 					}
 				},
-					plugins: {
+				plugins: {
 					colorschemes: {
 						scheme: 'office.Focus6'
 					}

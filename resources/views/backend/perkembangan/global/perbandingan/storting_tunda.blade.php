@@ -53,6 +53,11 @@
 								fill: false
 							}
 						},
+						plugins: {
+							colorschemes: {
+								scheme: 'office.Focus6'
+							}
+						}
 				// tooltips: {
 				// 	mode: 'index',
 				// 	bodySpacing : 10,

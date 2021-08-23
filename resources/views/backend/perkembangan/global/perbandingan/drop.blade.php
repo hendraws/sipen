@@ -53,6 +53,11 @@
 								fill: false
 							}
 						},
+						plugins: {
+							colorschemes: {
+								scheme: 'brewer.Paired12'
+							}
+						}
 				// tooltips: {
 				// 	mode: 'index',
 				// 	bodySpacing : 10,

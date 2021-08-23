@@ -53,6 +53,11 @@
 								fill: false
 							}
 						},
+						plugins: {
+							colorschemes: {
+								scheme: 'brewer.Accent3'
+							}
+						}
 				// tooltips: {
 				// 	mode: 'index',
 				// 	bodySpacing : 10,

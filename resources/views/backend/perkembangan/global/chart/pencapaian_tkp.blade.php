@@ -70,7 +70,7 @@
 						}
 					}
 				},
-					plugins: {
+				plugins: {
 					colorschemes: {
 						scheme: 'brewer.SetTwo8'
 					}

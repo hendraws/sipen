@@ -15,45 +15,45 @@ Route::get('/', function () {
 
 Route::get('/chart', function(){
 	    	// PERBANDINGAN
-    	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
-    	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
-    	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
-    	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
-    	$labels = [];
-    	$perbandingan = Perkembangan::selectRaw('
-    		sum(drops) as sum_drop, 
-    		sum(psp) as sum_psp,
-    		sum(storting) as sum_storting,
-    		sum(drop_tunda) as sum_drop_tunda, 
-    		sum(storting_tunda) as sum_storting_tunda, 
-    		sum(tkp) as sum_tkp, 
-    		sum(sisa_kas) as sum_sisa_kas, 
-    		tanggal, 
-    		MONTH(tanggal) as bulan, 
-    		DAY(tanggal) as hari')
-    	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
-    	->whereYear('tanggal', date('Y'))
-    	->groupBy('tanggal')
-    	->get();
+	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+	$labels = [];
+	$perbandingan = Perkembangan::selectRaw('
+		sum(drops) as sum_drop, 
+		sum(psp) as sum_psp,
+		sum(storting) as sum_storting,
+		sum(drop_tunda) as sum_drop_tunda, 
+		sum(storting_tunda) as sum_storting_tunda, 
+		sum(tkp) as sum_tkp, 
+		sum(sisa_kas) as sum_sisa_kas, 
+		tanggal, 
+		MONTH(tanggal) as bulan, 
+		DAY(tanggal) as hari')
+	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+	->whereYear('tanggal', date('Y'))
+	->groupBy('tanggal')
+	->get();
 
-    	$labels = $perbandingan->mapWithKeys(function ($item, $key) {
-    		return ['hari ke ' . $item->hari => $item->sum_drop];
-    	});
-    	$perbandinganLabels = $labels->keys();
+	$labels = $perbandingan->mapWithKeys(function ($item, $key) {
+		return ['hari ke ' . $item->hari => $item->sum_drop];
+	});
+	$perbandinganLabels = $labels->keys();
 
-    	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) {
-    		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
-    		return [ $bulan  => $item->sum_drop];
-    	});
-    	foreach ($mapDrop as $key => $value) {
-    		$drops[] = [ 
-    			'label' => $key , 
-    			'data' => $value->toArray(), 
-    		];
-    	}
+	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) {
+		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+		return [ $bulan  => $item->sum_drop];
+	});
+	foreach ($mapDrop as $key => $value) {
+		$drops[] = [ 
+			'label' => $key , 
+			'data' => $value->toArray(), 
+		];
+	}
 
-    	$perbandinganDrop = json_encode($drops);
-    	return view('backend.perkembangan.global.perbandingan2',compact('perbandinganLabels','perbandinganDrop'));
+	$perbandinganDrop = json_encode($drops);
+	return view('backend.perkembangan.global.perbandingan2',compact('perbandinganLabels','perbandinganDrop'));
 });
 // dibawah ini dibutuhkan akses autitentifikasi
 Route::group(['middleware' => 'auth'], function () { 
@@ -85,7 +85,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 			return 'Clear Cache';
 		});
-			
+
 		Route::get('/generate/program-kerja/{jml}', function($jml){
 		// Laravel Carbon subtract days from current date
 		// $date = Carbon::now()->subDays(0);
@@ -95,13 +95,13 @@ Route::group(['middleware' => 'auth'], function () {
 				$cabang = KantorCabang::get();
 				foreach ($cabang as $value) {
 					$cabang = $value->id;
-					$drop = rand(10000000,20000000);
-					$storting = rand(8000000,15000000);
-					$psp = rand(8000000,15000000);
-					$drop_tunda = rand(4000000,10000000);
-					$storting_tunda = rand(5000000,10000000);
+					$drop = rand(10000000,25000000);
+					$storting = $drop * 5;
+					$psp = $drop*0.05;
+					$drop_tunda = rand(10000,750000);
+					$storting_tunda = $drop_tunda * 0.1;
 					$tkp = $storting - ($drop / 100 * 91) - $psp;
-					$sisa_kas = rand(8000000,15000000);
+					$sisa_kas = rand(1000000,25000000);
 					ProgramKerja::Create(
 						[
 							"cabang" => $cabang,
