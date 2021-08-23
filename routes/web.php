@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 	// coming soon
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
+	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');
 	Route::resource('/perkembangan-data', 'PerkembanganController');
 	// Route::match(['get','post'],'/perkembangan', 'ReportController@perbandinganGlobal');
 	// Route::get('/data-pengguna', 'HomeController@underContraction');

@@ -49,7 +49,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+						<a href="{{ action('PerkembanganController@cabang') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Kantor Cabang</p>
 						</a>

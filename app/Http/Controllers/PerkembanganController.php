@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\KantorCabang;
 use App\Perkembangan;
 use App\ProgramKerja;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class PerkembanganController extends Controller
     		->selectRaw('DAY(tanggal) as hari')
     		->whereMonth('tanggal',date('m'))
     		->whereYear('tanggal',date('Y'))
-    		->orderBy('tanggal','desc');
+    		->orderBy('tanggal','asc');
     		return Datatables::of($data)
     		// ->addIndexColumn()
     		->addColumn('hari_kerja', function ($row) {
@@ -323,5 +324,95 @@ class PerkembanganController extends Controller
     	}
     	return $dataMappping;
     	// $data = json_encode($storting);
+    }
+
+    public function cabang(Request $request)
+    {
+    	$cabang = KantorCabang::pluck('cabang','id');
+    	if($request->ajax()){
+    		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp')
+    		->where('cabang', $request->cabang)
+    		->whereMonth('tanggal',date('m'))->first();
+    		$kasTerbaru = Perkembangan::where('cabang', $request->cabang)->whereMonth('tanggal',date('m'))->latest()->first();    
+
+			//PENCAPAIAN
+    		$target = ProgramKerja::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas')
+    		->whereMonth('tanggal',date('m'))
+    		->where('cabang', $request->cabang)
+    		->first();
+
+    		$pencapaian =  Perkembangan::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas')
+    		->whereMonth('tanggal',date('m'))
+    		->where('cabang', $request->cabang)
+    		->first();
+
+    		// Perbandingan
+    		$perbandingaLables = [];
+    		$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+    		$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+    		$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+    		$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+    		$perbandingan = Perkembangan::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas, 
+    			tanggal, 
+    			MONTH(tanggal) as bulan, 
+    			DAY(tanggal) as hari')
+    		->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+    		->where('cabang', $request->cabang)
+    		->whereYear('tanggal', date('Y'))
+    		->groupBy('tanggal')
+    		->get();
+
+    		$perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
+    			return ['hari ke ' . $item->hari => $item->sum_drop];
+    		});
+    		$perbandinganLabels = $perbandingaLables->keys();
+
+
+    		$pencapaianBulanLalu =  Perkembangan::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas')
+    		->whereMonth('tanggal',$bulanKemarin)
+    		->where('cabang', $request->cabang)
+    		->first();
+
+    		$perbandinganDrop = json_encode($this->mappingData($perbandingan, 'sum_drop'));
+    		$perbandinganStorting = json_encode($this->mappingData($perbandingan, 'sum_storting'));
+    		$perbandinganTkp = json_encode($this->mappingData($perbandingan, 'sum_tkp'));
+    		$perbandinganDropTunda = json_encode($this->mappingData($perbandingan, 'sum_drop_tunda'));
+    		$perbandinganStortingTunda = json_encode($this->mappingData($perbandingan, 'sum_storting_tunda'));
+    		return view('backend.perkembangan.kantor_cabang.data_cabang', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
+    	}
+    	return view('backend.perkembangan.kantor_cabang.index', compact('cabang'));
     }
 }
