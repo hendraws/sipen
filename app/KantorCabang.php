@@ -21,4 +21,8 @@ class KantorCabang extends Model
 		return $this->belongsTo(User::class, 'updated_by', 'id');
 	}
 
+	public function User()
+	{
+		return $this->hasOne(User::class, 'cabang_id', 'id');
+	}
 }

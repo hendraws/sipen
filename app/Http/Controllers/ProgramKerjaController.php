@@ -25,10 +25,11 @@ class ProgramKerjaController extends Controller
     		->orderBy('tanggal','desc');
     		return Datatables::of($data)
     		->addIndexColumn()
+
     		->addColumn('cabang', function ($row) {
     			$cabang = $row->Cabang->cabang;
     			return $cabang;
-    		})     			
+    		})    
     		->addColumn('drop', function ($row) {
     			$drop = number_format($row->drops);
     			return $drop;

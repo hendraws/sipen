@@ -73,7 +73,8 @@
 <div class="card card-primary card-outline">
 	<div class="card-header">
 		{{-- <a class="btn btn-sm btn-primary modal-button float-right" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KantorCabangController@create') }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Tambah Data</a> --}}
-		<a href="{{ action('ProgramKerjaController@create') }}" class="btn btn-primary btn-sm float-right">Tambah Data</a>
+		<a href="{{ action('ProgramKerjaController@create') }}" class="btn btn-primary btn-sm mr-auto">Tambah Data</a>
+		<a href="{{ action('ProgramKerjaController@create') }}" class="btn btn-success btn-sm float-right"><i class="fa fa-print mr-2"></i> Cetak</a>
 	</div>
 	<div class="card-body">
 		<div class="table-responsive">

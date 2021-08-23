@@ -23,15 +23,15 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($chart as $k => $val)
+					@foreach($globalTable as $k => $val)
 					<tr>
-						<td>{{ $val->Cabang->cabang }}</td>
-						<td>{{ number_format($val->sum_drop) }}</td>
-						<td>{{ number_format($val->sum_storting) }}</td>
-						<td>{{ number_format($val->sum_psp) }}</td>
-						<td>{{ number_format($val->sum_tkp) }}</td>
-						<td>{{ number_format($val->sum_drop_tunda) }}</td>
-						<td>{{ number_format($val->sum_storting_tunda) }}</td>
+						<td>{{ $k }}</td>
+						<td>{{ number_format($val['sum_drop']) }}</td>
+						<td>{{ number_format($val['sum_storting']) }}</td>
+						<td>{{ number_format($val['sum_psp']) }}</td>
+						<td>{{ number_format($val['sum_tkp']) }}</td>
+						<td>{{ number_format($val['sum_drop_tunda']) }}</td>
+						<td>{{ number_format($val['sum_storting_tunda']) }}</td>
 					</tr>
 					@endforeach
 				</tbody>

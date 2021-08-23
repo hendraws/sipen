@@ -43,7 +43,7 @@
 				</a>
 				<ul class="nav nav-treeview" style="display: none;">
 					<li class="nav-item">
-						<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+						<a href="{{ action('PerkembanganController@perkembanganGlobal') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Global</p>
 						</a>
@@ -81,6 +81,14 @@
 				</a>
 			</li> --}}
 
+			<li class="nav-item">
+				<a href="{{ action('PerkembanganController@create') }}" class="nav-link">
+					<i class="nav-icon fa fa-list"></i>
+					<p>
+						Input Data
+					</p>
+				</a>
+			</li>	
 			<li class="nav-item">
 				<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
 					<i class="nav-icon fas fa-users"></i>

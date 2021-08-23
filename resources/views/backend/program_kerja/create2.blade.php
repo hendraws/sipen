@@ -86,8 +86,8 @@
 				<input type="number" id="storting" class="form-control hitung" name="storting">
 			</div>
 			<div class="form-group">
-				<label for="tkp">TKP</label>
-				<input type="number" id="tkp" class="form-control bg-white" name="tkp" readonly>
+				<label for="psp">PSP</label>
+				<input type="number" id="psp" class="form-control hitung" name="psp">
 			</div>
 			<div class="form-group">
 				<label for="drop_tunda">Drop Tunda</label>
@@ -96,6 +96,14 @@
 			<div class="form-group">
 				<label for="storting_tunda">Storting Tunda</label>
 				<input type="number" id="storting_tunda" class="form-control" name="storting_tunda">
+			</div>
+			<div class="form-group">
+				<label for="tkp">TKP</label>
+				<input type="number" id="tkp" class="form-control bg-white" name="tkp" readonly>
+			</div>
+			<div class="form-group">
+				<label for="sisa_kas">Sisa Kas</label>
+				<input type="number" id="sisa_kas" class="form-control" name="sisa_kas">
 			</div>
 			<div class="modal-footer">
 				<a href="{{ action('ProgramKerjaController@index') }}" class="btn btn-secondary">Kembali</a>
