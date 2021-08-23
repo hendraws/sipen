@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
 @section('title', 'Perkembangan')
-@section('content-title', 'Grafik Perbandingan Perkembangan')
+@section('content-title', 'Informasi Perkembangan KSP Satria Mulia Arthomoro')
 @section('css')
 @endsection
 @section('js')
@@ -36,23 +36,16 @@
 	
 	$(document).ready(function () {
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-		// getGraphic('dropChart');
-		// getGraphic('stortingChart');
-		// getGraphic('pspChart');
-		// getGraphic('dropTundaChart');
-		// getGraphic('stortingTundaChart');
-		// getGraphic('tkpChart');
-		// getGraphic('sisaKasChart');
+
 	});
 </script>
 @endsection
 @section('content')
 <div class="card card-primary card-outline">
-	<div class="card-header">
-		<h3 class="card-title">
-			<i class="fas fa-edit"></i>
-			Navbar Examples
-		</h3>
+	<div class="card-header row">
+		<div class="ml-auto">
+			<button class="btn btn-success"> Print</button>
+		</div>
 	</div>
 </div>
 <div class="card card-primary card-outline card-outline-tabs">
@@ -75,12 +68,18 @@
 	<div class="card-body">
 		<div class="tab-content" id="custom-tabs-four-tabContent">
 			<div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-				<div id="tab-grafik">
-					
+				<div id="tab-grafik row">
+					<div class="col-md-8 m-auto">
+					@includeIf('backend.perkembangan.global.global_chart')
+					</div>
 				</div>
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-				Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam. 
+				<div id="tab-grafik row">
+					<div class="col-md-12 m-auto">
+						@includeIf('backend.perkembangan.global.table')
+					</div>
+				</div> 
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
 				Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna. 

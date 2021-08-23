@@ -43,7 +43,7 @@
 				</a>
 				<ul class="nav nav-treeview" style="display: none;">
 					<li class="nav-item">
-						<a href="{{ action('PerkembanganController@perkembanganGlobal') }}" class="nav-link">
+						<a href="{{ action('PerkembanganController@global') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Global</p>
 						</a>

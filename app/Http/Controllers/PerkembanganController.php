@@ -105,7 +105,7 @@ class PerkembanganController extends Controller
     		$cek = Perkembangan::where('tanggal', $request->tanggal)->where('cabang', auth()->user()->cabang_id)->first();
     		if(!empty($cek)){
     			toastr()->warning('Data Sudah Ada, Silahkan menggunakan fitur Edit', 'Peringatan');
-		    	return back();
+    			return back();
     		}
     		Perkembangan::create([
     			"cabang" => auth()->user()->cabang_id,
@@ -180,10 +180,61 @@ class PerkembanganController extends Controller
         //
     }
 
-    public function perkembanganGlobal(Request $request)
+    public function global(Request $request)
     {
+    	$kategori = $labels = [];
+    	$chart = Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas, 
+    		cabang')
+    	->whereMonth('tanggal',date('m'))
+    	->groupBy('cabang')
+    	->get();
+    	// CHART
+    	$labels = $chart->mapWithKeys(function ($item, $key) {
+    		return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+    	});
+    	$labels = $labels->keys();
+    	
+    	foreach ($chart as $key => $value) {
+    		$kategori['unit'][] = $value->Cabang->cabang;
+    		$kategori['drop'][] = $value->sum_drop;
+    		$kategori['storting'][]=$value->sum_storting;
+    			// $kategori['psp'][]=$value->sum_psp;
+    			// $kategori['tkp'][]=$value->sum_tkp;
+    		$kategori['drop_tunda'][]=$value->sum_drop_tunda;
+    		$kategori['storting_tunda'][]=$value->sum_storting_tunda;
+    	}
+    	$dataset=[];
 
+    	foreach ($kategori as $key => $value) {
+    		if($key != 'unit'){
+    			$dataset[] = [ 
+    				'label' => $key, 
+    				'data' => $value,  
+    				'maxBarThickness' => 50,
+    			];
+    		}
+    	}
+    	$dataset = json_encode($dataset);
 
-    	return view('backend.perkembangan.global.index');
+    	// TABLE
+    	$globalTable = $chart->mapWithKeys(function ($item, $key) {
+    		return [ucfirst($item->Cabang->cabang) => [
+    			'sum_drop' => $item->sum_drop,
+    			'sum_psp' => $item->sum_psp,
+    			'sum_storting' => $item->sum_storting,
+    			'sum_drop_tunda' => $item->sum_drop_tunda,
+    			'sum_storting_tunda' => $item->sum_storting_tunda,
+    			'sum_tkp' => $item->sum_tkp,
+    			'sum_sisa_kas' => $item->sum_sisa_kas,
+    		]];
+    	});
+    	return view('backend.perkembangan.global.index', compact('dataset','labels','globalTable'));
     }
 }

@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	// coming soon
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
-	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@perkembanganGlobal');
+	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::resource('/perkembangan-data', 'PerkembanganController');
 	// Route::match(['get','post'],'/perkembangan', 'ReportController@perbandinganGlobal');
 	// Route::get('/data-pengguna', 'HomeController@underContraction');
@@ -55,11 +55,11 @@ Route::group(['middleware' => 'auth'], function () {
 					$cabang = $value->id;
 					$drop = rand(10000000,20000000);
 					$storting = rand(8000000,15000000);
-					$psp = 0;
+					$psp = rand(8000000,15000000);
 					$drop_tunda = rand(4000000,10000000);
 					$storting_tunda = rand(5000000,10000000);
 					$tkp = $storting - ($drop / 100 * 91) - $psp;
-					$sisa_kas = 0;
+					$sisa_kas = rand(8000000,15000000);
 					ProgramKerja::Create(
 						[
 							"cabang" => $cabang,
@@ -89,13 +89,13 @@ Route::group(['middleware' => 'auth'], function () {
 				$cabang = KantorCabang::get();
 				foreach ($cabang as $value) {
 					$cabang = $value->id;
-					$drop = rand(10000,100000);
-					$storting = rand(100000,500000);
-					$psp = rand(5000,50000);
+					$drop = rand(1000000,2500000);
+					$storting = $drop * 1.2;
+					$psp = $drop*0.05;
 					$drop_tunda = rand(1000,75000);
-					$storting_tunda = rand(1000,75000);
+					$storting_tunda = $drop_tunda * 0.1;
 					$tkp = $storting - ($drop / 100 * 91) - $psp;
-					$sisa_kas = rand(1000,250000);
+					$sisa_kas = rand(100000,2500000);
 					Perkembangan::Create(
 						[
 							"cabang" => $cabang,
