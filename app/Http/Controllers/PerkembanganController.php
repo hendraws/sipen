@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Perkembangan;
+use App\ProgramKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -195,6 +196,7 @@ class PerkembanganController extends Controller
     	->whereMonth('tanggal',date('m'))
     	->groupBy('cabang')
     	->get();
+
     	// CHART
     	$labels = $chart->mapWithKeys(function ($item, $key) {
     		return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
@@ -235,6 +237,91 @@ class PerkembanganController extends Controller
     			'sum_sisa_kas' => $item->sum_sisa_kas,
     		]];
     	});
-    	return view('backend.perkembangan.global.index', compact('dataset','labels','globalTable'));
+
+    	// PENCAPAIAN
+    	$target = ProgramKerja::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',date('m'))
+    	->first();
+
+    	$pencapaian =  Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',date('m'))
+    	->first();
+
+    	    	// PERBANDINGAN
+    	$perbandingaLables = [];
+    	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+    	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+    	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+    	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+    	$perbandingan = Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas, 
+    		tanggal, 
+    		MONTH(tanggal) as bulan, 
+    		DAY(tanggal) as hari')
+    	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+    	->whereYear('tanggal', date('Y'))
+    	->groupBy('tanggal')
+    	->get();
+
+    	$perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
+    		return ['hari ke ' . $item->hari => $item->sum_drop];
+    	});
+    	$perbandinganLabels = $perbandingaLables->keys();
+
+    	$pencapaianBulanLalu =  Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',$bulanKemarin)
+    	->first();
+
+    	$perbandinganDrop = json_encode($this->mappingData($perbandingan, 'sum_drop'));
+    	$perbandinganStorting = json_encode($this->mappingData($perbandingan, 'sum_storting'));
+    	$perbandinganTkp = json_encode($this->mappingData($perbandingan, 'sum_tkp'));
+    	$perbandinganDropTunda = json_encode($this->mappingData($perbandingan, 'sum_drop_tunda'));
+    	$perbandinganStortingTunda = json_encode($this->mappingData($perbandingan, 'sum_storting_tunda'));
+
+    	return view('backend.perkembangan.global.index', compact('dataset','labels','target','pencapaian','globalTable','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
+    }
+
+    private function mappingData($data, $keyword)
+    {
+    	$mapping = $data->mapToGroups(function ($item, $key) use ($keyword) {
+    		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+    		return [ $bulan  => $item->$keyword];
+    	});
+
+    	foreach ($mapping as $key => $value) {
+    		$dataMappping[] = [ 
+    			'label' => $key , 
+    			'data' => $value->toArray(), 
+    		];
+    	}
+    	return $dataMappping;
+    	// $data = json_encode($storting);
     }
 }

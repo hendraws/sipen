@@ -82,10 +82,18 @@
 				</div> 
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-				Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna. 
+				@includeIf('backend.perkembangan.global.chart.pencapaian_drop')
+				@includeIf('backend.perkembangan.global.chart.pencapaian_storting')
+				@includeIf('backend.perkembangan.global.chart.pencapaian_tkp')
+				@includeIf('backend.perkembangan.global.chart.pencapaian_drop_tunda')
+				@includeIf('backend.perkembangan.global.chart.pencapaian_storting_tunda')
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
-				Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis. 
+				@includeIf('backend.perkembangan.global.perbandingan.drop')
+				@includeIf('backend.perkembangan.global.perbandingan.storting')
+				@includeIf('backend.perkembangan.global.perbandingan.tkp')
+				@includeIf('backend.perkembangan.global.perbandingan.drop_tunda')
+				@includeIf('backend.perkembangan.global.perbandingan.storting_tunda')
 			</div>
 		</div>
 	</div>

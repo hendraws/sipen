@@ -13,6 +13,48 @@ Route::get('/', function () {
 	return redirect(route('login'));
 })->name('front');
 
+Route::get('/chart', function(){
+	    	// PERBANDINGAN
+    	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+    	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+    	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+    	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+    	$labels = [];
+    	$perbandingan = Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas, 
+    		tanggal, 
+    		MONTH(tanggal) as bulan, 
+    		DAY(tanggal) as hari')
+    	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+    	->whereYear('tanggal', date('Y'))
+    	->groupBy('tanggal')
+    	->get();
+
+    	$labels = $perbandingan->mapWithKeys(function ($item, $key) {
+    		return ['hari ke ' . $item->hari => $item->sum_drop];
+    	});
+    	$perbandinganLabels = $labels->keys();
+
+    	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) {
+    		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
+    		return [ $bulan  => $item->sum_drop];
+    	});
+    	foreach ($mapDrop as $key => $value) {
+    		$drops[] = [ 
+    			'label' => $key , 
+    			'data' => $value->toArray(), 
+    		];
+    	}
+
+    	$perbandinganDrop = json_encode($drops);
+    	return view('backend.perkembangan.global.perbandingan2',compact('perbandinganLabels','perbandinganDrop'));
+});
 // dibawah ini dibutuhkan akses autitentifikasi
 Route::group(['middleware' => 'auth'], function () { 
 	Route::get('/home', 'HomeController@index')->name('home');
