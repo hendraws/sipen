@@ -49,21 +49,21 @@ Route::group(['middleware' => 'auth'], function () {
 		// $date = Carbon::now()->subDays(0);
 			$jumlah = $jml;
 			for ($i=0; $i < $jumlah ; $i++) { 
-				$tanggal = Carbon::now()->subDays($i);
+				$bulan = Carbon::now()->subMonth($i);
 				$cabang = KantorCabang::get();
 				foreach ($cabang as $value) {
 					$cabang = $value->id;
-					$drop = rand(10000,100000);
-					$storting = rand(100000,500000);
-					$psp = rand(5000,50000);
-					$drop_tunda = rand(1000,75000);
-					$storting_tunda = rand(1000,75000);
+					$drop = rand(10000000,20000000);
+					$storting = rand(8000000,15000000);
+					$psp = 0;
+					$drop_tunda = rand(4000000,10000000);
+					$storting_tunda = rand(5000000,10000000);
 					$tkp = $storting - ($drop / 100 * 91) - $psp;
-					$sisa_kas = rand(1000,250000);
+					$sisa_kas = 0;
 					ProgramKerja::Create(
 						[
 							"cabang" => $cabang,
-							"tanggal" => $tanggal,
+							"tanggal" => $bulan,
 							"drops" => $drop,
 							"storting" => $storting,
 							"psp" => $psp,

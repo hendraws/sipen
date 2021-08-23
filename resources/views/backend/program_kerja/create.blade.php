@@ -52,6 +52,7 @@
 		});
 		function hitung(storting, drop, psp)
 		{
+			console.log(storting,drop, psp);
 			var jumlah = storting - ( drop / 100 * 91 ) -  psp; 
 			$('#tkp').val(jumlah);
 		}
@@ -73,10 +74,10 @@
 					@endforeach
 				</select>
 			</div>
-			<div class="form-group">
+		{{-- 	<div class="form-group">
 				<label for="tanggal">Tanggal</label>
 				<input type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $today }}">
-			</div>
+			</div> --}}
 			<div class="form-group">
 				<label for="drop">Drop</label>
 				<input type="number" id="drop" class="form-control" name="drop">

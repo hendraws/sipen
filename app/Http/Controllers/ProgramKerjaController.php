@@ -92,22 +92,28 @@ class ProgramKerjaController extends Controller
     {
     	$request->validate([
     		'cabang' => 'required',
-    		'tanggal' => 'required',
+    		// 'tanggal' => 'required',
     	]);
 
+    	$cek = ProgramKerja::where('cabang',$request->cabang)->whereMonth('tanggal', date('m'))->first();
+    	if(!empty($cek)){
+    			toastr()->warning('Data Sudah Ada, Silahkan menggunakan fitur Edit', 'Peringatan');
+		    	return redirect(action('ProgramKerjaController@index'));
+    	}
     	DB::beginTransaction();
     	try {
     		ProgramKerja::Create(
     			[
     				"cabang" => $request->cabang,
-    				"tanggal" => $request->tanggal,
+    				// "tanggal" => $request->tanggal,
+    				"tanggal" => date('Y-m-d'),
     				"drops" => $request->drop,
     				"storting" => $request->storting,
-    				"psp" => $request->psp,
+    				"psp" => 0,
     				"drop_tunda" => $request->drop_tunda,
     				"storting_tunda" => $request->storting_tunda,
     				"tkp" => $request->tkp,
-    				"sisa_kas" => $request->sisa_kas,
+    				"sisa_kas" => 0,
     				'created_by' => auth()->user()->id,
     				'updated_by' => auth()->user()->id,
     			]
@@ -174,11 +180,11 @@ class ProgramKerjaController extends Controller
     			"tanggal" => $request->tanggal,
     			"drops" => $request->drop,
     			"storting" => $request->storting,
-    			"psp" => $request->psp,
+    			"psp" => 0,
     			"drop_tunda" => $request->drop_tunda,
     			"storting_tunda" => $request->storting_tunda,
     			"tkp" => $request->tkp,
-    			"sisa_kas" => $request->sisa_kas,
+    			"sisa_kas" => 0,
     			'updated_by' => auth()->user()->id,
     		]);
 
