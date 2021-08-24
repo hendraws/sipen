@@ -41,7 +41,7 @@
 </script>
 @endsection
 @section('content')
-<div class="card card-info card-outline col-md-12 collapsed-card">
+<div class="card card-info card-outline col-md-12 ">
 	<div class="card-header text-center">
 		<h3 class="card-title">DROP</h3>
 

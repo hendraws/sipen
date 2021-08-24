@@ -4,6 +4,7 @@ use App\KantorCabang;
 use App\Perkembangan;
 use App\ProgramKerja;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -20,6 +21,7 @@ Route::get('/chart', function(){
 	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
 	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
 	$labels = [];
+
 	$perbandingan = Perkembangan::selectRaw('
 		sum(drops) as sum_drop, 
 		sum(psp) as sum_psp,
@@ -40,11 +42,13 @@ Route::get('/chart', function(){
 		return ['hari ke ' . $item->hari => $item->sum_drop];
 	});
 	$perbandinganLabels = $labels->keys();
-
-	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) {
+	$cum = 0;
+	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) use ($cum){
 		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
-		return [ $bulan  => $item->sum_drop];
+		$cum +=  $item->sum_drop;
+		return [ $bulan  => $cum];
 	});
+	dd($mapDrop);
 	foreach ($mapDrop as $key => $value) {
 		$drops[] = [ 
 			'label' => $key , 
