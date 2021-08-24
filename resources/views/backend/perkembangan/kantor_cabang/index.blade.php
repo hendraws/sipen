@@ -37,8 +37,11 @@
 		$('#cabang').on('change', function() {
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 			getData(this.value);
-		});
-
+		});	
+		if($('#cabang').val().length != 0)
+		{
+			getData($('#cabang').val());
+		}
 	});
 </script>
 @endsection
@@ -49,10 +52,11 @@
 			<div class="form-group row">
 				<label for="tanggal" class="col-sm-2 col-form-label">Pilih Cabang</label>
 				<div class="col-md-6">
+
 					<select class="form-control custom-select" id="cabang" name="cabang">
 						<option selected="" disabled="">Pilih Cabang</option>
 						@foreach ($cabang as $key => $val)
-						<option value="{{ $key }}">{{ $val }}</option>
+						<option value="{{ $key }}" {{ auth()->user()->cabang_id == $key ? 'selected' : ''}}>{{ $val }}</option>
 						@endforeach
 					</select>
 				</div>

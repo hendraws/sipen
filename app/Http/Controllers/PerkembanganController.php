@@ -328,7 +328,17 @@ class PerkembanganController extends Controller
 
     public function cabang(Request $request)
     {
-    	$cabang = KantorCabang::pluck('cabang','id');
+    	$user = auth()->user();
+    	if($user->getRoleNames()->first() == 'admin')
+    	{
+	    	$cabang = KantorCabang::pluck('cabang','id');
+    	}
+
+    	if($user->getRoleNames()->first() == 'user')
+    	{
+	    	$cabang = KantorCabang::where('id', $user->cabang_id )->pluck('cabang','id');
+    	}
+
     	if($request->ajax()){
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,

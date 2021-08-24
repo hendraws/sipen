@@ -2,6 +2,7 @@
 	<!-- Sidebar Menu -->
 	<nav class="mt-2">
 		<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+			@can('dashboard')
 			<li class="nav-item">
 				<a href="{{ url('/home') }}" class="nav-link">
 					<i class="nav-icon fa fa-tachometer-alt"></i>
@@ -10,6 +11,8 @@
 					</p>
 				</a>
 			</li>
+			@endcan
+			@can('data-master')
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 					<i class="nav-icon fas fa-database"></i>
@@ -33,6 +36,8 @@
 					</li>
 				</ul>
 			</li>
+			@endcan
+			@can('perkembangan')
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 					<i class="nav-icon fa fa-chart-line"></i>
@@ -80,7 +85,8 @@
 					</p>
 				</a>
 			</li> --}}
-
+			@endcan
+			@can('input-data')
 			<li class="nav-item">
 				<a href="{{ action('PerkembanganController@create') }}" class="nav-link">
 					<i class="nav-icon fa fa-list"></i>
@@ -89,14 +95,17 @@
 					</p>
 				</a>
 			</li>	
+			@endcan
+			@can('management-user')
 			<li class="nav-item">
-				<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+				<a href="{{ action('UserController@index') }}" class="nav-link">
 					<i class="nav-icon fas fa-users"></i>
 					<p>
 						User
 					</p>
 				</a>
 			</li>
+			@endcan
 		</ul>
 
 	</nav>

@@ -58,22 +58,21 @@ Route::get('/chart', function(){
 // dibawah ini dibutuhkan akses autitentifikasi
 Route::group(['middleware' => 'auth'], function () { 
 	Route::get('/home', 'HomeController@index')->name('home');
-	Route::get('/report/{id}/delete', 'ReportController@delete');
-	Route::resource('/report', 'ReportController');
+	// Route::get('/report/{id}/delete', 'ReportController@delete');
+	// Route::resource('/report', 'ReportController');
 	Route::get('/program-kerja/{id}/delete', 'ProgramKerjaController@delete');
 	Route::resource('/program-kerja', 'ProgramKerjaController');
 	Route::get('/kantor-cabang/{id}/delete', 'KantorCabangController@delete');
 	Route::resource('/kantor-cabang', 'KantorCabangController');
 
-	// coming soon
+
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');
 	Route::resource('/perkembangan-data', 'PerkembanganController');
-	// Route::match(['get','post'],'/perkembangan', 'ReportController@perbandinganGlobal');
-	// Route::get('/data-pengguna', 'HomeController@underContraction');
 	Route::get('/under-contraction', 'HomeController@underContraction');
-
+	Route::get('/management-user/{id}/delete', 'UserController@delete');
+	Route::resource('/management-user', 'UserController');
 	// command
 	Route::group(['prefix'=>'/command/artisan','as'=>'account.'], function(){ 
 		Route::get('/migrate', function(){
