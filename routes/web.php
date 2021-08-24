@@ -42,17 +42,22 @@ Route::get('/chart', function(){
 		return ['hari ke ' . $item->hari => $item->sum_drop];
 	});
 	$perbandinganLabels = $labels->keys();
-	$cum = 0;
-	$mapDrop = $perbandingan->mapToGroups(function ($item, $key) use ($cum){
+	$mapDrop = $perbandingan->mapToGroups(function ($item, $key){
 		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
-		$cum +=  $item->sum_drop;
-		return [ $bulan  => $cum];
+		return [ $bulan  => $item->sum_drop];
 	});
-	dd($mapDrop);
-	foreach ($mapDrop as $key => $value) {
+	
+	foreach($mapDrop as $k => $v){
+		$cum = 0;
+		foreach($v as $val){
+			$mapping[$k][] = $cum +=$val;
+		} 
+	}
+
+	foreach ($mapping as $key => $value) {
 		$drops[] = [ 
 			'label' => $key , 
-			'data' => $value->toArray(), 
+			'data' => $value, 
 		];
 	}
 

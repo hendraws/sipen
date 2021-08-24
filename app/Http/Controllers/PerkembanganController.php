@@ -316,10 +316,16 @@ class PerkembanganController extends Controller
     		return [ $bulan  => $item->$keyword];
     	});
 
-    	foreach ($mapping as $key => $value) {
+		foreach($mapping as $k => $v){
+			$cum = 0;
+			foreach($v as $val){
+				$cummulative[$k][] = $cum +=$val;
+			} 
+		}
+    	foreach ($cummulative as $key => $value) {
     		$dataMappping[] = [ 
     			'label' => $key , 
-    			'data' => $value->toArray(), 
+    			'data' => $value, 
     		];
     	}
     	return $dataMappping;
