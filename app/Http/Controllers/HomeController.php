@@ -28,17 +28,20 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
+    	$startdate = (empty($request->startdate) ? now()->firstOfMonth() : $request->startdate);
+    	$enddate = (empty($request->enddate) ? now() : $request->enddate);
+
     	$data = Perkembangan::selectRaw('
-    			sum(drops) as sum_drop, 
-    			sum(psp) as sum_psp,
-    			sum(storting) as sum_storting,
-    			sum(drop_tunda) as sum_drop_tunda, 
-    			sum(storting_tunda) as sum_storting_tunda, 
-    			sum(tkp) as sum_tkp, 
-    			sum(sisa_kas) as sum_sisa_kas')
-    		->whereMonth('tanggal',date('m'))
-    		->first();
-    		
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',date('m'))
+    	->first();
+
     	if($request->ajax())
     	{
     		$labels = [];
@@ -49,11 +52,25 @@ class HomeController extends Controller
     			sum(drop_tunda) as sum_drop_tunda, 
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp, 
-    			sum(sisa_kas) as sum_sisa_kas, cabang')
+    			sum(sisa_kas) as sum_sisa_kas,cabang')
+    		->where('tanggal','>=',$request->startdate)
+    		->where('tanggal','<=',$request->enddate)
     		->whereMonth('tanggal',date('m'))
     		->groupBy('cabang')
     		->get();
 
+    		$dataFilter = Perkembangan::selectRaw('
+    			sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp, 
+    			sum(sisa_kas) as sum_sisa_kas')
+    		->where('tanggal','>=',$request->startdate)
+    		->where('tanggal','<=',$request->enddate)
+    		->first();
+    		// dd($chart->toArray(),$request->startdate, $request->enddate);
     		
     		$labels = $chart->mapWithKeys(function ($item, $key) {
     			return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
@@ -102,9 +119,9 @@ class HomeController extends Controller
 
     		$dataset = json_encode($dataset);
 
-    		return view('dashboard.chart', compact('labels', 'dataset','kategori','chart','globalTable'));
+    		return view('dashboard.chart', compact('labels', 'dataset','kategori','chart','globalTable','dataFilter'));
 		} //tutup ajax
-		return view('home', compact('data'));
+		return view('home', compact('data','startdate','enddate'));
 	}
 
 	public function underContraction()

@@ -316,12 +316,12 @@ class PerkembanganController extends Controller
     		return [ $bulan  => $item->$keyword];
     	});
 
-		foreach($mapping as $k => $v){
-			$cum = 0;
-			foreach($v as $val){
-				$cummulative[$k][] = $cum +=$val;
-			} 
-		}
+    	foreach($mapping as $k => $v){
+    		$cum = 0;
+    		foreach($v as $val){
+    			$cummulative[$k][] = $cum +=$val;
+    		} 
+    	}
     	foreach ($cummulative as $key => $value) {
     		$dataMappping[] = [ 
     			'label' => $key , 
@@ -337,12 +337,12 @@ class PerkembanganController extends Controller
     	$user = auth()->user();
     	if($user->getRoleNames()->first() == 'admin')
     	{
-	    	$cabang = KantorCabang::pluck('cabang','id');
+    		$cabang = KantorCabang::pluck('cabang','id');
     	}
 
     	if($user->getRoleNames()->first() == 'user')
     	{
-	    	$cabang = KantorCabang::where('id', $user->cabang_id )->pluck('cabang','id');
+    		$cabang = KantorCabang::where('id', $user->cabang_id )->pluck('cabang','id');
     	}
 
     	if($request->ajax()){
@@ -427,8 +427,151 @@ class PerkembanganController extends Controller
     		$perbandinganTkp = json_encode($this->mappingData($perbandingan, 'sum_tkp'));
     		$perbandinganDropTunda = json_encode($this->mappingData($perbandingan, 'sum_drop_tunda'));
     		$perbandinganStortingTunda = json_encode($this->mappingData($perbandingan, 'sum_storting_tunda'));
+
+    		if($request->print == 'true'){
+    			return view('backend.perkembangan.kantor_cabang.cetak', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
+    		}
     		return view('backend.perkembangan.kantor_cabang.data_cabang', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
     	}
     	return view('backend.perkembangan.kantor_cabang.index', compact('cabang'));
+    }
+
+    public function cetak()
+    {
+    	$kategori = $labels = [];
+    	$chart = Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas, 
+    		cabang')
+    	->whereMonth('tanggal',date('m'))
+    	->groupBy('cabang')
+    	->get();
+
+    	// CHART
+    	$labels = $chart->mapWithKeys(function ($item, $key) {
+    		return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+    	});
+    	$labels = $labels->keys();
+    	
+    	foreach ($chart as $key => $value) {
+    		$kategori['unit'][] = $value->Cabang->cabang;
+    		$kategori['drop'][] = $value->sum_drop;
+    		$kategori['storting'][]=$value->sum_storting;
+    			// $kategori['psp'][]=$value->sum_psp;
+    			// $kategori['tkp'][]=$value->sum_tkp;
+    		$kategori['drop_tunda'][]=$value->sum_drop_tunda;
+    		$kategori['storting_tunda'][]=$value->sum_storting_tunda;
+    	}
+    	$dataset=[];
+
+    	foreach ($kategori as $key => $value) {
+    		if($key != 'unit'){
+    			$dataset[] = [ 
+    				'label' => $key, 
+    				'data' => $value,  
+    				'maxBarThickness' => 50,
+    			];
+    		}
+    	}
+    	$dataset = json_encode($dataset);
+
+    	// TABLE
+    	$globalTable = $chart->mapWithKeys(function ($item, $key) {
+    		return [ucfirst($item->Cabang->cabang) => [
+    			'sum_drop' => $item->sum_drop,
+    			'sum_psp' => $item->sum_psp,
+    			'sum_storting' => $item->sum_storting,
+    			'sum_drop_tunda' => $item->sum_drop_tunda,
+    			'sum_storting_tunda' => $item->sum_storting_tunda,
+    			'sum_tkp' => $item->sum_tkp,
+    			'sum_sisa_kas' => $item->sum_sisa_kas,
+    		]];
+    	});
+
+    	// PENCAPAIAN
+    	$target = ProgramKerja::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',date('m'))
+    	->first();
+
+    	$pencapaian =  Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',date('m'))
+    	->first();
+
+    	    	// PERBANDINGAN
+    	$perbandingaLables = [];
+    	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
+    	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
+    	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
+    	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
+    	$perbandingan = Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas, 
+    		tanggal, 
+    		MONTH(tanggal) as bulan, 
+    		DAY(tanggal) as hari')
+    	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
+    	->whereYear('tanggal', date('Y'))
+    	->groupBy('tanggal')
+    	->get();
+
+    	$perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
+    		return ['hari ke ' . $item->hari => $item->sum_drop];
+    	});
+    	$perbandinganLabels = $perbandingaLables->keys();
+
+    	$pencapaianBulanLalu =  Perkembangan::selectRaw('
+    		sum(drops) as sum_drop, 
+    		sum(psp) as sum_psp,
+    		sum(storting) as sum_storting,
+    		sum(drop_tunda) as sum_drop_tunda, 
+    		sum(storting_tunda) as sum_storting_tunda, 
+    		sum(tkp) as sum_tkp, 
+    		sum(sisa_kas) as sum_sisa_kas')
+    	->whereMonth('tanggal',$bulanKemarin)
+    	->first();
+
+    	$perbandinganDrop = json_encode($this->mappingData($perbandingan, 'sum_drop'));
+    	$perbandinganStorting = json_encode($this->mappingData($perbandingan, 'sum_storting'));
+    	$perbandinganTkp = json_encode($this->mappingData($perbandingan, 'sum_tkp'));
+    	$perbandinganDropTunda = json_encode($this->mappingData($perbandingan, 'sum_drop_tunda'));
+    	$perbandinganStortingTunda = json_encode($this->mappingData($perbandingan, 'sum_storting_tunda'));
+
+    	return view('backend.perkembangan.global.cetak', compact('dataset','labels','target','pencapaian','globalTable','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
+    }
+
+    public function printHarian()
+    {
+    	$data = Perkembangan::where('cabang', auth()->user()->cabang_id)
+    	->select('*')
+    	->selectRaw('DAY(tanggal) as hari')
+    	->whereMonth('tanggal',date('m'))
+    	->whereYear('tanggal',date('Y'))
+    	->orderBy('tanggal','asc')
+    	->get();
+    	return view('backend.perkembangan.data.print', compact('data'));
     }
 }

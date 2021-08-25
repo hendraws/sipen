@@ -1,14 +1,14 @@
 <div class="card card-primary card-outline col-md-12">
 	<div class="card-header text-center">
 		<h3 class="card-title">STORTING TUNDA</h3>
-		<div class="card-tools">
+{{-- 		<div class="card-tools">
 			<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
 				<i class="fas fa-minus"></i>
 			</button>
 			<button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
 				<i class="fas fa-times"></i>
 			</button>
-		</div>
+		</div> --}}
 	</div>
 	<div class="card-body">
 		@php 

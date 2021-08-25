@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
-@section('title', 'Tambah Program Kerja')
-@section('content-title', 'Program Kerja Cabang '. ucfirst(auth()->user()->getCabang->cabang))
+@section('title', 'Data Harian ')
+@section('content-title', 'Data Harian Cabang '. ucfirst(auth()->user()->getCabang->cabang))
 @section('css')
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
@@ -99,6 +99,7 @@
 			<button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse">Tambah
 			</button>
 		</div>
+			<a href="{{ action('PerkembanganController@printHarian') }}" class="btn btn-success btn-sm mx-2 float-right" target="_blank">Cetak</a>
 		<!-- /.card-tools -->
 	</div>
 	<!-- /.card-header -->

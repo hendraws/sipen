@@ -6,7 +6,12 @@
 				<div class="small-box bg-info">
 					<div class="inner">
 						<h6>DROP</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_drop) }}</h4>
+						<div class="row">
+							<div class="col-6"></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_drop) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -16,7 +21,12 @@
 				<div class="small-box bg-success">
 					<div class="inner">
 						<h6>STORTING</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_storting) }}</h4>
+						<div class="row">
+							<div class="col-6"><h5>IP {{ round($dashboard->sum_storting / $dashboard->sum_drop * 100) }} %</h5></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_storting) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -26,7 +36,12 @@
 				<div class="small-box bg-warning">
 					<div class="inner">
 						<h6>PSP</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_psp) }}</h4>
+						<div class="row">
+							<div class="col-6"></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_psp) }}</h5>
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -37,34 +52,54 @@
 				<div class="small-box bg-danger">
 					<div class="inner">
 						<h6>TKP</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_tkp) }}</h4>
+						<div class="row">
+							<div class="col-6"><h5>IP {{ round($dashboard->sum_tkp / $dashboard->sum_drop * 100) }} %</h5></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_tkp) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-4 col-6">
 				<!-- small box -->
-				<div class="small-box bg-danger">
+				<div class="small-box bg-lime">
 					<div class="inner">
 						<h6>DROP TUNDA</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_drop_tunda) }}</h4>
+						<div class="row">
+							<div class="col-6"></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_drop_tunda) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-4 col-6">
 				<!-- small box -->
-				<div class="small-box bg-danger">
+				<div class="small-box bg-lightblue">
 					<div class="inner">
 						<h6>STORTING TUNDA</h6>
-						<h4 class="text-right">Rp. {{ number_format($dashboard->sum_storting_tunda) }}</h4>
+						<div class="row">
+							<div class="col-6"><h5>IP {{ round($dashboard->sum_storting_tunda / $dashboard->sum_drop_tunda * 100) }} %</h5></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_storting_tunda) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-4 col-6">
 				<!-- small box -->
-				<div class="small-box bg-danger">
+				<div class="small-box bg-orange">
 					<div class="inner">
 						<h6>KAS TERBARU</h6>
-						<h4 class="text-right">Rp. {{ number_format($kasTerbaru->sisa_kas) }}</h4>
+						<div class="row">
+							<div class="col-6"></div>
+							<div class="col-6">
+								<h5 class="text-right">Rp. {{ number_format($kasTerbaru->sisa_kas) }}</h5>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

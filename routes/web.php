@@ -70,14 +70,18 @@ Route::group(['middleware' => 'auth'], function () {
 	// Route::get('/report/{id}/delete', 'ReportController@delete');
 	// Route::resource('/report', 'ReportController');
 	Route::get('/program-kerja/{id}/delete', 'ProgramKerjaController@delete');
+	Route::get('/program-kerja/print', 'ProgramKerjaController@print');
 	Route::resource('/program-kerja', 'ProgramKerjaController');
 	Route::get('/kantor-cabang/{id}/delete', 'KantorCabangController@delete');
+	Route::get('/kantor-cabang/print', 'KantorCabangController@print');
 	Route::resource('/kantor-cabang', 'KantorCabangController');
 
 
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');
+	Route::get('/perkembangan-data/print', 'PerkembanganController@printHarian');
+	Route::get('/perkembangan-data/cetak', 'PerkembanganController@cetak');
 	Route::resource('/perkembangan-data', 'PerkembanganController');
 	Route::get('/under-contraction', 'HomeController@underContraction');
 	Route::get('/management-user/{id}/delete', 'UserController@delete');

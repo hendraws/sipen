@@ -27,7 +27,7 @@
 	<script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 	<script src="{{ asset('vendors/toastr/toastr.min.js') }}"></script>
 	<script src="{{ asset('js/custom.js') }}"></script>
-
+	<script src="{{ asset('js/print-this.js')}}"></script>
 
 </head>
 <body class="hold-transition sidebar-mini">
@@ -74,9 +74,10 @@
 			<div class="content-header">
 				<div class="container-fluid">
 					<div class="row mb-2">
-						<div class="col-sm-12">
+						<div class="col-sm-8">
 							<h1 class="m-0 text-dark">@yield('content-title')</h1>
 						</div><!-- /.col -->
+						<div class="col-md-4">@yield('button-title')</div>
 					</div><!-- /.row -->
 				</div><!-- /.container-fluid -->
 			</div>

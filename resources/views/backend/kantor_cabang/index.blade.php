@@ -48,8 +48,8 @@
 @section('content')
 <div class="card card-primary card-outline">
 	<div class="card-header">
+		<a href="{{ action('KantorCabangController@print') }}" class="btn btn-success btn-sm mx-2 float-right" target="_blank">Cetak</a>
 		<a class="btn btn-sm btn-primary modal-button float-right" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KantorCabangController@create') }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Tambah Data</a>
-		{{-- <a href="{{ action('KantorCabangController@create') }}" class="btn btn-primary float-right">Tambah Data</a> --}}
 	</div>
 	<div class="card-body">
 		<table id="data-table" class="table table-bordered table-striped">

@@ -174,4 +174,11 @@ class KantorCabangController extends Controller
     	$data = KantorCabang::find($id);
     	return view('backend.kantor_cabang.delete', compact('data'));
     }
+
+    public function print()
+    {
+    	$data = KantorCabang::get();
+
+    	return view('backend.kantor_cabang.print', compact('data'));
+    }
 }

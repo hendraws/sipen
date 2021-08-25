@@ -18,11 +18,11 @@
 	function number_format(x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
 	}
-	function getData(cabang){
+	function getData(cabang, print = false){
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		$.ajax({
 			{{-- url: "{{ url()->current() }}?startdate="+startDate+"&enddate="+endDate+"&graphic="+target, --}}
-			url: "{{ url()->current() }}?cabang="+cabang,
+			url: "{{ url()->current() }}?cabang="+cabang+"&print="+print,
 			type: "post",
 			datatype: "html"
 		}).done(function(data){
@@ -42,11 +42,15 @@
 		{
 			getData($('#cabang').val());
 		}
+
+		$('#print').on('click', function(){
+			getData($('#cabang').val(), true);
+		});
 	});
 </script>
 @endsection
 @section('content')
-<div class="card card-primary card-outline">
+<div class="card card-primary card-outline" id="filter">
 	<div class="card-header row">
 		<div class="col-md-8">
 			<div class="form-group row">
@@ -63,7 +67,7 @@
 			</div>
 		</div>
 		<div class="ml-auto">
-			<button class="btn btn-success"> Print</button>
+			<button class="btn btn-success" id="print"> Print</button>
 		</div>
 	</div>
 </div>

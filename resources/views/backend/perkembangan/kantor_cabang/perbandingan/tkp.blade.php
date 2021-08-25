@@ -1,34 +1,34 @@
 <div class="card card-info card-outline col-md-12">
 	<div class="card-header text-center">
 		<h3 class="card-title">TKP</h3>
-
+{{-- 
 		<div class="card-tools">
 			<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
 				<i class="fas fa-minus"></i></button>
 				<button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
 					<i class="fas fa-times"></i></button>
-				</div>
+				</div> --}}
 			</div>
 			<div class="card-body">
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<table class="table table-sm">
 							<tr>
-								<td class="bg-info">KINI</td>
+								<td class="">KINI</td>
 								<td class="text-right">{{ number_format($pencapaian->sum_tkp) }}</td>
 							</tr>
 							<tr>
-								<td class="bg-info">LALU</td>
+								<td class="">LALU</td>
 								<td class="text-right">{{ number_format($pencapaianBulanLalu->sum_tkp) ?? 0  }}</td>
 							</tr>
 							<tr>
-								<td class="bg-info">Keterangan</td>
+								<td class="">Keterangan</td>
 								@php $keteranganTkp = $pencapaian->sum_tkp - $pencapaianBulanLalu->sum_tkp ; @endphp
 								<td class=" {{ $keteranganTkp <= 0 ? 'text-danger' : 'text-success'}} text-right"><b>{{ number_format($keteranganTkp)  }}</b></td>
 							</tr>
 						</table>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-9">
 						<canvas id="perbandinganTkp"></canvas>
 					</div>
 				</div>
@@ -38,7 +38,7 @@
 			$(document).ready(function () {
 				var perbandinganTkp  = <?= $perbandinganTkp ?>;
 				var perbandinganLabels  = <?= $perbandinganLabels ?>;
-				console.log(perbandinganTkp,perbandinganLabels );
+
 				const data = {
 					labels: perbandinganLabels,
 					datasets: perbandinganTkp,
@@ -57,22 +57,22 @@
 							colorschemes: {
 								scheme: 'brewer.SetTwo8'
 							}
-						}
-				// tooltips: {
-				// 	mode: 'index',
-				// 	bodySpacing : 10,
-				// 	callbacks: {
-				// 		label: function(tooltipItem, data) {
-    //                     	// console.log(tooltipItem);
-				// 			return 'Rp.'+number_format(tooltipItem.yLabel);
-				// 		}
-				// 	}
-				// },
-			}
-		};
-		var perbandinganTkp = new Chart(
-			$('#perbandinganTkp'),
-			config
-			);
-	});
+						},
+						tooltips: {
+							mode: 'index',
+							bodySpacing : 10,
+							callbacks: {
+								label: function(tooltipItem, data) {
+                        	// console.log(tooltipItem);
+                        	return 'Rp.'+number_format(tooltipItem.yLabel);
+                        }
+                    }
+                },
+            }
+        };
+        var perbandinganTkp = new Chart(
+        	$('#perbandinganTkp'),
+        	config
+        	);
+    });
 </script>

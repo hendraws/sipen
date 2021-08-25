@@ -36,7 +36,11 @@
 	
 	$(document).ready(function () {
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-
+		// $(document).on('click', '#cetak', function(){
+		// 	$('#cetak').printThis({
+		// 		canvas: true,
+		// 	});
+		// });
 	});
 </script>
 @endsection
@@ -44,7 +48,9 @@
 <div class="card card-primary card-outline">
 	<div class="card-header row">
 		<div class="ml-auto">
-			<button class="btn btn-success"> Print</button>
+			{{-- <button type="button" class="btn btn-brand btn-success btn-sm float-right" id="cetak"><i class="cui-filter"></i><span>Cetak</span></button> --}}
+			<a href="{{ action('PerkembanganController@cetak') }}" class="btn btn-success">CETAK</a>
+			{{-- <button type="button" class="btn btn-brand btn-success btn-sm float-right" id="cetak"><i class="cui-filter"></i><span>Cetak</span></button> --}}
 		</div>
 	</div>
 </div>
@@ -66,29 +72,29 @@
 		</ul>
 	</div>
 	<div class="card-body">
-		<div class="tab-content" id="custom-tabs-four-tabContent">
+		<div class="tab-content " id="custom-tabs-four-tabContent">
 			<div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
 				<div id="tab-grafik row">
-					<div class="col-md-8 m-auto">
-					@includeIf('backend.perkembangan.global.global_chart')
+					<div class="col-md-8 m-auto ">
+						@includeIf('backend.perkembangan.global.global_chart')
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+			<div class="tab-pane fade " id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
 				<div id="tab-grafik row">
 					<div class="col-md-12 m-auto">
 						@includeIf('backend.perkembangan.global.table')
 					</div>
 				</div> 
 			</div>
-			<div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
+			<div class="tab-pane fade " id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
 				@includeIf('backend.perkembangan.global.chart.pencapaian_drop')
 				@includeIf('backend.perkembangan.global.chart.pencapaian_storting')
 				@includeIf('backend.perkembangan.global.chart.pencapaian_tkp')
 				@includeIf('backend.perkembangan.global.chart.pencapaian_drop_tunda')
 				@includeIf('backend.perkembangan.global.chart.pencapaian_storting_tunda')
 			</div>
-			<div class="tab-pane fade" id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
+			<div class="tab-pane fade " id="custom-tabs-four-settings" role="tabpanel" aria-labelledby="custom-tabs-four-settings-tab">
 				@includeIf('backend.perkembangan.global.perbandingan.drop')
 				@includeIf('backend.perkembangan.global.perbandingan.storting')
 				@includeIf('backend.perkembangan.global.perbandingan.tkp')

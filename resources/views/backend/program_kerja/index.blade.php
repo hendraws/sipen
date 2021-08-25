@@ -65,7 +65,11 @@
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			}
 		});
-
+		$(document).on('click', '#cetak', function(){
+			$('.print').printThis({
+				canvas: true,
+			});
+		});
 	});
 </script>
 @endsection
@@ -74,7 +78,7 @@
 	<div class="card-header">
 		{{-- <a class="btn btn-sm btn-primary modal-button float-right" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KantorCabangController@create') }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Tambah Data</a> --}}
 		<a href="{{ action('ProgramKerjaController@create') }}" class="btn btn-primary btn-sm mr-auto">Tambah Data</a>
-		<a href="{{ action('ProgramKerjaController@create') }}" class="btn btn-success btn-sm float-right"><i class="fa fa-print mr-2"></i> Cetak</a>
+			<a href="{{ action('ProgramKerjaController@print') }}" class="btn btn-success btn-sm mx-2 float-right" target="_blank">Cetak</a>
 	</div>
 	<div class="card-body">
 		<div class="table-responsive">

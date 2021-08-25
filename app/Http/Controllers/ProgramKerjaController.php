@@ -225,4 +225,11 @@ class ProgramKerjaController extends Controller
     	$data = ProgramKerja::find($id);
     	return view('backend.program_kerja.delete', compact('data'));
     }
+
+    public function print()
+    {
+    	$data = ProgramKerja::with('Cabang')->get();
+    	return view('backend.program_kerja.print', compact('data'));
+
+    }
 }
