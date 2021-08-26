@@ -18,56 +18,35 @@ class ProgramKerjaController extends Controller
      */
     public function index(Request $request)
     {
-    	if ($request->ajax()) {
-    		$data = ProgramKerja::with('Cabang')
-    		->whereMonth('tanggal',date('m'))
-    		->whereYear('tanggal',date('Y'))
-    		->orderBy('tanggal','desc');
-    		return Datatables::of($data)
-    		->addIndexColumn()
+    	
 
-    		->addColumn('cabang', function ($row) {
-    			$cabang = $row->Cabang->cabang;
-    			return $cabang;
-    		})    
-    		->addColumn('drop', function ($row) {
-    			$drop = number_format($row->drops);
-    			return $drop;
-    		})         		
-    		->addColumn('storting', function ($row) {
-    			$storting = number_format($row->storting);
-    			return $storting;
-    		})     	
-    		->addColumn('tkp', function ($row) {
-    			$tkp = number_format($row->tkp);
-    			return $tkp;
-    		})         		     		
-    		->addColumn('drop_tunda', function ($row) {
-    			$drop_tunda = number_format($row->drop_tunda);
-    			return $drop_tunda;
-    		})         		
-    		->addColumn('storting_tunda', function ($row) {
-    			$storting_tunda = number_format($row->storting_tunda);
-    			return $storting_tunda;
-    		})         		
-    		->addColumn('action', function ($row) {
-    			$action =  '<a class="btn btn-xs btn-warning" href="'. action('ProgramKerjaController@edit', $row->id) .'" >Edit</a>';
-    			$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ProgramKerjaController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>';
-    			return $action;
-    		})
-    		->rawColumns(['action'])
-    		->make(true);
+    	
+
+    	if ($request->ajax()) {
+    		$pecah = explode( '/',$request->tanggal);
+
+    		$getTanggal = $request->tanggal."/01";
+    		$tahun = $pecah[0];
+    		$bulan = $pecah[1];
+
+    		$data = ProgramKerja::with('Cabang')
+    		->whereMonth('tanggal',$bulan)
+    		->whereYear('tanggal',$tahun)
+    		->orderBy('tanggal','desc')
+    		->get();
+
+    		$globalData = ProgramKerja::selectRaw('sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp')
+    		->whereMonth('tanggal',$bulan)
+    		->whereYear('tanggal',$tahun)
+    		->first();
+    		return view('backend.program_kerja.table', compact('globalData', 'data','getTanggal'));
     	}
-    	$globalData = ProgramKerja::selectRaw('sum(drops) as sum_drop, 
-			    		sum(psp) as sum_psp,
-			    		sum(storting) as sum_storting,
-			    		sum(drop_tunda) as sum_drop_tunda, 
-			    		sum(storting_tunda) as sum_storting_tunda, 
-			    		sum(tkp) as sum_tkp')
-			    	->whereMonth('tanggal',date('m'))
-			    	->whereYear('tanggal',date('Y'))
-			    	->first();
-    	return view('backend.program_kerja.index', compact('globalData'));
+    	return view('backend.program_kerja.index');
     }
 
     /**
@@ -92,21 +71,29 @@ class ProgramKerjaController extends Controller
     {
     	$request->validate([
     		'cabang' => 'required',
-    		// 'tanggal' => 'required',
+    		'tanggal' => 'required',
     	]);
+    	$pecah = explode( '/',$request->tanggal);
 
-    	$cek = ProgramKerja::where('cabang',$request->cabang)->whereMonth('tanggal', date('m'))->first();
+    	$tanggal = $request->tanggal."/01";
+    	$tahun = $pecah[0];
+    	$bulan = $pecah[1];
+
+    	$cek = ProgramKerja::where('cabang',$request->cabang)
+    	->whereMonth('tanggal', $bulan)
+    	->whereYear('tanggal', $tahun)
+    	->first();
+
     	if(!empty($cek)){
-    			toastr()->warning('Data Sudah Ada, Silahkan menggunakan fitur Edit', 'Peringatan');
-		    	return redirect(action('ProgramKerjaController@index'));
+    		toastr()->warning('Data Sudah Ada, Silahkan menggunakan fitur Edit', 'Peringatan');
+    		return redirect(action('ProgramKerjaController@index'));
     	}
     	DB::beginTransaction();
     	try {
     		ProgramKerja::Create(
     			[
     				"cabang" => $request->cabang,
-    				// "tanggal" => $request->tanggal,
-    				"tanggal" => date('Y-m-d'),
+    				"tanggal" => $tanggal,
     				"drops" => $request->drop,
     				"storting" => $request->storting,
     				"psp" => 0,
@@ -168,16 +155,12 @@ class ProgramKerjaController extends Controller
      */
     public function update(Request $request, $id)
     {
-    	$request->validate([
-    		'tanggal' => 'required',
-    		'cabang' => 'required',
-    	]);
-
+    	
     	DB::beginTransaction();
     	try {
     		ProgramKerja::whereId($id)->update([
-    			"cabang" => $request->cabang,
-    			"tanggal" => $request->tanggal,
+    			// "cabang" => $request->cabang,
+    			// "tanggal" => $request->tanggal,
     			"drops" => $request->drop,
     			"storting" => $request->storting,
     			"psp" => 0,
@@ -216,6 +199,20 @@ class ProgramKerjaController extends Controller
     	$data->save();
     	$data->delete();
     	toastr()->success('Data telah hapus', 'Berhasil');
+    	return back();
+    }    
+    public function reset($id)
+    {
+    	$data = ProgramKerja::find($id);
+    	$data->drops = 0;
+    	$data->storting = 0;
+    	$data->psp = 0;
+    	$data->tkp = 0;
+    	$data->drop_tunda = 0;
+    	$data->storting_tunda = 0;
+    	$data->updated_by = auth()->user()->id;
+    	$data->save();
+    	toastr()->success('Data telah reset', 'Berhasil');
     	return back();
     }
 

@@ -19,7 +19,7 @@ class PerkembanganController extends Controller
      */
     public function index()
     {
-        //
+        return redirect(action('PerkembanganController@create'));
     }
 
     /**
@@ -31,61 +31,45 @@ class PerkembanganController extends Controller
     {
 
     	if ($request->ajax()) {
+    		$pecah = explode( '/',$request->tanggal);
+
+    		$getTanggal = $request->tanggal."/01";
+    		$tahun = $pecah[0];
+    		$bulan = $pecah[1];
+
+    		$globalData = Perkembangan::selectRaw('sum(drops) as sum_drop, 
+    			sum(psp) as sum_psp,
+    			sum(storting) as sum_storting,
+    			sum(drop_tunda) as sum_drop_tunda, 
+    			sum(storting_tunda) as sum_storting_tunda, 
+    			sum(tkp) as sum_tkp,
+    			MAX(DAY(tanggal)) as hari_ke')
+    		->whereMonth('tanggal',$bulan)
+    		->whereYear('tanggal',$tahun)
+    		->where('cabang', auth()->user()->cabang_id)
+    		->first();
+
     		$data = Perkembangan::where('cabang', auth()->user()->cabang_id)
     		->select('*')
     		->selectRaw('DAY(tanggal) as hari')
-    		->whereMonth('tanggal',date('m'))
-    		->whereYear('tanggal',date('Y'))
-    		->orderBy('tanggal','asc');
-    		return Datatables::of($data)
-    		// ->addIndexColumn()
-    		->addColumn('hari_kerja', function ($row) {
-    			$hari = number_format($row->hari);
-    			return $hari;
-    		})     	
-    		->addColumn('drop', function ($row) {
-    			$drop = number_format($row->drops);
-    			return $drop;
-    		})         		
-    		->addColumn('storting', function ($row) {
-    			$storting = number_format($row->storting);
-    			return $storting;
-    		})     	
-    		->addColumn('tkp', function ($row) {
-    			$tkp = number_format($row->tkp);
-    			return $tkp;
-    		})         		     		
-    		->addColumn('drop_tunda', function ($row) {
-    			$drop_tunda = number_format($row->drop_tunda);
-    			return $drop_tunda;
-    		})         		
-    		->addColumn('storting_tunda', function ($row) {
-    			$storting_tunda = number_format($row->storting_tunda);
-    			return $storting_tunda;
-    		})         		
-    		->addColumn('action', function ($row) {
-    			$action =  '<a class="btn btn-xs btn-warning" href="'. action('ProgramKerjaController@edit', $row->id) .'" >Edit</a>';
-    			$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ProgramKerjaController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>';
-    			return $action;
-    		})
-    		->rawColumns(['action'])
-    		->make(true);
+    		->whereMonth('tanggal',$bulan)
+    		->whereYear('tanggal',$tahun)
+    		->orderBy('tanggal','asc')
+    		->get();
+    		
+    		// ->addColumn('action', function ($row) {
+    		// 	$action =  '<a class="btn btn-xs btn-warning" href="'. action('ProgramKerjaController@edit', $row->id) .'" >Edit</a>';
+    		// 	$action = $action .  '<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ProgramKerjaController@delete',$row->id).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>';
+    		// 	return $action;
+    		// })
+
+    		return view('backend.perkembangan.data.table',compact('globalData','data','getTanggal'));
     	}
 
     	$today =  date('Y-m-d');
-    	$globalData = Perkembangan::selectRaw('sum(drops) as sum_drop, 
-    		sum(psp) as sum_psp,
-    		sum(storting) as sum_storting,
-    		sum(drop_tunda) as sum_drop_tunda, 
-    		sum(storting_tunda) as sum_storting_tunda, 
-    		sum(tkp) as sum_tkp,
-    		MAX(DAY(tanggal)) as hari_ke')
-    	->whereMonth('tanggal',date('m'))
-    	->whereYear('tanggal',date('Y'))
-    	->where('cabang', auth()->user()->cabang_id)
-    	->first();
+    	
 
-    	return view('backend.perkembangan.data.index',compact('today','globalData'));
+    	return view('backend.perkembangan.data.index',compact('today'));
 
     }
 
@@ -154,9 +138,11 @@ class PerkembanganController extends Controller
      * @param  \App\Perkembangan  $perkembangan
      * @return \Illuminate\Http\Response
      */
-    public function edit(Perkembangan $perkembangan)
+    public function edit($id)
     {
-        //
+
+    	$data  = Perkembangan::find($id);
+    	return view('backend.perkembangan.data.edit', compact('data'));
     }
 
     /**
@@ -166,11 +152,39 @@ class PerkembanganController extends Controller
      * @param  \App\Perkembangan  $perkembangan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Perkembangan $perkembangan)
+    public function update(Request $request, $id)
     {
-        //
+    	DB::beginTransaction();
+    	try {
+    		Perkembangan::whereId($id)->update([
+    			// "cabang" => $request->cabang,
+    			// "tanggal" => $request->tanggal,
+    			"drops" => $request->drop,
+    			"storting" => $request->storting,
+    			"psp" => $request->psp,
+    			"drop_tunda" => $request->drop_tunda,
+    			"storting_tunda" => $request->storting_tunda,
+    			"tkp" => $request->tkp,
+    			"sisa_kas" => $request->sisa_kas,
+    			'updated_by' => auth()->user()->id,
+    		]);
+
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah Diubah', 'Berhasil');
+    	return redirect(action('PerkembanganController@create'));
     }
 
+  
     /**
      * Remove the specified resource from storage.
      *
@@ -181,7 +195,7 @@ class PerkembanganController extends Controller
     {
         //
     }
-
+     
     public function global(Request $request)
     {
     	$kategori = $labels = [];
@@ -573,5 +587,30 @@ class PerkembanganController extends Controller
     	->orderBy('tanggal','asc')
     	->get();
     	return view('backend.perkembangan.data.print', compact('data'));
+    }
+
+    public function reset($id)
+    {
+    	// dd($id);
+    	$data = Perkembangan::find($id);
+    	$data->drops = 0;
+    	$data->storting = 0;
+    	$data->psp = 0;
+    	$data->tkp = 0;
+    	$data->drop_tunda = 0;
+    	$data->storting_tunda = 0;
+    	$data->sisa_kas = 0;
+    	$data->updated_by = auth()->user()->id;
+    	$data->save();
+    	toastr()->success('Data telah reset', 'Berhasil');
+    	return back();
+    }
+
+
+    public function delete($id)
+    {
+    	
+    	$data = Perkembangan::find($id);
+    	return view('backend.perkembangan.data.delete', compact('data'));
     }
 }

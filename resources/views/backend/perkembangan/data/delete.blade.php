@@ -1,4 +1,4 @@
-<form action="{{ action('ProgramKerjaController@reset', $data->id) }}" method="POST" id="kantorCabangForm">
+<form action="{{ action('PerkembanganController@reset', $data->id) }}" method="POST" id="kantorCabangForm">
 	<div class="modal-header ">
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span aria-hidden="true">&times;</span>

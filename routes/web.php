@@ -69,6 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/home', 'HomeController@index')->name('home');
 	// Route::get('/report/{id}/delete', 'ReportController@delete');
 	// Route::resource('/report', 'ReportController');
+	Route::put('/program-kerja/{id}/reset', 'ProgramKerjaController@reset');
 	Route::get('/program-kerja/{id}/delete', 'ProgramKerjaController@delete');
 	Route::get('/program-kerja/print', 'ProgramKerjaController@print');
 	Route::resource('/program-kerja', 'ProgramKerjaController');
@@ -76,8 +77,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/kantor-cabang/print', 'KantorCabangController@print');
 	Route::resource('/kantor-cabang', 'KantorCabangController');
 
-
+	Route::put('/perkembangan-data/{id}/reset', 'PerkembanganController@reset');
+	Route::get('/perkembangan-data/{id}/delete', 'PerkembanganController@delete');
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
+
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');
 	Route::get('/perkembangan-data/print', 'PerkembanganController@printHarian');

@@ -6,30 +6,29 @@
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/jquery.datetimepicker/jquery.datetimepicker.css')}}">
 <link href="{{ asset('vendors/DataTables/datatables.min.css') }}" rel="stylesheet">
+<link href="{{ asset('vendors/bootstrap/datepicker.css') }}" rel="stylesheet">
+{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet"> --}}
+
 @endsection
 @section('js')
 <script src="{{ asset('vendors/DataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{ asset('plugins/select2/js/select2.full.min.js')}}"></script>
-<script src="{{ asset('plugins/jquery.datetimepicker/jquery.datetimepicker.full.js')}}"></script>
+<script src="{{ asset('vendors/bootstrap/datepicker.js') }}"></script>
+{{-- <script src="{{ asset('plugins/jquery.datetimepicker/jquery.datetimepicker.full.js')}}"></script> --}}
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script> --}}
 <script type="text/javascript">
 	$(document).ready(function () {
 		let storting = psp = drop = 0;
 		$('#cabang').select2({
 			theme: 'bootstrap4'
 		})
-		$('.tanggal').datetimepicker({
-			format: 'Y-m-d',
-			onShow: function (ct) {
-				this.setOptions({
-					maxDate: "{{ $today }}",
-				})
-			},
-			defaultDate: '{{ \Illuminate\Support\Carbon::now()->subDay() }}',
-			setDate: '2019-12-28',
-			timepicker: false,
-			lang:'id'
+		$(".tanggal").datepicker( {
+			format: "yyyy/mm",
+			startView: "months", 
+			minViewMode: "months"
 		});
+		
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -74,10 +73,10 @@
 					@endforeach
 				</select>
 			</div>
-		{{-- 	<div class="form-group">
-				<label for="tanggal">Tanggal</label>
-				<input type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $today }}">
-			</div> --}}
+			<div class="form-group">
+				<label for="tanggal">Bulan</label>
+				<input type="text" id="tanggal" class="form-control tanggal bg-white" name="tanggal"  autocomplete="off" readonly="">
+			</div>
 			<div class="form-group">
 				<label for="drop">Drop</label>
 				<input type="number" id="drop" class="form-control" name="drop">

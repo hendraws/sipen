@@ -14,22 +14,13 @@
 <script src="{{ asset('plugins/jquery.datetimepicker/jquery.datetimepicker.full.js')}}"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		let storting = psp = drop = 0;
-		$('#cabang').select2({
-			theme: 'bootstrap4'
-		})
-		$('.tanggal').datetimepicker({
-			format: 'Y-m-d',
-			onShow: function (ct) {
-				this.setOptions({
-					maxDate: "{{ $today }}",
-				})
-			},
-			defaultDate: '{{ \Illuminate\Support\Carbon::now()->subDay() }}',
-			setDate: '2019-12-28',
-			timepicker: false,
-			lang:'id'
-		});
+		let storting =  $('#storting').val();
+		let psp = 0;
+		let drop = $('#drop').val();
+		// $('#cabang').select2({
+		// 	theme: 'bootstrap4'
+		// })
+
 		$.ajaxSetup({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -53,7 +44,7 @@
 		function hitung(storting, drop, psp)
 		{
 			var jumlah = storting - ( drop / 100 * 91 ) -  psp; 
-			$('#tkp').val(jumlah);
+			$('#tkp').val(Math.round(jumlah));
 		}
 	});
 </script>
@@ -66,17 +57,12 @@
 			@csrf
 			@method('PATCH')
 			<div class="form-group">
-				<label for="inputName">Kantor Cabang</label>
-				<select class="form-control custom-select" id="cabang" name="cabang">
-					<option selected="" disabled="">Pilih Cabang</option>
-					@foreach ($cabang as $key => $val)
-					<option value="{{ $key }}" {{ $data->cabang == $key ? 'selected' : '' }}>{{ $val }}</option>
-					@endforeach
-				</select>
+				<label for="cabang">Kantor Cabang</label>
+				<input type="text" id="tanggal" class="form-control tanggal" readonly autocomplete="off" value="{{$data->Cabang->cabang }}">
 			</div>
 			<div class="form-group">
-				<label for="tanggal">Tanggal</label>
-				<input type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $data->tanggal }}">
+				<label for="tanggal">Bulan</label>
+				<input type="text" id="tanggal" class="form-control tanggal" name="tanggal" readonly autocomplete="off" value="{{ date_format(date_create_from_format('Y-m-d', $data->tanggal), 'F') }}">
 			</div>
 			<div class="form-group">
 				<label for="drop">Drop</label>
