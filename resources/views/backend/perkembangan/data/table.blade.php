@@ -22,7 +22,8 @@
 				<tbody>
 					@forelse ($data as $key => $val)
 					<tr>
-						<td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $val->tanggal)->format('d') }}</td>
+						{{-- <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $val->tanggal)->format('d') }}</td> --}}
+						<td>{{ $key+1 }}</td>
 						<td>{{ number_format($val->drops) }}</td>
 						<td>{{ number_format($val->storting) }}</td>
 						<td>{{ number_format($val->tkp) }}</td>
@@ -30,8 +31,9 @@
 						<td>{{ number_format($val->drop_tunda) }}</td>
 						<td>{{ number_format($val->storting_tunda) }}</td>
 						<td class="text-center">
-							<a class="btn btn-xs btn-warning" href="{{   action('PerkembanganController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('PerkembanganController@delete',$val->id) }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>
+							<a class="btn btn-xs btn-info" href="{{   action('PerkembanganController@edit', $val->id)   }}" >Edit</a>
+							<a class="btn btn-xs btn-warning modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('PerkembanganController@resetModal',$val->id) }}" >Reset</a>
+							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('PerkembanganController@delete',$val->id) }}">Hapus</a>
 						</td>
 					</tr>
 					@empty
@@ -64,7 +66,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td scope="col">{{ $globalData->hari_ke }}</td>
+						<td scope="col">{{ count($data) }}</td>
 						<td scope="col">{{ number_format($globalData->sum_drop) }}</td>
 						<td scope="col">{{ number_format($globalData->sum_storting) }}</td>
 						<td scope="col">{{ number_format($globalData->sum_psp) }}</td>

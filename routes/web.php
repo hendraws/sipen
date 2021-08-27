@@ -14,62 +14,13 @@ Route::get('/', function () {
 	return redirect(route('login'));
 })->name('front');
 
-Route::get('/chart', function(){
-	    	// PERBANDINGAN
-	$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
-	$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
-	$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
-	$jmlHariKemarin = Carbon::now()->subMonth(1)->endOfMonth()->format('d');
-	$labels = [];
-
-	$perbandingan = Perkembangan::selectRaw('
-		sum(drops) as sum_drop, 
-		sum(psp) as sum_psp,
-		sum(storting) as sum_storting,
-		sum(drop_tunda) as sum_drop_tunda, 
-		sum(storting_tunda) as sum_storting_tunda, 
-		sum(tkp) as sum_tkp, 
-		sum(sisa_kas) as sum_sisa_kas, 
-		tanggal, 
-		MONTH(tanggal) as bulan, 
-		DAY(tanggal) as hari')
-	->whereIn(DB::raw('MONTH(tanggal)'),[$bulanKemarin,$bulanSekarang])
-	->whereYear('tanggal', date('Y'))
-	->groupBy('tanggal')
-	->get();
-
-	$labels = $perbandingan->mapWithKeys(function ($item, $key) {
-		return ['hari ke ' . $item->hari => $item->sum_drop];
-	});
-	$perbandinganLabels = $labels->keys();
-	$mapDrop = $perbandingan->mapToGroups(function ($item, $key){
-		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
-		return [ $bulan  => $item->sum_drop];
-	});
-	
-	foreach($mapDrop as $k => $v){
-		$cum = 0;
-		foreach($v as $val){
-			$mapping[$k][] = $cum +=$val;
-		} 
-	}
-
-	foreach ($mapping as $key => $value) {
-		$drops[] = [ 
-			'label' => $key , 
-			'data' => $value, 
-		];
-	}
-
-	$perbandinganDrop = json_encode($drops);
-	return view('backend.perkembangan.global.perbandingan2',compact('perbandinganLabels','perbandinganDrop'));
-});
 // dibawah ini dibutuhkan akses autitentifikasi
 Route::group(['middleware' => 'auth'], function () { 
 	Route::get('/home', 'HomeController@index')->name('home');
 	// Route::get('/report/{id}/delete', 'ReportController@delete');
 	// Route::resource('/report', 'ReportController');
 	Route::put('/program-kerja/{id}/reset', 'ProgramKerjaController@reset');
+	Route::get('/program-kerja/{id}/resetModal', 'ProgramKerjaController@resetModal');
 	Route::get('/program-kerja/{id}/delete', 'ProgramKerjaController@delete');
 	Route::get('/program-kerja/print', 'ProgramKerjaController@print');
 	Route::resource('/program-kerja', 'ProgramKerjaController');
@@ -79,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::put('/perkembangan-data/{id}/reset', 'PerkembanganController@reset');
 	Route::get('/perkembangan-data/{id}/delete', 'PerkembanganController@delete');
+	Route::get('/perkembangan-data/{id}/reset-modal', 'PerkembanganController@resetModal');
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
 
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');

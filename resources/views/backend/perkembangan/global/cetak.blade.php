@@ -15,6 +15,10 @@
 			display: none;
 		}
 	}
+	#bg-total{
+		
+		color: black !important;
+	}
 </style>
 @endsection
 @section('js')

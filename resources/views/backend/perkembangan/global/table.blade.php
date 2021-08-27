@@ -40,16 +40,16 @@
 		@endphp
 		@endforeach
 	</tbody>
-	<tr class="bg-success">
+	<tr class="bg-success" id="bg-total">
 		<th scope="col">TOTAL</th>
-		<th scope="col">{{ $drop }}</th>
-		<th scope="col">{{ $storting }}</th>
-		<th scope="col">{{ $psp }}</th>
-		<th scope="col">{{ $tkp }}</th>
+		<th scope="col">{{ number_format($drop) }}</th>
+		<th scope="col">{{ number_format($storting) }}</th>
+		<th scope="col">{{ number_format($psp) }}</th>
+		<th scope="col">{{ number_format($tkp) }}</th>
 		<th scope="col">{{ round(($tkp / $drop) * 100, 2) }}</th>
 		<th scope="col">{{ round(($storting / $drop) * 100, 2) }}</th>
-		<th scope="col">{{ $dropTunda }}</th>
-		<th scope="col">{{ $stortingTunda }}</th>
+		<th scope="col">{{ number_format($dropTunda) }}</th>
+		<th scope="col">{{ number_format($stortingTunda) }}</th>
 		<th scope="col">{{ round(($stortingTunda / $dropTunda ) * 100, 2) }}</th>
 	</tr>
 </table>

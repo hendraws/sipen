@@ -19,7 +19,7 @@ class PerkembanganController extends Controller
      */
     public function index()
     {
-        return redirect(action('PerkembanganController@create'));
+    	return redirect(action('PerkembanganController@create'));
     }
 
     /**
@@ -43,7 +43,7 @@ class PerkembanganController extends Controller
     			sum(drop_tunda) as sum_drop_tunda, 
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp,
-    			MAX(DAY(tanggal)) as hari_ke')
+    			MAX(DAY(tanggal)) as hari_ker')
     		->whereMonth('tanggal',$bulan)
     		->whereYear('tanggal',$tahun)
     		->where('cabang', auth()->user()->cabang_id)
@@ -93,6 +93,13 @@ class PerkembanganController extends Controller
     			toastr()->warning('Data Sudah Ada, Silahkan menggunakan fitur Edit', 'Peringatan');
     			return back();
     		}
+
+    		$cekHari = Perkembangan::where('cabang', auth()->user()->cabang_id)
+    		->whereMonth('tanggal', Carbon::createFromFormat('Y-m-d', $request->tanggal)->format('m'))->latest()->first();
+    		$hariKerja = 0;
+    		if(!empty($cekHari)){
+    			$hariKerja = $cekHari->hari_kerja;
+    		}
     		Perkembangan::create([
     			"cabang" => auth()->user()->cabang_id,
     			"tanggal" => $request->tanggal,
@@ -103,6 +110,7 @@ class PerkembanganController extends Controller
     			"storting_tunda" => $request->storting_tunda,
     			"tkp" => $request->tkp,
     			"sisa_kas" => $request->sisa_kas,
+    			"hari_kerja" => $hariKerja + 1,
     			'created_by' => auth()->user()->id,
     			'updated_by' => auth()->user()->id,
     		]);
@@ -166,6 +174,7 @@ class PerkembanganController extends Controller
     			"storting_tunda" => $request->storting_tunda,
     			"tkp" => $request->tkp,
     			"sisa_kas" => $request->sisa_kas,
+    			"hari_kerja" => $request->hari_kerja,
     			'updated_by' => auth()->user()->id,
     		]);
 
@@ -184,18 +193,21 @@ class PerkembanganController extends Controller
     	return redirect(action('PerkembanganController@create'));
     }
 
-  
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Perkembangan  $perkembangan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Perkembangan $perkembangan)
+    public function destroy($id)
     {
-        //
+    	$data = Perkembangan::find($id);
+    	$data->delete();
+    	toastr()->success('Data telah hapus', 'Berhasil');
+    	return back();
     }
-     
+
     public function global(Request $request)
     {
     	$kategori = $labels = [];
@@ -607,10 +619,18 @@ class PerkembanganController extends Controller
     }
 
 
+    public function resetModal($id)
+    {
+    	
+    	$data = Perkembangan::find($id);
+    	return view('backend.perkembangan.data.reset', compact('data'));
+    } 
+
     public function delete($id)
     {
     	
     	$data = Perkembangan::find($id);
     	return view('backend.perkembangan.data.delete', compact('data'));
     }
+
 }
