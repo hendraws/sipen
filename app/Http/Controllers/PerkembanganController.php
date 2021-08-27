@@ -430,10 +430,19 @@ class PerkembanganController extends Controller
     		->groupBy('tanggal')
     		->get();
 
-    		$perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
-    			return ['hari ke ' . $item->hari => $item->sum_drop];
+    		$perbandingaLables = $perbandingan->mapToGroups(function ($item, $key) {
+    			return ['hari ke ' . $item->bulan => $item->sum_drop];
     		});
-    		$perbandinganLabels = $perbandingaLables->keys();
+    		// dd($perbandingaLables);
+    		foreach($perbandingaLables as $jumlahHari){
+    			$jmlHari[] = count($jumlahHari);
+    		}
+
+    		for ($i=1; $i <= max($jmlHari) ; $i++) { 
+    			$dataLabel[] = $i;
+    		}
+    		
+    		$perbandinganLabels = json_encode($dataLabel);
 
 
     		$pencapaianBulanLalu =  Perkembangan::selectRaw('
