@@ -22,7 +22,7 @@
 					<div class="inner">
 						<h6>STORTING</h6>
 						<div class="row">
-							<div class="col-6"><h5>IP {{ round($dashboard->sum_storting / $dashboard->sum_drop * 100) }} %</h5></div>
+							<div class="col-6"><h5>IP {{ $dashboard->sum_drop != 0 ? round($dashboard->sum_storting / $dashboard->sum_drop * 100) : 0 }} %</h5></div>
 							<div class="col-6">
 								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_storting) }}</h5>
 							</div>
@@ -53,7 +53,7 @@
 					<div class="inner">
 						<h6>TKP</h6>
 						<div class="row">
-							<div class="col-6"><h5>IP {{ round($dashboard->sum_tkp / $dashboard->sum_drop * 100) }} %</h5></div>
+							<div class="col-6"><h5>IP {{ $dashboard->sum_drop_tunda != 0  ?round($dashboard->sum_tkp / $dashboard->sum_drop * 100) : 0 }} %</h5></div>
 							<div class="col-6">
 								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_tkp) }}</h5>
 							</div>
@@ -81,7 +81,7 @@
 					<div class="inner">
 						<h6>STORTING TUNDA</h6>
 						<div class="row">
-							<div class="col-6"><h5>IP {{ round($dashboard->sum_storting_tunda / $dashboard->sum_drop_tunda * 100) }} %</h5></div>
+							<div class="col-6"><h5>IP {{ $dashboard->sum_drop_tunda != 0 ? round($dashboard->sum_storting_tunda / $dashboard->sum_drop_tunda * 100) : 0 }} %</h5></div>
 							<div class="col-6">
 								<h5 class="text-right">Rp. {{ number_format($dashboard->sum_storting_tunda) }}</h5>
 							</div>

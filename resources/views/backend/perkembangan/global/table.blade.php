@@ -25,8 +25,8 @@
 			<td>{{ number_format($val['sum_storting']) }}</td>
 			<td>{{ number_format($val['sum_psp']) }}</td>
 			<td>{{ number_format($val['sum_tkp']) }}</td>
-			<td>{{ round(($val['sum_tkp'] / $val['sum_drop']) * 100, 2) }}</td>
-			<td>{{ round(($val['sum_storting'] / $val['sum_drop']) * 100, 2) }}</td>
+			<td>{{ $val['sum_drop'] != 0 ? round(($val['sum_tkp'] / $val['sum_drop']) * 100, 2) : 0 }}</td>
+			<td>{{ $val['sum_drop'] != 0 ? round(($val['sum_storting'] / $val['sum_drop']) * 100, 2) : 0 }}</td>
 			<td>{{ number_format($val['sum_drop_tunda']) }}</td>
 			<td>{{ number_format($val['sum_storting_tunda']) }}</td>
 			<td>{{ $val['sum_drop_tunda'] != 0 ? round(($val['sum_storting_tunda'] / $val['sum_drop_tunda'] ) * 100, 2) :0 }}</td>
@@ -48,10 +48,10 @@
 		<th scope="col">{{ number_format($storting) }}</th>
 		<th scope="col">{{ number_format($psp) }}</th>
 		<th scope="col">{{ number_format($tkp) }}</th>
-		<th scope="col">{{ round(($tkp / $drop) * 100, 2) }}</th>
-		<th scope="col">{{ round(($storting / $drop) * 100, 2) }}</th>
+		<th scope="col">{{ $drop != 0 ? round(($tkp / $drop) * 100, 2) : 0 }}</th>
+		<th scope="col">{{ $drop != 0 ? round(($storting / $drop) * 100, 2) : 0 }}</th>
 		<th scope="col">{{ number_format($dropTunda) }}</th>
 		<th scope="col">{{ number_format($stortingTunda) }}</th>
-		<th scope="col">{{ round(($stortingTunda / $dropTunda ) * 100, 2) }}</th>
+		<th scope="col">{{ $dropTunda != 0 ? round(($stortingTunda / $dropTunda ) * 100, 2) : 0 }}</th>
 	</tr>
 </table>
