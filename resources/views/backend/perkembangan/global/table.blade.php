@@ -17,6 +17,7 @@
 		@php 
 			$drop = $storting = $psp = $tkp = $dropTunda = $stortingTunda = 0;
 		@endphp
+
 		@foreach($globalTable as $k => $val)
 		<tr>
 			<td>{{ $k }}</td>
@@ -28,7 +29,8 @@
 			<td>{{ round(($val['sum_storting'] / $val['sum_drop']) * 100, 2) }}</td>
 			<td>{{ number_format($val['sum_drop_tunda']) }}</td>
 			<td>{{ number_format($val['sum_storting_tunda']) }}</td>
-			<td>{{ round(($val['sum_storting_tunda'] / $val['sum_drop_tunda'] ) * 100, 2) }}</td>
+			<td>{{ $val['sum_drop_tunda'] != 0 ? round(($val['sum_storting_tunda'] / $val['sum_drop_tunda'] ) * 100, 2) :0 }}</td>
+
 		</tr>
 		@php 
 			$drop += $val['sum_drop'];

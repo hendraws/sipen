@@ -264,7 +264,7 @@ class PerkembanganController extends Controller
     			'sum_sisa_kas' => $item->sum_sisa_kas,
     		]];
     	});
-
+    	
     	// PENCAPAIAN
     	$target = ProgramKerja::selectRaw('
     		sum(drops) as sum_drop, 
@@ -310,10 +310,24 @@ class PerkembanganController extends Controller
     	->groupBy('tanggal')
     	->get();
 
-    	$perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
-    		return ['hari ke ' . $item->hari => $item->sum_drop];
-    	});
-    	$perbandinganLabels = $perbandingaLables->keys();
+    	$perbandingaLables = $perbandingan->mapToGroups(function ($item, $key) {
+    			return ['hari ke ' . $item->bulan => $item->sum_drop];
+    		});
+    		// dd($perbandingaLables);
+    		foreach($perbandingaLables as $jumlahHari){
+    			$jmlHari[] = count($jumlahHari);
+    		}
+
+    		for ($i=1; $i <= max($jmlHari) ; $i++) { 
+    			$dataLabel[] = $i;
+    		}
+    		
+    		$perbandinganLabels = json_encode($dataLabel);
+
+    	// $perbandingaLables = $perbandingan->mapWithKeys(function ($item, $key) {
+    	// 	return ['hari ke ' . $item->hari => $item->sum_drop];
+    	// });
+    	// $perbandinganLabels = $perbandingaLables->keys();
 
     	$pencapaianBulanLalu =  Perkembangan::selectRaw('
     		sum(drops) as sum_drop, 
