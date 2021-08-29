@@ -398,7 +398,7 @@ class PerkembanganController extends Controller
     			sum(tkp) as sum_tkp')
     		->where('cabang', $request->cabang)
     		->whereMonth('tanggal',date('m'))->first();
-    		$kasTerbaru = Perkembangan::where('cabang', $request->cabang)->whereMonth('tanggal',date('m'))->latest()->first();    
+    		$kasTerbaru = Perkembangan::where('cabang', $request->cabang)->whereMonth('tanggal',date('m'))->latest()->first();    	
 
 			//PENCAPAIAN
     		$target = ProgramKerja::selectRaw('
@@ -426,7 +426,7 @@ class PerkembanganController extends Controller
     		->first();
 
     		// Perbandingan
-    		$perbandingaLables = [];
+    		$perbandingaLables = $jmlHari = $dataLabel =[];
     		$bulanSekarang = Carbon::now()->subMonth(0)->format('m');
     		$bulanKemarin = Carbon::now()->subMonth(1)->format('m');
     		$jmlHariSekarang = Carbon::now()->subMonth(0)->endOfMonth()->format('d');
@@ -455,9 +455,11 @@ class PerkembanganController extends Controller
     		foreach($perbandingaLables as $jumlahHari){
     			$jmlHari[] = count($jumlahHari);
     		}
+    		if(count($jmlHari) > 0){
 
     		for ($i=1; $i <= max($jmlHari) ; $i++) { 
     			$dataLabel[] = $i;
+    		}
     		}
     		
     		$perbandinganLabels = json_encode($dataLabel);

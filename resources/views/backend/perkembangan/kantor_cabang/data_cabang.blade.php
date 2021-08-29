@@ -97,7 +97,7 @@
 						<div class="row">
 							<div class="col-6"></div>
 							<div class="col-6">
-								<h5 class="text-right">Rp. {{ number_format($kasTerbaru->sisa_kas) }}</h5>
+								<h5 class="text-right">Rp. {{ !empty($kasTerbaru) ?  number_format($kasTerbaru->sisa_kas) : 0}}</h5>
 							</div>
 						</div>
 					</div>

@@ -15,12 +15,11 @@
 	</thead>
 	<tbody>
 		@php 
-			$drop = $storting = $psp = $tkp = $dropTunda = $stortingTunda = 0;
-			if(!empty($globalTable) ){
-				echo "<td colspan='9' class='text-center'>Tidak Ada Data</td>";
-			}
+		$drop = $storting = $psp = $tkp = $dropTunda = $stortingTunda = 0;
 		@endphp
-		@foreach($globalTable as $k => $val)
+
+
+		@forelse($globalTable as $k => $val)
 		<tr>
 			<td>{{ $k }}</td>
 			<td>{{ number_format($val['sum_drop']) }}</td>
@@ -32,17 +31,20 @@
 			<td>{{ number_format($val['sum_drop_tunda']) }}</td>
 			<td>{{ number_format($val['sum_storting_tunda']) }}</td>
 			<td>{{ $val['sum_drop_tunda'] != 0 ? round(($val['sum_storting_tunda'] / $val['sum_drop_tunda'] ) * 100, 2) :0 }}</td>
-
 		</tr>
 		@php 
-			$drop += $val['sum_drop'];
-			$storting += $val['sum_storting'];
-			$psp += $val['sum_psp'];
-			$tkp += $val['sum_tkp'];
-			$dropTunda += $val['sum_drop_tunda'];
-			$stortingTunda += $val['sum_storting_tunda'];
+		$drop += $val['sum_drop'];
+		$storting += $val['sum_storting'];
+		$psp += $val['sum_psp'];
+		$tkp += $val['sum_tkp'];
+		$dropTunda += $val['sum_drop_tunda'];
+		$stortingTunda += $val['sum_storting_tunda'];
 		@endphp
-		@endforeach
+		@empty
+		<tr>
+			<td colspan="9" class="text-center">TIDAK ADA DATA YANG DI TAMPILKAN </td>
+		</tr>
+		@endforelse
 	</tbody>
 	<tr class="bg-success" id="bg-total">
 		<th scope="col">TOTAL</th>
