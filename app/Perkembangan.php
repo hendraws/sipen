@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Perkembangan extends Model
 {
-       use SoftDeletes;
+       // use SoftDeletes;
 
 	protected $fillable = ['program_kerja_id','cabang','tanggal','drops','storting','psp','drop_tunda','storting_tunda','tkp','sisa_kas','hari_kerja','created_by','updated_by'];
 
