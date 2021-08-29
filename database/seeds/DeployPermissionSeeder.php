@@ -32,7 +32,12 @@ class DeployPermissionSeeder extends Seeder
     	Role::create(['name' => 'admin'])->givePermissionTo(['dashboard', 'data-master','perkembangan','management-user']);
     	Role::create(['name' => 'user'])->givePermissionTo(['dashboard', 'perkembangan','input-data']);
     	
-    	$user = User::first();
+    	$user = User::firstOrCreate([
+    		'name' => 'super-admin', 
+    		'email' => 'superadmin@siperan.com', 
+    		'password' => Hash::make('12345678'),
+    		'cabang_id' => '1',
+    	]);
     	$user->assignRole('admin');
     }
 }
