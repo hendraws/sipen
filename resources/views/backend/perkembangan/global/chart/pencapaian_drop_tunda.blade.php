@@ -12,7 +12,7 @@
 	</div>
 	<div class="card-body">
 		@php 
-		$dropTundaPencapaianPersent = round(($pencapaian->sum_drop_tunda / $target->sum_drop_tunda) *100,2);
+		$dropTundaPencapaianPersent = $target->sum_drop_tunda != 0 ? round(($pencapaian->sum_drop_tunda / $target->sum_drop_tunda) *100,2) : 0;
 		$dropTundaTargetPersent = 100 - $dropTundaPencapaianPersent;
 		if($dropTundaTargetPersent <= 0)
 		{

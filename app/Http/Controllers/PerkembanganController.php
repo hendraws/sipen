@@ -314,13 +314,16 @@ class PerkembanganController extends Controller
     			return ['hari ke ' . $item->bulan => $item->sum_drop];
     		});
     		// dd($perbandingaLables);
+    		$jmlHari = $dataLabel = [];
     		foreach($perbandingaLables as $jumlahHari){
     			$jmlHari[] = count($jumlahHari);
     		}
-
-    		for ($i=1; $i <= max($jmlHari) ; $i++) { 
-    			$dataLabel[] = $i;
+    		if(count($jmlHari) > 0){
+	    		for ($i=1; $i <= max($jmlHari) ; $i++) { 
+	    			$dataLabel[] = $i;
+	    		}
     		}
+
     		
     		$perbandinganLabels = json_encode($dataLabel);
 
@@ -351,6 +354,7 @@ class PerkembanganController extends Controller
 
     private function mappingData($data, $keyword)
     {
+    	$cummulative = $dataMappping = [];
     	$mapping = $data->mapToGroups(function ($item, $key) use ($keyword) {
     		$bulan = Carbon::create()->month($item->bulan)->startOfMonth()->format('F');
     		return [ $bulan  => $item->$keyword];

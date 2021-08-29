@@ -16,8 +16,10 @@
 	<tbody>
 		@php 
 			$drop = $storting = $psp = $tkp = $dropTunda = $stortingTunda = 0;
+			if(!empty($globalTable) ){
+				echo "<td colspan='9' class='text-center'>Tidak Ada Data</td>";
+			}
 		@endphp
-
 		@foreach($globalTable as $k => $val)
 		<tr>
 			<td>{{ $k }}</td>

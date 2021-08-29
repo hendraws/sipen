@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class KantorCabang extends Model
 {
-	use SoftDeletes;
+	// use SoftDeletes;
 
 	protected $fillable = ['slug','cabang','created_by','updated_by'];
 

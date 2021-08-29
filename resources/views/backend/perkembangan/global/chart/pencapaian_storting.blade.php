@@ -12,7 +12,7 @@
 	</div>
 	<div class="card-body">
 		@php 
-		$stortingPencapaianPersent = round(($pencapaian->sum_storting / $target->sum_storting) *100,2);
+		$stortingPencapaianPersent = $target->sum_storting != 0 ? round(($pencapaian->sum_storting / $target->sum_storting) *100,2) : 0;
 		$stortingTargetPersent = 100 - $stortingPencapaianPersent;
 		if($stortingTargetPersent <= 0)
 		{
