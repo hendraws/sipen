@@ -32,8 +32,9 @@
 						<td>{{ number_format($val->drop_tunda) }}</td>
 						<td>{{ number_format($val->storting_tunda) }}</td>
 						<td class="text-center">
-							<a class="btn btn-xs btn-warning" href="{{   action('ProgramKerjaController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('ProgramKerjaController@delete',$val->id) }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Reset</a>
+							<a class="btn btn-xs btn-info" href="{{   action('ProgramKerjaController@edit', $val->id)   }}" >Edit</a>
+							<a class="btn btn-xs btn-warning modal- ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('ProgramKerjaController@resetModal',$val->id) }}"  data-toggle="tooltip" data-placement="top" title="Reset" >Reset</a>
+							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('ProgramKerjaController@delete',$val->id) }}"  data-toggle="tooltip" data-placement="top" title="Delete" >Delete</a>
 						</td>
 					</tr>
 					@empty

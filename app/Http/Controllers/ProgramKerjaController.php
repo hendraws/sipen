@@ -221,6 +221,11 @@ class ProgramKerjaController extends Controller
     {
     	$data = ProgramKerja::find($id);
     	return view('backend.program_kerja.delete', compact('data'));
+    }    
+    public function resetModal($id)
+    {
+    	$data = ProgramKerja::find($id);
+    	return view('backend.program_kerja.reset_modal', compact('data'));
     }
 
     public function print()
