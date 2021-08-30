@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\KantorCabang;
+use App\Perkembangan;
+use App\ProgramKerja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -164,6 +166,8 @@ class KantorCabangController extends Controller
     public function destroy($id)
     {
     	$data = KantorCabang::find($id);
+    	$programKerja = ProgramKerja::where('cabang', $id)->delete();
+    	$perkembangan = Perkembangan::where('cabang', $id)->delete();
     	$data->delete();
 		toastr()->success('Data telah hapus', 'Berhasil');
     	return back();

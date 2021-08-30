@@ -8,10 +8,13 @@
 		@csrf
 		@method('DELETE')
 		<div class="form-group row">
-			<div class="col-md-12 text center">
+			<div class="col-md-12 text-center">
+				<h3 class="text-center bg-red"><b>PERHATIAN !!!</b></h3>
+				<hr>
 				<h5>
-					Apakah Anda Yakin Mengkapus Cabang {{ $data->cabang }} ?
+					APAKAH ANDA YAKIN AKAN MENGHAPUS CABANG {{ strtoupper($data->cabang) }} ?
 				</h5>
+				<h6><b>Semua Data Akan Terhapus Termasuk Data Perkembangan dan Data Target</b></h6>
 			</div>
 		</div>
 	</div>
