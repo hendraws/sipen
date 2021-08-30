@@ -12,7 +12,7 @@
 	</div>
 	<div class="card-body">
 		@php 
-		$tkpPencapaianPersent = round(($pencapaian->sum_tkp / $target->sum_tkp) *100,2);
+		$tkpPencapaianPersent = $target->sum_tkp != 0 ? round(($pencapaian->sum_tkp / $target->sum_tkp) *100,2) : 0;
 		$tkpTargetPersent = 100 - $tkpPencapaianPersent;
 		if($tkpTargetPersent <= 0)
 		{
