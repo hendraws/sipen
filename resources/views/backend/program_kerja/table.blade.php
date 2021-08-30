@@ -25,7 +25,7 @@
 					@forelse ($data as $key => $val)
 					<tr>
 						<td>{{ $key+1 }}</td>
-						<td class="text-left">{{ $val->Cabang->cabang }}</td>
+						<td class="text-left">{{ optional($val->Cabang)->cabang }}</td>
 						<td>{{ number_format($val->drops) }}</td>
 						<td>{{ number_format($val->storting) }}</td>
 						<td>{{ number_format($val->tkp) }}</td>

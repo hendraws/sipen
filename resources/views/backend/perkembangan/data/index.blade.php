@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
 @section('title', 'Data Harian ')
-@section('content-title', 'Data Harian Cabang '. ucfirst(auth()->user()->getCabang->cabang))
+@section('content-title', 'Data Harian Cabang '. ucfirst(optional(optional(auth()->user())->getCabang)->cabang))
 @section('css')
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">

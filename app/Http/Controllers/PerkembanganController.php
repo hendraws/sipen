@@ -226,12 +226,12 @@ class PerkembanganController extends Controller
 
     	// CHART
     	$labels = $chart->mapWithKeys(function ($item, $key) {
-    		return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+    		return [ucfirst(optional($item->Cabang)->cabang) => ucfirst($item->cabang)];
     	});
     	$labels = $labels->keys();
     	
     	foreach ($chart as $key => $value) {
-    		$kategori['unit'][] = $value->Cabang->cabang;
+    		$kategori['unit'][] = optional($value->Cabang)->cabang;
     		$kategori['drop'][] = $value->sum_drop;
     		$kategori['storting'][]=$value->sum_storting;
     			// $kategori['psp'][]=$value->sum_psp;
@@ -254,7 +254,7 @@ class PerkembanganController extends Controller
 
     	// TABLE
     	$globalTable = $chart->mapWithKeys(function ($item, $key) {
-    		return [ucfirst($item->Cabang->cabang) => [
+    		return [ucfirst(optional($item->Cabang)->cabang) => [
     			'sum_drop' => $item->sum_drop,
     			'sum_psp' => $item->sum_psp,
     			'sum_storting' => $item->sum_storting,
@@ -509,12 +509,12 @@ class PerkembanganController extends Controller
 
     	// CHART
     	$labels = $chart->mapWithKeys(function ($item, $key) {
-    		return [ucfirst($item->Cabang->cabang) => ucfirst($item->cabang)];
+    		return [ucfirst(optional($item->Cabang)->cabang) => ucfirst($item->cabang)];
     	});
     	$labels = $labels->keys();
     	
     	foreach ($chart as $key => $value) {
-    		$kategori['unit'][] = $value->Cabang->cabang;
+    		$kategori['unit'][] = optional($value->Cabang)->cabang;
     		$kategori['drop'][] = $value->sum_drop;
     		$kategori['storting'][]=$value->sum_storting;
     			// $kategori['psp'][]=$value->sum_psp;
@@ -537,7 +537,7 @@ class PerkembanganController extends Controller
 
     	// TABLE
     	$globalTable = $chart->mapWithKeys(function ($item, $key) {
-    		return [ucfirst($item->Cabang->cabang) => [
+    		return [ucfirst(optional($item->Cabang)->cabang) => [
     			'sum_drop' => $item->sum_drop,
     			'sum_psp' => $item->sum_psp,
     			'sum_storting' => $item->sum_storting,

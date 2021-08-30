@@ -58,7 +58,7 @@
 			@method('PATCH')
 			<div class="form-group">
 				<label for="cabang">Kantor Cabang</label>
-				<input type="text" id="tanggal" class="form-control tanggal" readonly autocomplete="off" value="{{$data->Cabang->cabang }}">
+				<input type="text" id="tanggal" class="form-control tanggal" readonly autocomplete="off" value="{{optional($data->Cabang)->cabang }}">
 			</div>
 			<div class="form-group">
 				<label for="tanggal">Bulan</label>

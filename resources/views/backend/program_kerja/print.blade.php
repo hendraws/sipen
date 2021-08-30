@@ -35,7 +35,7 @@
 			@foreach($data as $key => $val)
 			<tr>
 				<th>{{ $key+1 }}</th>
-				<td>{{ $val->Cabang->cabang }}</td>
+				<td>{{ optional($val->Cabang)->cabang }}</td>
 				<td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $val->tanggal)->format('F') }}</td>
 				<td>{{ number_format($val->drops) }}</td>
 				<td>{{ number_format($val->storting) }}</td>

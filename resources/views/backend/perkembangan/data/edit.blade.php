@@ -60,7 +60,7 @@
 			<div class="form-group row">
 				<label for="drop" class="col-sm-2 col-form-label">Kantor Cabang</label>
 				<div class="col-md-10">
-					<input type="text" id="tanggal" class="form-control tanggal" readonly autocomplete="off" value="{{$data->Cabang->cabang }}">
+					<input type="text" id="tanggal" class="form-control tanggal" readonly autocomplete="off" value="{{optional($data->Cabang)->cabang }}">
 				</div>
 			</div>
 			<div class="form-group row">
