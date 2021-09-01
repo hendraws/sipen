@@ -27,6 +27,10 @@
 
 <div class="card card-primary card-outline card-outline-tabs">
 	<div class="card-header p-0 border-bottom-0">
+			<div class="col-md-12 my-4" id="getBulan">
+				<h5>Bulan {{ $getBulan }}</h5>
+			</div>
+		<hr>
 		<div class="row">
 			<div class="col-md-3">
 				<!-- small box -->
@@ -49,7 +53,7 @@
 					<div class="inner">
 						<h6>STORTING</h6>
 						<div class="row">
-							<div class="col-6"><h6>IP {{ round($dashboard->sum_storting / $dashboard->sum_drop * 100) }} %</h6></div>
+							<div class="col-6"><h6>IP {{ $dashboard->sum_drop != 0 ? round($dashboard->sum_storting / $dashboard->sum_drop * 100) : 0 }} %</h6></div>
 							<div class="col-6">
 								<h6 class="text-right">Rp. {{ number_format($dashboard->sum_storting) }}</h6>
 							</div>
@@ -80,7 +84,7 @@
 					<div class="inner">
 						<h6>TKP</h6>
 						<div class="row">
-							<div class="col-6"><h6>IP {{ round($dashboard->sum_tkp / $dashboard->sum_drop * 100) }} %</h6></div>
+							<div class="col-6"><h6>IP {{ $dashboard->sum_drop != 0 ? round($dashboard->sum_tkp / $dashboard->sum_drop * 100) : 0 }} %</h6></div>
 							<div class="col-6">
 								<h6 class="text-right">Rp. {{ number_format($dashboard->sum_tkp) }}</h6>
 							</div>
@@ -108,7 +112,7 @@
 					<div class="inner">
 						<h6>STORTING TUNDA</h6>
 						<div class="row">
-							<div class="col-6"><h6>IP {{ round($dashboard->sum_storting_tunda / $dashboard->sum_drop_tunda * 100) }} %</h6></div>
+							<div class="col-6"><h6>IP {{$dashboard->sum_drop_tunda != 0 ? round($dashboard->sum_storting_tunda / $dashboard->sum_drop_tunda * 100) : 0}} %</h6></div>
 							<div class="col-6">
 								<h6 class="text-right">Rp. {{ number_format($dashboard->sum_storting_tunda) }}</h6>
 							</div>
@@ -124,7 +128,7 @@
 						<div class="row">
 							<div class="col-6"></div>
 							<div class="col-6">
-								<h6 class="text-right">Rp. {{ number_format($kasTerbaru->sisa_kas) }}</h6>
+								<h6 class="text-right">Rp. {{ !empty($kasTerbaru) ? number_format($kasTerbaru->sisa_kas) : 0 }}</h6>
 							</div>
 						</div>
 					</div>

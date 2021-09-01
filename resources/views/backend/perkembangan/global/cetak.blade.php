@@ -1,7 +1,3 @@
-@extends('layouts.app_master')
-@section('title', 'Perkembangan')
-@section('content-title', 'Informasi Perkembangan KSP Satria Mulia Arthomoro')
-@section('css')
 <style type="text/css">
 	@page{
 		padding: 20px;
@@ -19,9 +15,10 @@
 		
 		color: black !important;
 	}
+	.swal2-container.swal2-top-end.swal2-backdrop-show{
+		display: none;
+	}
 </style>
-@endsection
-@section('js')
 <script src="{{ asset('vendors/chartjs/chartjs.js') }}"></script>
 <script src="{{ asset('vendors/chartjs/chartjs-plugin-colorschemes.js') }}"></script>
 <script src="{{ asset('vendors/chartjs/chartjs-plugin-datalabels.js') }}"></script>
@@ -36,40 +33,18 @@
 	function number_format(x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
 	}
-	function getGraphic(target){
-		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-		$.ajax({
-			{{-- url: "{{ url()->current() }}?startdate="+startDate+"&enddate="+endDate+"&graphic="+target, --}}
-			url: "{{ url()->current() }}?graphic="+target,
-			type: "post",
-			datatype: "html"
-		}).done(function(data){
-			Swal.fire({title: 'Selesai', icon: 'success', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
-			$("#"+target).empty().html(data);
-			$('[data-toggle="tooltip"]').tooltip();
-		}).fail(function(jqXHR, ajaxOptions, thrownError){
-			Swal.fire({html: 'No response from server', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 10000, timerProgressBar: true,});
-		});
-	}
 	
 	$(document).ready(function () {
-		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-		
-		// $('#cetak, #break_page').printThis({
-		// 	canvas: true,
-		// 	importCSS: true,
-		// 	loadCSS:"https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css",
-		// });
 		setTimeout(function(){ window.print() }, 2000);
 	});
 </script>
-@endsection
-@section('content')
 
 <div id="cetak">
 	<div class="card card-primary card-outline card-outline-tabs">
 
 		<div class="card-body table-breaked">
+			<h5>Bulan {{ $getBulan }}</h5>
+			<hr>
 			<h1 class="m-2">Global</h1>
 			@includeIf('backend.perkembangan.global.global_chart')
 
@@ -96,4 +71,3 @@
 		<!-- /.card -->
 	</div>
 </div>
-@endsection

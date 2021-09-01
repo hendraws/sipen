@@ -56,7 +56,7 @@ class KantorCabangController extends Controller
      */
     public function create()
     {
- 
+
     	return view('backend.kantor_cabang.create');
     }
 
@@ -169,7 +169,7 @@ class KantorCabangController extends Controller
     	$programKerja = ProgramKerja::where('cabang', $id)->delete();
     	$perkembangan = Perkembangan::where('cabang', $id)->delete();
     	$data->delete();
-		toastr()->success('Data telah hapus', 'Berhasil');
+    	toastr()->success('Data telah hapus', 'Berhasil');
     	return back();
     }
 
