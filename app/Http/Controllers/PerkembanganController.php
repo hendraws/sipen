@@ -349,8 +349,7 @@ class PerkembanganController extends Controller
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp, 
     			sum(sisa_kas) as sum_sisa_kas')
-    		->whereMonth('tanggal',$bulan)
-    		->whereYear('tanggal',$tahun)
+    		->whereMonth('tanggal',$bulanKemarin)
     		->first();
 
     		$perbandinganDrop = json_encode($this->mappingData($perbandingan, 'sum_drop'));
