@@ -55,10 +55,9 @@ class HomeController extends Controller
     			sum(sisa_kas) as sum_sisa_kas,cabang')
     		->where('tanggal','>=',$request->startdate)
     		->where('tanggal','<=',$request->enddate)
-    		->whereMonth('tanggal',date('m'))
     		->groupBy('cabang')
     		->get();
-
+    		dd($chart);
     		$dataFilter = Perkembangan::selectRaw('
     			sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,
