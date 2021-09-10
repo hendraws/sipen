@@ -68,7 +68,7 @@
 		<div class="card card-info card-outline col-md-12">
 			<div class="card-header text-center">
 				<h3>Data Perkembangan</h3>
-				<p>Tanggal : {{ date('d F Y') }}</p>
+				<p>{!! $tanggalFilter !!}</p>
 			</div>
 			<div class="card-body">
 				<div>

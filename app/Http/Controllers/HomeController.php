@@ -39,9 +39,10 @@ class HomeController extends Controller
     		sum(storting_tunda) as sum_storting_tunda, 
     		sum(tkp) as sum_tkp, 
     		sum(sisa_kas) as sum_sisa_kas')
-    	->whereMonth('tanggal',date('m'))
+		->where('tanggal','>=',$startdate)
+		->where('tanggal','<=',$enddate)
     	->first();
-
+    	// dd($startdate);
     	if($request->ajax())
     	{
     		$labels = [];
@@ -53,8 +54,8 @@ class HomeController extends Controller
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp, 
     			sum(sisa_kas) as sum_sisa_kas,cabang')
-    		->where('tanggal','>=',$request->startdate)
-    		->where('tanggal','<=',$request->enddate)
+    		->where('tanggal','>=',$startdate)
+    		->where('tanggal','<=',$enddate)
     		->groupBy('cabang')
     		->get();
 
@@ -66,8 +67,8 @@ class HomeController extends Controller
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp, 
     			sum(sisa_kas) as sum_sisa_kas')
-    		->where('tanggal','>=',$request->startdate)
-    		->where('tanggal','<=',$request->enddate)
+    		->where('tanggal','>=',$startdate)
+    		->where('tanggal','<=',$enddate)
     		->first();
     		// dd($chart->toArray(),$request->startdate, $request->enddate);
     		
@@ -117,8 +118,8 @@ class HomeController extends Controller
     		}
 
     		$dataset = json_encode($dataset);
-
-    		return view('dashboard.chart', compact('labels', 'dataset','kategori','chart','globalTable','dataFilter'));
+    		$tanggalFilter = 'Periode <b>'. date_format(date_create_from_format('Y-m-d', $startdate), 'd F Y') . '</b> s/d <b>'. date_format(date_create_from_format('Y-m-d', $enddate), 'd F Y') . '</b>';
+    		return view('dashboard.chart', compact('labels', 'dataset','kategori','chart','globalTable','dataFilter', 'tanggalFilter'));
 		} //tutup ajax
 		return view('home', compact('data','startdate','enddate'));
 	}
