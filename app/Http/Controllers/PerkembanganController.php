@@ -210,7 +210,6 @@ class PerkembanganController extends Controller
 
     public function global(Request $request)
     {
-
     	if($request->ajax()) {
     		$pecah = explode( '/',$request->tanggal);
     		$tanggal = Carbon::createFromFormat('Y/m/d', $request->tanggal."/01");
@@ -228,7 +227,7 @@ class PerkembanganController extends Controller
     			sum(storting_tunda) as sum_storting_tunda, 
     			sum(tkp) as sum_tkp, 
     			sum(sisa_kas) as sum_sisa_kas, 
-    			cabang')
+    			cabang, count(tanggal) as hk')
     		->whereMonth('tanggal',$bulan)
     		->whereYear('tanggal',$tahun)
     		->groupBy('cabang')
@@ -272,6 +271,7 @@ class PerkembanganController extends Controller
     				'sum_storting_tunda' => $item->sum_storting_tunda,
     				'sum_tkp' => $item->sum_tkp,
     				'sum_sisa_kas' => $item->sum_sisa_kas,
+    				'hk' => $item->hk,
     			]];
     		});
 
@@ -299,7 +299,7 @@ class PerkembanganController extends Controller
     		->whereMonth('tanggal',$bulan)
     		->whereYear('tanggal',$tahun)
     		->first();
-
+    		// dd($tahun);
     	    	// PERBANDINGAN
     		$perbandingaLables = [];
     		$bulanKemarin = $tanggal->subMonth(1)->format('m');
@@ -494,8 +494,23 @@ class PerkembanganController extends Controller
     		
     		$perbandinganLabels = json_encode($dataLabel);
 
+    		$hk = Perkembangan::select('tanggal')
+    		->whereMonth('tanggal',$bulan)
+    		->whereYear('tanggal',$tahun)
+    		->where('cabang', $request->cabang)
+    		->get()->count();
+    		
+    		$pencapaianBulanLalu = [];
+    		$pencapaianBulanLalu['sum_drop'] = 0;
+    		$pencapaianBulanLalu['sum_psp'] = 0;
+    		$pencapaianBulanLalu['sum_storting'] = 0;
+    		$pencapaianBulanLalu['sum_drop_tunda'] = 0;
+    		$pencapaianBulanLalu['sum_storting_tunda'] = 0;
+    		$pencapaianBulanLalu['sum_tkp'] = 0;
+    		$pencapaianBulanLalu['sum_sisa_kas'] = 0;
 
-    		$pencapaianBulanLalu =  Perkembangan::selectRaw('
+    		$sum_drop = $sum_psp = $sum_storting = $sum_drop_tunda = $sum_storting_tunda = $sum_tkp = $sum_sisa_kas = 0;
+    		$getPencapaianBulanLalu =  Perkembangan::select('tanggal')->selectRaw('
     			sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,
     			sum(storting) as sum_storting,
@@ -505,8 +520,27 @@ class PerkembanganController extends Controller
     			sum(sisa_kas) as sum_sisa_kas')
     		->whereMonth('tanggal',$bulanKemarin)
     		->where('cabang', $request->cabang)
-    		->first();
+    		->groupBy('tanggal')
+    		->take($hk)
+    		->get();
 
+    		foreach ($getPencapaianBulanLalu as $key => $value) {
+    			$sum_drop += $value->sum_drop;
+    			$sum_psp += $value->sum_psp;
+    			$sum_storting += $value->sum_storting;
+    			$sum_drop_tunda += $value->sum_drop_tunda;
+    			$sum_storting_tunda += $value->sum_storting_tunda;
+    			$sum_tkp += $value->sum_tkp;
+    			$sum_sisa_kas += $value->sum_sisa_kas;
+    			$pencapaianBulanLalu['sum_drop'] = $sum_drop;
+    			$pencapaianBulanLalu['sum_psp'] =$sum_psp;
+    			$pencapaianBulanLalu['sum_storting'] = $sum_storting;
+    			$pencapaianBulanLalu['sum_drop_tunda'] = $sum_drop_tunda;
+    			$pencapaianBulanLalu['sum_storting_tunda'] = $sum_storting_tunda;
+    			$pencapaianBulanLalu['sum_tkp'] = $sum_tkp;
+    			$pencapaianBulanLalu['sum_sisa_kas'] =  $value->sum_sisa_kas;
+    		}
+    		
     		$perbandinganDrop = json_encode($this->mappingData($perbandingan, 'sum_drop'));
     		$perbandinganStorting = json_encode($this->mappingData($perbandingan, 'sum_storting'));
     		$perbandinganTkp = json_encode($this->mappingData($perbandingan, 'sum_tkp'));
