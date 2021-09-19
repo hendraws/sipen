@@ -39,6 +39,13 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/under-contraction', 'HomeController@underContraction');
 	Route::get('/management-user/{id}/delete', 'UserController@delete');
 	Route::resource('/management-user', 'UserController');
+	
+	// ----------------------------------------------------------------------------------------- //
+	Route::resource('/resort', 'ResortController');
+	Route::get('/resort/{resort}/delete/', 'ResortController@delete');
+
+
+
 	// command
 	Route::group(['prefix'=>'/command/artisan','as'=>'account.'], function(){ 
 		Route::get('/migrate', function(){
@@ -51,8 +58,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 			return 'Clear Cache';
 		});
-
-		
 	});
 	
 });
