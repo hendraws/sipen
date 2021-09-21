@@ -11,7 +11,7 @@
 		<div class="form-group row">
 			<label for="nama" class="col-sm-4 col-form-label">Nama Resort</label>
 			<div class="col-sm-12">
-				<input required type="text" class="form-control" id="nama" value="{{ $resort->nama }}" name="nama">
+				<input required type="text" class="form-control" id="nama" value="{{ $resort->nama }}" name="nama" >
 			</div>
 		</div>
 	</div>

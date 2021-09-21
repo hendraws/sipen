@@ -37,6 +37,7 @@
 				</ul>
 			</li>
 			@endcan
+			@role('user')
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 					<i class="nav-icon fas fa-database"></i>
@@ -46,6 +47,12 @@
 					</p>
 				</a>
 				<ul class="nav nav-treeview" style="display: none;">
+					<li class="nav-item">
+						<a href="{{ action('KemacetanController@index') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Kemacetan</p>
+						</a>
+					</li>
 					<li class="nav-item">
 						<a href="{{ action('ResortController@index') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
@@ -60,6 +67,7 @@
 					</li>
 				</ul>
 			</li>
+			@endrole
 			@can('perkembangan')
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">

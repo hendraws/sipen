@@ -44,6 +44,10 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/resort', 'ResortController');
 	Route::get('/resort/{resort}/delete/', 'ResortController@delete');
 
+	Route::get('/kemacetan/{kemacetan}/delete', 'KemacetanController@delete');
+	Route::resource('/kemacetan', 'KemacetanController');
+	Route::resource('/pasaran', 'PasaranController');
+
 
 
 	// command
