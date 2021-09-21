@@ -59,12 +59,6 @@
 							<p>Resort</p>
 						</a>
 					</li>
-					<li class="nav-item">
-						<a href="{{ action('ProgramKerjaController@index') }}" class="nav-link">
-							<i class="far fa-circle nav-icon"></i>
-							<p>Program Kerja</p>
-						</a>
-					</li>
 				</ul>
 			</li>
 			@endrole
