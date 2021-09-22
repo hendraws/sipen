@@ -54,6 +54,12 @@
 						</a>
 					</li>
 					<li class="nav-item">
+						<a href="{{ action('CalonMacetController@index') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Calon Macet</p>
+						</a>
+					</li>
+					<li class="nav-item">
 						<a href="{{ action('ResortController@index') }}" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>Resort</p>

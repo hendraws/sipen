@@ -46,6 +46,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('/kemacetan/{kemacetan}/delete', 'KemacetanController@delete');
 	Route::resource('/kemacetan', 'KemacetanController');
+
+	Route::get('/calon-macet/{calon_macet}/delete', 'CalonMacetController@delete');
+	Route::resource('/calon-macet', 'CalonMacetController');
+	
 	Route::resource('/pasaran', 'PasaranController');
 
 
