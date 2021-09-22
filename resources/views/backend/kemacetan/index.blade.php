@@ -99,9 +99,6 @@
 				</div>
 			</div>
 		</div>
-
-
-
 		<!-- /.card-tools -->
 	</div>
 	<!-- /.card-header -->

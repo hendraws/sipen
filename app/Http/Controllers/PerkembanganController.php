@@ -100,20 +100,31 @@ class PerkembanganController extends Controller
     		if(!empty($cekHari)){
     			$hariKerja = $cekHari->hari_kerja;
     		}
-    		Perkembangan::create([
+
+    		$drop_tunda = $storting_tunda = 0;
+
+    		$drop_tunda = $request->drop_tunda_masuk  - $request->drop_tunda_keluar;
+    		$storting_tunda = $request->angsuran_tunda_masuk  - $request->angsuran_tunda_keluar;
+
+    		$a = Perkembangan::create([
     			"cabang" => auth()->user()->cabang_id,
     			"tanggal" => $request->tanggal,
     			"drops" => $request->drop,
     			"storting" => $request->storting,
     			"psp" => $request->psp,
-    			"drop_tunda" => $request->drop_tunda,
-    			"storting_tunda" => $request->storting_tunda,
+    			"drop_tunda" => $drop_tunda,
+    			"drop_tunda_masuk" => $request->drop_tunda_masuk,
+    			"drop_tunda_keluar" => $request->drop_tunda_keluar,
+    			"storting_tunda" => $storting_tunda,
+    			"angsuran_tunda_masuk" => $request->angsuran_tunda_masuk,
+    			"angsuran_tunda_keluar" => $request->angsuran_tunda_keluar,
     			"tkp" => $request->tkp,
     			"sisa_kas" => $request->sisa_kas,
     			"hari_kerja" => $hariKerja + 1,
     			'created_by' => auth()->user()->id,
     			'updated_by' => auth()->user()->id,
     		]);
+    		// dd($a);
     	} catch (\Exception $e) {
     		DB::rollback();
     		toastr()->success($e->getMessage(), 'Error');
