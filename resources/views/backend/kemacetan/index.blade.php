@@ -51,6 +51,23 @@
  		}
  		getData(resort_id, tanggal);
 	});
+
+
+	$(document).on('keyup', '#ma_pinjaman', function(){
+		var pinjaman = $(this).val();
+		var target = (pinjaman / 100) * 20;
+		$('#ma_target').val( target );
+		$('#ma_saldo').val( pinjaman - target );
+	});
+
+
+	$(document).on('keyup', '#mb_pinjaman', function(){
+		var pinjaman = $(this).val();
+		var target = (pinjaman / 100) * 20;
+		$('#mb_target').val( target );
+		$('#mb_saldo').val( pinjaman - target );
+	});
+
 </script>
 @endsection
 

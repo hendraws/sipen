@@ -40,7 +40,7 @@
 		var resort = $('#resort_id').val();
 		var tanggal = $('#bulan').val();
 		var url = "{{ url()->current() }}?tanggal="+tanggal+"&resort="+resort;
-		if(resort_id == null){
+		if(resort == null){
 			return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
 		}
 		getDataTable(url, '#data-table')
