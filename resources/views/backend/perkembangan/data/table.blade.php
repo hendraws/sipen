@@ -46,7 +46,7 @@
 					</tr>
 					@empty
 					<tr>
-						<td colspan="8" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
+						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
 					</tr>
 					@endforelse
 				</tbody>
