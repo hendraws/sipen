@@ -37,7 +37,7 @@
 			<div class="form-group row">
 				<label for="ma_target" class="col-sm-2 col-form-label">Target</label>
 				<div class="col-md-10">
-					<input type="number" id="ma_target" class="form-control hitung" name="ma_target">
+					<input type="number" id="ma_target" class="form-control hitung" name="ma_target" readonly="">
 				</div>
 			</div>
 			<div class="form-group row">
@@ -63,7 +63,7 @@
 			<div class="form-group row">
 				<label for="mb_target" class="col-sm-2 col-form-label">Target</label>
 				<div class="col-md-10">
-					<input type="number" id="mb_target" class="form-control hitung" name="mb_target">
+					<input type="number" id="mb_target" class="form-control hitung" name="mb_target" readonly="">
 				</div>
 			</div>
 			<div class="form-group row">

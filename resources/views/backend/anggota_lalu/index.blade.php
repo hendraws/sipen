@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
-@section('title', 'Kemacetan ')
-@section('content-title', 'Kemacetan Cabang '. ucfirst(optional(optional(auth()->user())->getCabang)->cabang))
+@section('title', 'Anggota Lalu ')
+@section('content-title', 'Anggota Lalu Cabang '. ucfirst(optional(optional(auth()->user())->getCabang)->cabang))
 @section('css')
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
@@ -20,19 +20,6 @@
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
-	function getData(resort,tanggal){
-		$.ajax({
-			url: "{{ url()->current() }}?tanggal="+tanggal+"&resort="+resort,
-			type: "get",
-			datatype: "html"
-		}).done(function(data){
-			Swal.fire({title: 'Selesai', icon: 'success', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
-			$("#data-table").empty().html(data);
-			$('[data-toggle="tooltip"]').tooltip();
-		}).fail(function(jqXHR, ajaxOptions, thrownError){
-			Swal.fire({html: 'No response from server', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 10000, timerProgressBar: true,});
-		});
-	}
 
 	$(document).ready(function () {
 		$("#bulan").datepicker( {
@@ -41,33 +28,16 @@
 			minViewMode: "months"
 		});
 	});
-
+	
 	$(document).on('click', '#filter', function(){
-		var resort_id = $('#resort_id').val();
+		var resort = $('#resort_id').val();
 		var tanggal = $('#bulan').val();
- 		
- 		if(resort_id == null){
- 			return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
- 		}
- 		getData(resort_id, tanggal);
+		var url = "{{ url()->current() }}?tanggal="+tanggal+"&resort="+resort;
+		if(resort == null){
+			return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
+		}
+		getDataTable(url, '#data-table')
 	});
-
-
-	$(document).on('keyup', '#ma_pinjaman', function(){
-		var pinjaman = $(this).val();
-		var target = (pinjaman / 100) * 20;
-		$('#ma_target').val( target );
-		
-	});
-
-
-	$(document).on('keyup', '#mb_pinjaman', function(){
-		var pinjaman = $(this).val();
-		var target = (pinjaman / 100) * 20;
-		$('#mb_target').val( target );
-		
-	});
-
 </script>
 @endsection
 
@@ -106,7 +76,7 @@
 	</div>
 	<!-- /.card-header -->
 	<div class="card-body" style="display: none;">
-		@includeIf('backend.kemacetan.create')
+		@includeIf('backend.anggota_lalu.create')
 	</div>
 	<!-- /.card-body -->
 </div>

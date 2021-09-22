@@ -33,7 +33,7 @@
 		var pinjaman = $(this).val();
 		var target = (pinjaman / 100) * 20;
 		$('#target').val( target );
-		$('#saldo').val( pinjaman - target );
+
 	});
 	
 	$(document).on('click', '#filter', function(){
@@ -68,7 +68,7 @@
 				<div class="input-group mb-3 input-sm">
 					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y/m') }}">
 					<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
-					<a href="{{ action('PerkembanganController@printHarian') }}" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a>
+					<a href="" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a>
 					<div class="card-tools ml-2">
 						<button type="button" class="btn btn-primary" data-card-widget="collapse">Tambah
 						</button>
