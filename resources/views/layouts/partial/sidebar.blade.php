@@ -124,14 +124,38 @@
 			</li> --}}
 			@endcan
 			@can('input-data')
-			<li class="nav-item">
-				<a href="{{ action('PerkembanganController@create') }}" class="nav-link">
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
 					<i class="nav-icon fa fa-list"></i>
 					<p>
 						Input Data
+						<i class="right fas fa-angle-left"></i>
 					</p>
 				</a>
-			</li>	
+				<ul class="nav nav-treeview" style="display: none;">
+					<li class="nav-item">
+						<a href="{{ action('PerkembanganController@create') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>
+								Perkembangan
+							</p>
+						</a>
+					</li>	
+					<li class="nav-item">
+						<a href="{{ action('AngsuranKemacetanController@index') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Angsuran Kemacetan</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{ action('HomeController@underContraction') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Angsuran Calon Macet</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+
 			@endcan
 			@can('management-user')
 			<li class="nav-item">
