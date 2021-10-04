@@ -16,6 +16,7 @@ class KemacetanController extends Controller
      */
     public function index(Request $request)
     {
+    	
     	if($request->ajax()) {
     		$pecah = explode( '/',$request->tanggal);
     		$getTanggal = $request->tanggal."/01";
@@ -68,7 +69,11 @@ class KemacetanController extends Controller
     		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
     		$pasaran['tanggal'] = date('Y-m-d'); 
 
-    		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)->where('resort_id', $request->resort_id)->where('pasaran', $request->pasaran)->first();
+    		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal',now()->month)
+    		->first();
     		if(!empty($cekKemacetan)){
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
