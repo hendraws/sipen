@@ -1,5 +1,5 @@
 <h5>Angsuran Kemacetan Cabang {{ ucfirst(optional(optional(auth()->user())->getCabang)->cabang) }}</h5>
-<form action="{{ action('AngsuranKemacetanController@store') }}" method="POST">
+<form action="{{ action('AngsuranCalonMacetController@store') }}" method="POST">
 	@csrf
 	<div class="form-group row">
 		<label for="resort" class="col-sm-2 col-form-label">Resort</label>
@@ -33,7 +33,7 @@
 	<div class="form-group row">
 		<label for="pasaran" class="col-sm-2 col-form-label">Pasaran</label>
 		<div class="col-md-10">
-			<select class="form-control" name="pasaran" readonly id="pasaran"> 
+			<select class="form-control" name="pasaran" readonly id="pasaran">
 				@foreach($pasaran as $k => $v)
 					<option value="{{ $k }}" selected>{{ $v }}</option>
 				@endforeach
@@ -46,3 +46,6 @@
 		<button class="btn btn-brand btn-square btn-primary">Simpan</button>
 	</div>
 </form>
+<script type="text/javascript">
+
+</script>

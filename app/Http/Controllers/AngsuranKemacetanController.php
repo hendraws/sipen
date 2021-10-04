@@ -26,6 +26,7 @@ class AngsuranKemacetanController extends Controller
     		$data = AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)
+    		->orderBy('tanggal')
     		->get();
     		
     		$kemacetan = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
@@ -47,7 +48,7 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('tanggal',$bulan)
     		->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo')
     		->first();
-
+    		// dd($totalKemacetan);
     		return view('backend.angsuran_kemacetan.table', compact('data', 'getTanggal','kemacetan', 'totalAngsuran', 'totalKemacetan'));
     	}
 
@@ -101,6 +102,10 @@ class AngsuranKemacetanController extends Controller
 
     	DB::beginTransaction();
     	try {
+
+    		$kemacetan = Kemacetan::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
+
+    		$angsuran['kemacetan_id'] = $kemacetan->id; 
     		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
     		$angsuran['created_by'] = auth()->user()->id; 
 

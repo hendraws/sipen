@@ -1,6 +1,6 @@
 @extends('layouts.app_master')
-@section('title', 'Angsuran Kemacetan ')
-@section('content-title', 'Angsuran Kemacetan Cabang '. ucfirst(optional(optional(auth()->user())->getCabang)->cabang))
+@section('title', 'Angsuran Calon Macet ')
+@section('content-title', 'Angsuran Calon Macet Cabang '. ucfirst(optional(optional(auth()->user())->getCabang)->cabang))
 @section('css')
 <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{ asset('plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
@@ -31,7 +31,9 @@
 			format: "yyyy-mm-dd",
 		}).on('changeDate', function(ev){
 			getPasaran($(this).val());
-		});
+	    });
+
+
 	});
 
 	function getPasaran(tanggal){
@@ -42,21 +44,22 @@
 		if(cekDay == 1 || cekDay == 4){
 			key = 1;
 			val = "Senin - Kamis"; 
-		}
+    	}
 
-		if(cekDay == 2 || cekDay == 5){
-			key = 2;
+    	if(cekDay == 2 || cekDay == 5){
+    		key = 2;
 			val = "Selasa - Jum'at"; 
-		}
+    	}
 
-		if(cekDay == 3 || cekDay == 6){
+    	if(cekDay == 3 || cekDay == 6){
 			key = 2;
 			val = "Rabu - Sabtu"; 
-		}
-		var option = '<option value='+key+' selected>'+ val +'</option>'
-		$('#pasaran').html(option);
+    	}
+    	var option = '<option value='+key+' selected>'+ val +'</option>'
+    	$('#pasaran').html(option);
 	}
-	$(document).on('keyup', '#pinjaman', function(){
+
+	$(document).on('click', '#pinjaman', function(){
 		var pinjaman = $(this).val();
 		var target = (pinjaman / 100) * 20;
 		$('#target').val( target );
@@ -109,7 +112,7 @@
 	</div>
 	<!-- /.card-header -->
 	<div class="card-body" style="display: none;">
-		@includeIf('backend.angsuran_kemacetan.create')
+		@includeIf('backend.angsuran_calon_macet.create')
 	</div>
 	<!-- /.card-body -->
 </div>

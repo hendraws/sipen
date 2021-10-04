@@ -9,7 +9,7 @@
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
-						<th scope="col" rowspan="2">Hari Kerja</th>
+						<th scope="col" rowspan="2">NO.</th>
 						<th scope="col" rowspan="2">Pasaran</th>
 						<th scope="col" colspan="4">Angsuran Kemacetan</th>
 						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
@@ -72,8 +72,7 @@
 				</table>
 			</div>
 			<hr>
-			<div class="col-md-12 mt-3 bg-dark">
-				<h5>Total Keseluruhan</h5>
+			<div class="col-md-12 mt-3">
 				<div class="table-responsive">
 					<table id="data-table" class="table table-sm">
 						<thead class="text-center">
