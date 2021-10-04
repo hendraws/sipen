@@ -66,7 +66,11 @@ class CalonMacetController extends Controller
     		$pasaran['tanggal'] = date('Y-m-d'); 
     		$pasaran['created_by'] = auth()->user()->id; 
 
-    		$cekKemacetan  = CalonMacet::where('cabang_id', auth()->user()->cabang_id)->where('resort_id', $request->resort_id)->where('pasaran', $request->pasaran)->first();
+    		$cekKemacetan  = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal',now()->month)
+    		->first();
     		if(!empty($cekKemacetan)){
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
