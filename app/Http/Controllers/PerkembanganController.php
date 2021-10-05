@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\KantorCabang;
+use App\Kemacetan;
 use App\Perkembangan;
 use App\ProgramKerja;
 use Illuminate\Http\Request;
@@ -425,6 +426,18 @@ class PerkembanganController extends Controller
     		$tahun = $pecah[0];
     		$bulan = $pecah[1];
 
+    		// get data kemacetan 
+    		if($request->data = 'kemacetan'){
+    			$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    			->whereMonth('tanggal',$bulan)
+    			->get();
+
+    			$groupKemacetan = $kemacetan->mapToGroups(function ($item, $key) {
+    				return [$item->getResort->nama => $item];
+    			});
+
+    			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan'));
+    		}
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,
     			sum(storting) as sum_storting,

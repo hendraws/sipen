@@ -9,9 +9,10 @@
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
-						<th scope="col" rowspan="2">Hari Kerja</th>
-						<th scope="col" rowspan="2">Pasaran</th>
-						<th scope="col" colspan="4">Angsuran Kemacetan</th>
+						<th scope="col" >Hari Kerja</th>
+						<th scope="col" >Pasaran</th>
+						<th scope="col" >Angsuran Kemacetan</th>
+						<th scope="col" >Anggota Keluar</th>
 						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 					</tr>
 				</thead>
@@ -20,7 +21,8 @@
 					<tr>
 						<td class="text-center"> {{ $loop->index +1 }} </td>
 						<td class="text-center"> {{ $val->getPasaran->hari  }} </td>
-						<td class="text-center"> {{ $val->angsuran  }} </td>
+						<td class="text-right" width="20%"> {{ number_format($val->angsuran)  }} </td>
+						<td class="text-center"> {{ $val->anggota_keluar  }} </td>
 						{{-- <td>  </td> --}}
 						{{-- <td class="text-center">
 							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>
@@ -44,6 +46,9 @@
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Pasaran</th>
+								<th scope="col" >Anggota</th>
+								<th scope="col" >Anggota Keluar</th>
+								<th scope="col" >Total Anggota</th>
 								<th scope="col" >Macet Awal</th>
 								<th scope="col" >Macet Baru</th>
 								<th scope="col" >Total Macet</th>
@@ -56,11 +61,14 @@
 							@forelse ($kemacetan as $key => $val)
 							<tr>
 								<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
-								<td class="text-right"> {{ $val->ma_saldo  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo + $val->ma_saldo  }} </td>
-								<td class="text-right"> {{ $val->angsuran ?? 0  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo + $val->ma_saldo -$val->angsuran  }} </td>
+								<td class="text-right"> {{ $val->ma_anggota + $val->mb_anggota  }} </td>
+								<td class="text-right"> {{ $val->anggota_keluar  }} </td>
+								<td class="text-right"> {{ $val->ma_anggota + $val->mb_anggota -$val->anggota_keluar   }} </td>
+								<td class="text-right"> {{ number_format($val->ma_saldo)  }} </td>
+								<td class="text-right"> {{ number_format($val->mb_saldo)  }} </td>
+								<td class="text-right"> {{ number_format($val->mb_saldo + $val->ma_saldo)  }} </td>
+								<td class="text-right"> {{ number_format($val->angsuran ?? 0)  }} </td>
+								<td class="text-right"> {{ number_format($val->mb_saldo + $val->ma_saldo -$val->angsuran)  }} </td>
 							</tr>
 							@empty
 							<tr>
@@ -79,6 +87,9 @@
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Hari Kerja</th>
+								<th scope="col" >Anggota</th>
+								<th scope="col" >Anggota Keluar</th>
+								<th scope="col" >Total Anggota</th>
 								<th scope="col" >Macet Awal</th>
 								<th scope="col" >Macet Baru</th>
 								<th scope="col" >Total Macet</th>
@@ -90,23 +101,21 @@
 						<tbody>
 							<tr>
 								<td class="text-center"> {{ $totalAngsuran->hk }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_ma_saldo }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo }}</td>
-								<td class="text-center"> {{ $totalAngsuran->total_angsuran }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo - $totalAngsuran->total_angsuran }}</td>
-								{{-- <td>  </td> --}}
-							{{-- <td class="text-center">
-							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KemacetanController@delete',$val->id) }}">Hapus</a>
-						</td> --}}
-					</tr>
-				</tbody>
-			</table>
+								<td class="text-right"> {{ $totalKemacetan->total_ma_anggota + $totalKemacetan->total_mb_anggota  }} </td>
+								<td class="text-right"> {{ $totalAngsuran->total_anggota_keluar  }} </td>
+								<td class="text-right"> {{ $totalKemacetan->total_ma_anggota + $totalKemacetan->total_mb_anggota -$totalAngsuran->total_anggota_keluar   }} </td>
+								<td class="text-center"> {{ number_format($totalKemacetan->total_ma_saldo) }}</td>
+								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo) }}</td>
+								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo) }}</td>
+								<td class="text-center"> {{ number_format($totalAngsuran->total_angsuran) }}</td>
+								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo - $totalAngsuran->total_angsuran) }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
-	</div>
-</div>
 
-</div>
-<hr>
+	</div>
+	<hr>
 </div>

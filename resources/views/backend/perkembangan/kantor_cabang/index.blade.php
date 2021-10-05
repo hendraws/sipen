@@ -39,22 +39,38 @@
 		}).fail(function(jqXHR, ajaxOptions, thrownError){
 			Swal.fire({html: 'No response from server', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 10000, timerProgressBar: true,});
 		});
-	}
+	}	
+
+
 	
 	$(document).ready(function () {
 		$('#cabang').on('change', function() {
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
+			var cabang = this.valueOf();
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getData(this.value, false, $('#tanggal').val(),'dataCabang');
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 		});	
 		if($('#cabang').val().length != 0)
 		{
-			getData($('#cabang').val(),false, $('#tanggal').val(), 'dataCabang');
+			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
+			var cabang = $('#cabang').val();
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 		}
 
 
 		$(document).on('click', '#filter', function(){
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-			getData($('#cabang').val(),false, $('#tanggal').val(),'dataCabang');
+			var cabang = $('#cabang').val();
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 		});
 
 		$(document).on('click', '#cetak', function(){
@@ -96,6 +112,39 @@
 			</div>
 		</div>
 	</div>
-	<div id="dataCabang"></div>
+	<div class="card card-olive card-tabs">
+		<div class="card-header p-0 pt-1">
+			<ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+				{{-- <li class="pt-2 px-3"><h3 class="card-title"></h3></li> --}}
+				<li class="nav-item">
+					<a class="nav-link active" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="true">Kemacetan</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Calon Macet</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">Perkembangan</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<div class="tab-content" id="custom-tabs-two-tabContent">
+				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+					<div id="dataCabang"></div>
+				</div>
+				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+					<div id="dataKemacetan"></div>
+				</div>
+				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+					Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna. 
+				</div>
+				<div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
+					Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis. 
+				</div>
+			</div>
+		</div>
+		<!-- /.card -->
+	</div>
+
 </div>
 @endsection

@@ -33,20 +33,20 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('kemacetans.tanggal',$bulan )
     		->where('kemacetans.cabang_id', auth()->user()->cabang_id)
     		->where('kemacetans.resort_id', $request->resort)
-    		->select('kemacetans.pasaran as pasaran', 'ma_saldo','mb_saldo','angsuran')
+    		->select('kemacetans.pasaran as pasaran', 'ma_saldo','mb_saldo','angsuran', 'ma_anggota', 'mb_anggota', 'anggota_keluar')
     		->orderBy('kemacetans.pasaran')
     		->get();
 
     		$totalAngsuran =  AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)
-    		->selectRaw('count(tanggal) as hk, sum(angsuran) as total_angsuran')
+    		->selectRaw('count(tanggal) as hk, sum(angsuran) as total_angsuran, sum(anggota_keluar) as total_anggota_keluar')
     		->first();
 
     		$totalKemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)
-    		->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo')
+    		->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(mb_anggota) as total_mb_anggota, sum(ma_anggota) as total_ma_anggota')
     		->first();
     		// dd($totalKemacetan);
     		return view('backend.angsuran_kemacetan.table', compact('data', 'getTanggal','kemacetan', 'totalAngsuran', 'totalKemacetan'));
