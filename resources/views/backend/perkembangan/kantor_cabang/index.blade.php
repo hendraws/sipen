@@ -46,7 +46,7 @@
 	$(document).ready(function () {
 		$('#cabang').on('change', function() {
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-			var cabang = this.valueOf();
+			var cabang = this.value;
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan

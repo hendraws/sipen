@@ -436,6 +436,20 @@ class PerkembanganController extends Controller
     				return [$item->getResort->nama => $item];
     			});
 
+    			$evaluasi = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
+    			->where('kemacetans.cabang_id', auth()->user()->cabang_id) 
+    			->whereMonth('kemacetans.tanggal',$bulan)
+    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id')
+    			->groupBy('kemacetans.resort_id')
+    			->groupBy('kemacetans.pasaran')
+    			->get();
+    			// dd($evaluasi);
+
+    // 			$groupEvaluasi = [];
+    // 			foreach ($evaluasi as $key => $value) {
+    // 				$groupEvaluasi[$value->getResort->nama] = [ 'pasaran' => $value->getPasaran->nama, 'saldo_macet' => ($value->total_ma_saldo + $value->total_mb_saldo),  'angsuran_masuk' => $value->jml_angsuran ];
+    // 			}
+				// dd($groupEvaluasi);
     			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan'));
     		}
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
