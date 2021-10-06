@@ -4,7 +4,7 @@
 	<div class="form-group row">
 		<label for="resort" class="col-sm-2 col-form-label">Resort</label>
 		<div class="col-md-10">
-			<select class="form-control" name="resort_id">
+			<select class="form-control" name="resort_id" required>
 				<option disabled="" selected>Pilih Resort</option>
 				@foreach ($resort as $row)
 				<option value="{{ $row->id }}" >{{ $row->nama }}</option>
@@ -15,19 +15,19 @@
 	<div class="form-group row">
 		<label for="tanggal" class="col-sm-2 col-form-label">Tanggal</label>
 		<div class="col-md-10">
-			<input type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $today }}">
+			<input required type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $today }}">
 		</div>
 	</div>
 	<div class="form-group row">
 		<label for="pinjaman" class="col-sm-2 col-form-label">Angsuran</label>
 		<div class="col-md-10">
-			<input type="number" id="pinjaman" class="form-control hitung" name="angsuran">
+			<input  required type="number" id="pinjaman" class="form-control hitung" name="angsuran">
 		</div>
 	</div>
 	<div class="form-group row">
 		<label for="ma_anggota" class="col-sm-2 col-form-label">Anggota Keluar</label>
 		<div class="col-md-10">
-			<input type="number" id="ma_anggota" class="form-control" name="anggota_keluar">
+			<input required type="number" id="ma_anggota" class="form-control" name="anggota_keluar">
 		</div>
 	</div>
 	<div class="form-group row">

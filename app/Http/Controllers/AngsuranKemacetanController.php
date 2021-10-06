@@ -113,6 +113,7 @@ class AngsuranKemacetanController extends Controller
     		->where('resort_id', $request->resort_id)
     		->where('pasaran', $request->pasaran)
     		->where('tanggal', $request->tanggal)
+    		->where('kemacetan_id', $kemacetan->id)
     		->first();
 
     		if(!empty($cekAngsuran)){

@@ -5,11 +5,11 @@
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
-						<th scope="col" rowspan="2">NO.</th>
-						<th scope="col" rowspan="2">PASARAN</th>
+						<th scope="col" rowspan="2" class="align-middle">NO.</th>
+						<th scope="col" rowspan="2" class="align-middle">PASARAN</th>
 						<th scope="col" colspan="4">Macet Awal</th>
 						<th scope="col" colspan="4">Macet Baru</th>
-						<th scope="col"	rowspan="2">JUMLAH</th>
+						<th scope="col"	rowspan="2" class="align-middle">JUMLAH</th>
 						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 					</tr>
 					<tr>
@@ -42,7 +42,7 @@
 						<td> {{ number_format($val->mb_pinjaman)  }} </td>
 						<td> {{ number_format($val->mb_target)  }} </td>
 						<td> {{ number_format($val->mb_saldo)  }} </td>
-						<td>  </td>
+						<td>  {{ number_format($val->ma_saldo + $val->mb_saldo )  }} </td>
 					</tr>
 					@php
 					$ma_anggota += $val->ma_anggota;
@@ -69,7 +69,7 @@
 						<td class="text-right">{{ number_format($mb_pinjaman) }}</td>
 						<td class="text-right">{{ number_format($mb_target) }}</td>
 						<td class="text-right">{{ number_format($mb_saldo) }}</td>
-						<td class="text-right"></td>
+						<td class="text-right">{{ number_format($ma_saldo+$mb_saldo) }}</td>
 					</tr>
 					@empty
 					<tr>
@@ -83,14 +83,14 @@
 	<hr>
 </div>
 
-{{-- <div class="card card-maroon card-outline">
+<div class="card card-maroon card-outline">
 	<div class="card-body">
 		<div class="table-responsive">
 			<h5>Evaluasi Macet Berjalan</h5>
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
-						<th scope="col">NO.</th>
+						<th scope="col">Hari Kerja</th>
 						<th scope="col">PASARAN</th>
 						<th scope="col">Saldo Macet</th>
 						<th scope="col">Angsuran Masuk</th>
@@ -98,15 +98,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					@forelse($groupKemacetan as $resort => $data)
+					@forelse($evaluasiBerjalan as $resort => $data)
 					<tr class="bg-warning"><td colspan="11"><b>Resort {{ ucfirst($resort) }}</b></td></tr>
 					@forelse ($data as $key => $val)
 					<tr class="text-right">
-						<td> {{ $loop->index +1 }} </td>
-						<td> {{ $val->getPasaran->hari  }} </td>
-						<td> {{ $val->ma_anggota  }} </td>
-						<td> {{ $val->ma_pinjaman  }} </td>
-						<td> {{ $val->ma_pinjaman  }} </td>
+						@if($loop->index == 0)
+						<td rowspan="3" class="align-middle text-center"> {{ $val->hk }} </td>
+						@endif
+						<td> {{ $val->hari_pasaran  }} </td>
+						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo)  }} </td>
+						<td> {{ number_format($val->jml_angsuran)  }} </td>
+						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
 						<td>  </td>
 					</tr>
 					@empty
@@ -124,4 +126,4 @@
 		</div>
 	</div>
 	<hr>
-</div> --}}
+</div>

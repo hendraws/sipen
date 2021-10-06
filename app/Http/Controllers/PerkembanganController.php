@@ -437,20 +437,27 @@ class PerkembanganController extends Controller
     			});
 
     			$evaluasi = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
+    			->leftjoin('pasarans','pasarans.id', 'kemacetans.pasaran')
+    			->leftjoin('resorts','resorts.id', 'kemacetans.resort_id')
     			->where('kemacetans.cabang_id', auth()->user()->cabang_id) 
     			->whereMonth('kemacetans.tanggal',$bulan)
-    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id')
+    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id, pasarans.hari as hari_pasaran, resorts.nama as nama_resort, count(angsuran_kemacetans.tanggal) as hk')
     			->groupBy('kemacetans.resort_id')
     			->groupBy('kemacetans.pasaran')
+    			->groupBy('kemacetans.resort_id')
     			->get();
-    			// dd($evaluasi);
+
+    			$evaluasiBerjalan = $evaluasi->mapToGroups(function ($item, $key) {
+    				// dd($item);
+    				return [$item->nama_resort => $item];
+    			});
 
     // 			$groupEvaluasi = [];
     // 			foreach ($evaluasi as $key => $value) {
     // 				$groupEvaluasi[$value->getResort->nama] = [ 'pasaran' => $value->getPasaran->nama, 'saldo_macet' => ($value->total_ma_saldo + $value->total_mb_saldo),  'angsuran_masuk' => $value->jml_angsuran ];
     // 			}
 				// dd($groupEvaluasi);
-    			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan'));
+    			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan','evaluasiBerjalan'));
     		}
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,
