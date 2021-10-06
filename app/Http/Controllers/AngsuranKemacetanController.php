@@ -104,7 +104,7 @@ class AngsuranKemacetanController extends Controller
     	try {
 
     		$kemacetan = Kemacetan::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
-
+    		
     		$angsuran['kemacetan_id'] = $kemacetan->id; 
     		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
     		$angsuran['created_by'] = auth()->user()->id; 

@@ -44,9 +44,7 @@
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Pasaran</th>
-								<th scope="col" >Macet Awal</th>
-								<th scope="col" >Macet Baru</th>
-								<th scope="col" >Total Macet</th>
+								<th scope="col" >Calon Macet Awal</th>
 								<th scope="col" >Angsuran</th>
 								<th scope="col" >Saldo</th>
 								{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
@@ -56,11 +54,9 @@
 							@forelse ($kemacetan as $key => $val)
 							<tr>
 								<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
-								<td class="text-right"> {{ $val->ma_saldo  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo + $val->ma_saldo  }} </td>
+								<td class="text-right"> {{ $val->cma_saldo  }} </td>
 								<td class="text-right"> {{ $val->angsuran ?? 0  }} </td>
-								<td class="text-right"> {{ $val->mb_saldo + $val->ma_saldo -$val->angsuran  }} </td>
+								<td class="text-right"> {{ $val->cma_saldo - $val->angsuran  }} </td>
 							</tr>
 							@empty
 							<tr>
@@ -78,9 +74,7 @@
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Hari Kerja</th>
-								<th scope="col" >Macet Awal</th>
-								<th scope="col" >Macet Baru</th>
-								<th scope="col" >Total Macet</th>
+								<th scope="col" >Calon Macet Awal</th>
 								<th scope="col" >Angsuran</th>
 								<th scope="col" >Saldo</th>
 								{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
@@ -88,12 +82,7 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td class="text-center"> {{ $totalAngsuran->hk }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_ma_saldo }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo }}</td>
-								<td class="text-center"> {{ $totalAngsuran->total_angsuran }}</td>
-								<td class="text-center"> {{ $totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo - $totalAngsuran->total_angsuran }}</td>
+								
 								{{-- <td>  </td> --}}
 							{{-- <td class="text-center">
 							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>

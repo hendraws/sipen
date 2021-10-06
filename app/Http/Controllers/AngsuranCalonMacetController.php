@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\AngsuranCalonMacet;
 use App\CalonMacet;
+use App\Kemacetan;
 use App\Resort;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AngsuranCalonMacetController extends Controller
 {
@@ -26,12 +28,12 @@ class AngsuranCalonMacetController extends Controller
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)
     		->get();
-    		
+
     		$kemacetan = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
     		->whereMonth('calon_macets.tanggal',$bulan )
     		->where('calon_macets.cabang_id', auth()->user()->cabang_id)
     		->where('calon_macets.resort_id', $request->resort)
-    		->select('calon_macets.pasaran as pasaran', 'cma_saldo','angsuran')
+    		->select('calon_macets.pasaran as pasaran', 'cma_saldo','angsuran', 'cma_anggota', 'anggota_keluar')
     		->orderBy('calon_macets.pasaran')
     		->get();
 
@@ -89,6 +91,55 @@ class AngsuranCalonMacetController extends Controller
      */
     public function store(Request $request)
     {
+    	$angsuran = $request->validate([
+    		'resort_id' => 'required',
+    		'pasaran' => 'required',
+    		'anggota_keluar' => 'required',
+    		'angsuran' => 'required',
+    		'tanggal' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+
+    		$calonMacet = CalonMacet::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
+    		if(empty($calonMacet)){
+    			toastr()->error('Silahkan membuat data master calon macet terlebih dahulu!');
+    			return back();
+    		}
+
+    		$angsuran['calon_macet_id'] = $calonMacet->id; 
+    		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
+    		$angsuran['created_by'] = auth()->user()->id; 
+
+    		$cekAngsuran  = AngsuranCalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->where('tanggal', $request->tanggal)
+    		->where('calon_macet_id', $calonMacet->id)
+    		->first();
+
+    		if(!empty($cekAngsuran)){
+    			toastr()->warning('Data Sudah Ada', 'Error');
+    			return back();
+    		}
+    		AngsuranCalonMacet::create($angsuran);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		// dd($e->getMessage());
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		// dd($e->getMessage());
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah ditambahkan', 'Berhasil');
+    	return back();
+
         dd($request);
     }
 
