@@ -106,7 +106,7 @@
 					@forelse ($data as $key => $val)
 					<tr class="text-right">
 						@if($loop->index == 0)
-						<td rowspan="3" class="align-middle text-center"> {{ $val->hk }} </td>
+						<td rowspan="3" class="align-middle text-center"> {{ $data->sum('hk') }} </td>
 						@endif
 						<td class="text-center"> {{ $val->hari  }} </td>
 						<td class="text-center"> {{ $val->anggota  }} </td>
