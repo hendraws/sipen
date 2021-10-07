@@ -92,23 +92,29 @@
 					<tr class="text-center">
 						<th scope="col">Hari Kerja</th>
 						<th scope="col">PASARAN</th>
+						<th scope="col">Anggota</th>
+						<th scope="col">Anggota Keluar</th>
+						<th scope="col" class="bg-gray-dark">Anggota Kini</th>
 						<th scope="col">Saldo Macet</th>
 						<th scope="col">Angsuran Masuk</th>
-						<th scope="col">Macet Kini</th>
+						<th scope="col" class="bg-gray-dark">Macet Kini</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($evaluasiBerjalan as $resort => $data)
-					<tr class="bg-warning"><td colspan="11"><b>Resort {{ ucfirst($resort) }}</b></td></tr>
+					<tr class="bg-warning"><td colspan="8"><b>Resort {{ ucfirst($resort) }}</b></td></tr>
 					@forelse ($data as $key => $val)
 					<tr class="text-right">
 						@if($loop->index == 0)
 						<td rowspan="3" class="align-middle text-center"> {{ $val->hk }} </td>
 						@endif
 						<td class="text-center"> {{ $val->hari  }} </td>
+						<td class="text-center"> {{ $val->anggota  }} </td>
+						<td class="text-center"> {{ $val->anggota_keluar  }} </td>
+						<td class="text-center bg-gray-dark"> {{ $val->anggota - $val->anggota_keluar  }} </td>
 						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo)  }} </td>
 						<td> {{ number_format($val->jml_angsuran)  }} </td>
-						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
+						<td class="bg-gray-dark"> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
 						<td>  </td>
 					</tr>
 					@empty
