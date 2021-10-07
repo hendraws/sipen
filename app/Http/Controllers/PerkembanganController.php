@@ -437,11 +437,11 @@ class PerkembanganController extends Controller
     			});
 
     			$evaluasi = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
-    			->leftjoin('pasarans','pasarans.id', 'kemacetans.pasaran')
+    			->join('pasarans','pasarans.id', 'kemacetans.pasaran')
     			->leftjoin('resorts','resorts.id', 'kemacetans.resort_id')
     			->where('kemacetans.cabang_id', auth()->user()->cabang_id) 
     			->whereMonth('kemacetans.tanggal',$bulan)
-    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id, pasarans.hari as hari_pasaran, resorts.nama as nama_resort, count(angsuran_kemacetans.tanggal) as hk')
+    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id, hari, resorts.nama as nama_resort, count(angsuran_kemacetans.tanggal) as hk')
     			->groupBy('kemacetans.resort_id')
     			->groupBy('kemacetans.pasaran')
     			->groupBy('kemacetans.resort_id')
