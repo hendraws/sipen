@@ -441,12 +441,12 @@ class PerkembanganController extends Controller
     			->leftjoin('resorts','resorts.id', 'kemacetans.resort_id')
     			->where('kemacetans.cabang_id', auth()->user()->cabang_id) 
     			->whereMonth('kemacetans.tanggal',$bulan)
-    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id, resorts.nama as nama_resort, count(angsuran_kemacetans.tanggal) as hk')
+    			->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(angsuran) as jml_angsuran, kemacetans.pasaran, kemacetans.resort_id, hari, resorts.nama as nama_resort, count(angsuran_kemacetans.tanggal) as hk')
     			->groupBy('kemacetans.resort_id')
     			->groupBy('kemacetans.pasaran')
     			->groupBy('kemacetans.resort_id')
     			->get();
-    			dd($evaluasi);
+
     			$evaluasiBerjalan = $evaluasi->mapToGroups(function ($item, $key) {
     				return [$item->nama_resort => $item];
     			});

@@ -82,7 +82,7 @@
 	</div><!-- /.card-body -->
 	<hr>
 </div>
-{{-- 
+
 <div class="card card-maroon card-outline">
 	<div class="card-body">
 		<div class="table-responsive">
@@ -105,7 +105,7 @@
 						@if($loop->index == 0)
 						<td rowspan="3" class="align-middle text-center"> {{ $val->hk }} </td>
 						@endif
-						<td> {{ $val->hari  }} </td>
+						<td class="text-center"> {{ $val->hari  }} </td>
 						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo)  }} </td>
 						<td> {{ number_format($val->jml_angsuran)  }} </td>
 						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
@@ -126,4 +126,4 @@
 		</div>
 	</div>
 	<hr>
-</div> --}}
+</div>
