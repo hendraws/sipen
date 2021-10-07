@@ -6,7 +6,7 @@
 			</div>
 		</div>
 		<div class="table-responsive">
-			<table id="data-table" class="table table-sm">
+			<table id="data-table" class="table table-sm table-bordered">
 				<thead class="text-center">
 					<tr class="text-center">
 						<th scope="col" >Hari Kerja</th>
@@ -42,7 +42,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
-					<table id="data-table" class="table table-sm">
+					<table id="data-table" class="table table-sm table-bordered">
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Pasaran</th>
@@ -81,9 +81,9 @@
 			</div>
 			<hr>
 			<div class="col-md-12 mt-3 bg-dark">
-				<h5>Total Keseluruhan</h5>
+				<h5>Total keluruhan Berjalan</h5>
 				<div class="table-responsive">
-					<table id="data-table" class="table table-sm">
+					<table id="data-table" class="table table-sm table-bordered">
 						<thead class="text-center">
 							<tr class="text-center">
 								<th scope="col" >Hari Kerja</th>
@@ -101,14 +101,14 @@
 						<tbody>
 							<tr>
 								<td class="text-center"> {{ $totalAngsuran->hk }}</td>
-								<td class="text-right"> {{ $totalKemacetan->total_ma_anggota + $totalKemacetan->total_mb_anggota  }} </td>
-								<td class="text-right"> {{ $totalAngsuran->total_anggota_keluar  }} </td>
-								<td class="text-right"> {{ $totalKemacetan->total_ma_anggota + $totalKemacetan->total_mb_anggota -$totalAngsuran->total_anggota_keluar   }} </td>
-								<td class="text-center"> {{ number_format($totalKemacetan->total_ma_saldo) }}</td>
-								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo) }}</td>
-								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo) }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->total_angsuran) }}</td>
-								<td class="text-center"> {{ number_format($totalKemacetan->total_mb_saldo + $totalKemacetan->total_ma_saldo - $totalAngsuran->total_angsuran) }}</td>
+								<td class="text-center"> {{ $totalAngsuran->ma_anggota + $totalAngsuran->mb_anggota }}</td>
+								<td class="text-center"> {{ $totalAngsuran->total_anggota_keluar }}</td>
+								<td class="text-center"> {{ $totalAngsuran->ma_anggota + $totalAngsuran->mb_anggota - $totalAngsuran->total_anggota_keluar  }}</td>
+								<td class="text-center"> {{ $totalAngsuran->total_ma_saldo }}</td>
+								<td class="text-center"> {{ $totalAngsuran->total_mb_saldo }}</td>
+								<td class="text-center"> {{ $totalAngsuran->total_mb_saldo + $totalAngsuran->total_ma_saldo  }}</td>
+								<td class="text-center"> {{ $totalAngsuran->total_angsuran  }}</td>
+								<td class="text-center"> {{  $totalAngsuran->total_mb_saldo + $totalAngsuran->total_ma_saldo - $totalAngsuran->total_angsuran  }}</td>
 							</tr>
 						</tbody>
 					</table>

@@ -33,14 +33,31 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('kemacetans.tanggal',$bulan )
     		->where('kemacetans.cabang_id', auth()->user()->cabang_id)
     		->where('kemacetans.resort_id', $request->resort)
-    		->select('kemacetans.pasaran as pasaran', 'ma_saldo','mb_saldo','angsuran', 'ma_anggota', 'mb_anggota', 'anggota_keluar')
+    		->selectRaw('kemacetans.pasaran as pasaran,sum(ma_saldo) as ma_saldo, sum(mb_saldo) as mb_saldo, sum(angsuran) as angsuran, sum(ma_anggota) as ma_anggota, sum(mb_anggota) as mb_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('kemacetans.pasaran')
+    		->groupBy('kemacetans.pasaran')
     		->get();
 
-    		$totalAngsuran =  AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
-    		->where('resort_id', $request->resort)
-    		->whereMonth('tanggal',$bulan)
-    		->selectRaw('count(tanggal) as hk, sum(angsuran) as total_angsuran, sum(anggota_keluar) as total_anggota_keluar')
+    		// $totalAngsuran =  AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		// ->where('resort_id', $request->resort)
+    		// ->whereMonth('tanggal',$bulan)
+    		// ->selectRaw('count(tanggal) as hk, sum(angsuran) as total_angsuran, sum(anggota_keluar) as total_anggota_keluar')
+    		// ->first();
+
+    		$totalAngsuran =  AngsuranKemacetan::join('kemacetans','kemacetans.id','angsuran_kemacetans.kemacetan_id')
+    		->where('angsuran_kemacetans.cabang_id', auth()->user()->cabang_id)
+    		->where('angsuran_kemacetans.resort_id', $request->resort)
+    		->whereMonth('angsuran_kemacetans.tanggal',$bulan)
+    		->selectRaw('
+    			count(angsuran_kemacetans.tanggal) as hk, 
+    			sum(angsuran_kemacetans.angsuran) as total_angsuran, 
+    			sum(ma_saldo) as total_ma_saldo, 
+    			sum(ma_anggota) as ma_anggota, 
+    			sum(mb_anggota) as mb_anggota, 
+    			sum(mb_saldo) as total_ma_saldo, 
+    			sum(mb_saldo) as total_mb_saldo, 
+    			sum(anggota_keluar) as total_anggota_keluar
+    		')
     		->first();
 
     		$totalKemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
@@ -104,7 +121,7 @@ class AngsuranKemacetanController extends Controller
     	try {
 
     		$kemacetan = Kemacetan::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
-    		
+
     		$angsuran['kemacetan_id'] = $kemacetan->id; 
     		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
     		$angsuran['created_by'] = auth()->user()->id; 

@@ -29,27 +29,42 @@ class AngsuranCalonMacetController extends Controller
     		->whereMonth('tanggal',$bulan)
     		->get();
 
-    		$kemacetan = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
+    		$calonMacet = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
     		->whereMonth('calon_macets.tanggal',$bulan )
     		->where('calon_macets.cabang_id', auth()->user()->cabang_id)
     		->where('calon_macets.resort_id', $request->resort)
-    		->select('calon_macets.pasaran as pasaran', 'cma_saldo','angsuran', 'cma_anggota', 'anggota_keluar')
+    		->selectRaw('calon_macets.pasaran as pasaran, sum(cma_saldo) as cma_saldo,sum(angsuran) as angsuran, sum(cma_anggota) as cma_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('calon_macets.pasaran')
+    		->groupBy('calon_macets.pasaran')
     		->get();
-
-    		$totalAngsuran =  AngsuranCalonMacet::where('cabang_id', auth()->user()->cabang_id)
-    		->where('resort_id', $request->resort)
-    		->whereMonth('tanggal',$bulan)
-    		->selectRaw('count(tanggal) as hk, sum(angsuran) as total_angsuran')
+				// <th scope="col" >Hari Kerja</th>
+				// 				<th scope="col" >Anggota</th>
+				// 				<th scope="col" >Anggota Keluar</th>
+				// 				<th scope="col" >Total Anggota</th>
+				// 				<th scope="col" >Calon Macet Awal</th>
+				// 				<th scope="col" >Angsuran</th>
+				// 				<th scope="col" >Saldo</th>
+    		$totalAngsuran =  CalonMacet::leftJoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id','calon_macets.id' ) 
+    		// AngsuranCalonMacet::leftjoin('calon_macets','calon_macets.id','angsuran_calon_macets.calon_macet_id')
+    		->where('angsuran_calon_macets.cabang_id', auth()->user()->cabang_id)
+    		->where('angsuran_calon_macets.resort_id', $request->resort)
+    		->whereMonth('angsuran_calon_macets.tanggal',$bulan)
+    		->selectRaw('
+    			count(angsuran_calon_macets.tanggal) as hk, 
+    			sum(calon_macets.cma_anggota) as total_anggota, 
+    			sum(anggota_keluar) as total_anggota_keluar,
+    			sum(cma_saldo) as total_cma_saldo, 
+    			sum(angsuran) as total_angsuran
+    			')
     		->first();
-
+    		// dd($totalAngsuran);
     		$totalKemacetan = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)
     		->selectRaw('sum(cma_saldo) as total_cma_saldo')
     		->first();
 
-    		return view('backend.angsuran_calon_macet.table', compact('data', 'getTanggal','kemacetan', 'totalAngsuran', 'totalKemacetan'));
+    		return view('backend.angsuran_calon_macet.table', compact('data', 'getTanggal','calonMacet', 'totalAngsuran', 'totalKemacetan'));
     	}
 
     	$today =  date('Y-m-d');

@@ -50,7 +50,7 @@
 		}
 
 		if(cekDay == 3 || cekDay == 6){
-			key = 2;
+			key = 3;
 			val = "Rabu - Sabtu"; 
 		}
 		var option = '<option value='+key+' selected>'+ val +'</option>'
