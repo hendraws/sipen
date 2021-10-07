@@ -30,7 +30,7 @@
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		$.ajax({
 			{{-- url: "{{ url()->current() }}?startdate="+startDate+"&enddate="+endDate+"&graphic="+target, --}}
-			url: "{{ url()->current() }}?cabang="+cabang+"&print="+print+"&tanggal="+tanggal,
+			url: "{{ url()->current() }}?cabang="+cabang+"&print="+print+"&tanggal="+tanggal+"&tanggal="+tanggal,
 			type: "post",
 			datatype: "html"
 		}).done(function(data){
@@ -50,7 +50,7 @@
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
-			getData(this.value, false, $('#tanggal').val(),'dataCabang');
+			getData(cabang, false, $('#tanggal').val(),'dataCabang');
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 		});	
 		if($('#cabang').val().length != 0)
@@ -130,16 +130,16 @@
 		<div class="card-body">
 			<div class="tab-content" id="custom-tabs-two-tabContent">
 				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
-					<div id="dataCabang"></div>
+					{{-- <div id="dataCabang"></div> --}}
 				</div>
 				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
 					<div id="dataKemacetan"></div>
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
-					Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna. 
+					{{-- <div id="dataCabang"></div> --}}
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
-					Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis. 
+										{{-- <div id="dataCabang"></div> --}}
 				</div>
 			</div>
 		</div>

@@ -102,6 +102,10 @@
 				</thead>
 				<tbody>
 					@forelse($evaluasiBerjalan as $resort => $data)
+					@php
+					$anggota = $anggota_keluar = $anggota_kini =  0;
+					$saldo_macet = $angsuran_masuk = $macet_kini = 0;
+					@endphp
 					<tr class="bg-warning"><td colspan="8"><b>Resort {{ ucfirst($resort) }}</b></td></tr>
 					@forelse ($data as $key => $val)
 					<tr class="text-right">
@@ -115,13 +119,29 @@
 						<td> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo)  }} </td>
 						<td> {{ number_format($val->jml_angsuran)  }} </td>
 						<td class="bg-gray-dark"> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
-						<td>  </td>
 					</tr>
+					@php
+					$anggota += $val->anggota;
+					$anggota_keluar += $val->anggota_keluar ;
+					$anggota_kini +=  $val->anggota - $val->anggota_keluar;
+					$saldo_macet += $val->total_ma_saldo + $val->total_mb_saldo;
+					$angsuran_masuk += $val->jml_angsuran;
+					$macet_kini +=$val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran;
+					@endphp
 					@empty
 					<tr>
 						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
 					</tr>
 					@endforelse
+					<tr class="text-right bg-success">
+						<td colspan="2" class="align-middle text-center"> TOTAL </td>
+						<td class="text-center"> {{ $anggota  }} </td>
+						<td class="text-center"> {{ $anggota_keluar  }} </td>
+						<td class="text-center"> {{ $anggota_kini  }} </td>
+						<td> {{ number_format($saldo_macet)  }} </td>
+						<td> {{ number_format($angsuran_masuk)  }} </td>
+						<td class=""> {{ number_format($macet_kini)  }} </td>
+					</tr>
 					@empty
 					<tr>
 						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
