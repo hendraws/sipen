@@ -74,7 +74,7 @@
 				</table>
 			</div>
 			<hr>
-			<div class="col-md-12 mt-3">
+			<div class="col-md-12 mt-3 bg-dark">
 				<h5>Total keluruhan Berjalan</h5>
 				<div class="table-responsive">
 					<table id="data-table" class="table table-sm table-bordered">

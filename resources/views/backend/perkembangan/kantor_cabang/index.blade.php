@@ -30,7 +30,7 @@
 		// Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
 		$.ajax({
 			{{-- url: "{{ url()->current() }}?startdate="+startDate+"&enddate="+endDate+"&graphic="+target, --}}
-			url: "{{ url()->current() }}?cabang="+cabang+"&print="+print+"&tanggal="+tanggal+"&tanggal="+tanggal,
+			url: "{{ url()->current() }}?cabang="+cabang+"&print="+print+"&tanggal="+tanggal,
 			type: "post",
 			datatype: "html"
 		}).done(function(data){
@@ -59,8 +59,10 @@
 			var cabang = $('#cabang').val();
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
 			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
 		}
 
 
@@ -69,8 +71,10 @@
 			var cabang = $('#cabang').val();
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
 			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
 		});
 
 		$(document).on('click', '#cetak', function(){
@@ -129,17 +133,14 @@
 		</div>
 		<div class="card-body">
 			<div class="tab-content" id="custom-tabs-two-tabContent">
-				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
-					{{-- <div id="dataCabang"></div> --}}
-				</div>
 				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
 					<div id="dataKemacetan"></div>
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
-					{{-- <div id="dataCabang"></div> --}}
+					<div id="dataCalonMacet"></div>
 				</div>
-				<div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
-										{{-- <div id="dataCabang"></div> --}}
+				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+					<div id="dataCabang"></div>
 				</div>
 			</div>
 		</div>

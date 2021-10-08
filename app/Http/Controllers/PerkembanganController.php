@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CalonMacet;
 use App\KantorCabang;
 use App\Kemacetan;
 use App\Perkembangan;
@@ -427,7 +428,7 @@ class PerkembanganController extends Controller
     		$bulan = $pecah[1];
 
     		// get data kemacetan 
-    		if($request->data = 'kemacetan'){
+    		if($request->data == 'kemacetan'){
     			$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
     			->whereMonth('tanggal',$bulan)
     			->get();
@@ -452,7 +453,7 @@ class PerkembanganController extends Controller
     				ma_anggota + mb_anggota as anggota,
     				sum(anggota_keluar) as anggota_keluar,
     				count(angsuran_kemacetans.tanggal) as hk
-    			')
+    				')
     			->groupBy('kemacetans.resort_id')
     			->groupBy('kemacetans.pasaran')
     			->get();
@@ -462,8 +463,45 @@ class PerkembanganController extends Controller
     			});
 
     			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan','evaluasiBerjalan'));
+    		}    		
+
+    		if($request->data == 'calonMacet'){
+
+    			$calonMacet = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    			->whereMonth('tanggal',$bulan)
+    			->get();
+
+    			$groupCalonMacet = $calonMacet->mapToGroups(function ($item, $key) {
+    				return [$item->getResort->nama => $item];
+    			});
+    
+    			$evaluasi = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
+    			->join('pasarans','pasarans.id', 'calon_macets.pasaran')
+    			->leftjoin('resorts','resorts.id', 'calon_macets.resort_id')
+    			->where('calon_macets.cabang_id', auth()->user()->cabang_id) 
+    			->whereMonth('calon_macets.tanggal',$bulan)
+    			->selectRaw('
+    				cma_saldo as total_cma_saldo,
+    				sum(angsuran) as jml_angsuran, 
+    				calon_macets.pasaran, 
+    				calon_macets.resort_id, 
+    				hari, 
+    				resorts.nama as nama_resort, 
+    				cma_anggota as anggota,
+    				sum(anggota_keluar) as anggota_keluar,
+    				count(angsuran_calon_macets.tanggal) as hk
+    				')
+    			->groupBy('calon_macets.resort_id')
+    			->groupBy('calon_macets.pasaran')
+    			->get();
+  
+    			$evaluasiBerjalan = $evaluasi->mapToGroups(function ($item, $key) {
+    				return [$item->nama_resort => $item];
+    			});
+
+    			return view('backend.perkembangan.kantor_cabang.calon_macet.index', compact('groupCalonMacet','evaluasiBerjalan'));
     		}
-    		dd('asdfa');
+
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
     			sum(psp) as sum_psp,
     			sum(storting) as sum_storting,
