@@ -153,3 +153,15 @@
 	</div>
 	<hr>
 </div>
+
+<div class="card card-maroon card-outline">
+	<div class="card-body">
+		<h5>Grafik Angsuran Kemacetan</h5>
+		<div class="row">
+			<div class="col">
+				<div id="grafikKemacetan"></div>
+			</div>
+		</div>
+	</div>
+	<hr>
+</div>

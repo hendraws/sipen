@@ -1,13 +1,13 @@
 <div class="card card-success card-outline">
 	<div class="card-body">
 		<div class="table-responsive">
-			<h5>Sirkulasi Macet</h5>
+			<h5>Sirkulasi Calon Macet</h5>
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
 						<th scope="col" rowspan="2" class="align-middle">NO.</th>
 						<th scope="col" rowspan="2" class="align-middle">PASARAN</th>
-						<th scope="col" colspan="4">Macet Awal</th>
+						<th scope="col" colspan="4">CALON MACET </th>
 						<th scope="col"	rowspan="2" class="align-middle">JUMLAH</th>
 						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 					</tr>
@@ -68,7 +68,7 @@
 <div class="card card-maroon card-outline">
 	<div class="card-body">
 		<div class="table-responsive">
-			<h5>Evaluasi Macet Berjalan</h5>
+			<h5>Evaluasi Calon Macet Berjalan</h5>
 			<table id="data-table" class="table table-sm">
 				<thead class="text-center">
 					<tr class="text-center">
@@ -79,7 +79,7 @@
 						<th scope="col" class="bg-gray-dark">Anggota Kini</th>
 						<th scope="col">Saldo Calon Macet</th>
 						<th scope="col">Angsuran Masuk</th>
-						<th scope="col" class="bg-gray-dark">Macet Kini</th>
+						<th scope="col" class="bg-gray-dark">Calon Macet Kini</th>
 					</tr>
 				</thead>
 				<tbody>

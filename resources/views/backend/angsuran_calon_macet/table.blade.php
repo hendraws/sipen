@@ -51,7 +51,6 @@
 								<th scope="col" >Calon Macet Awal</th>
 								<th scope="col" >Angsuran</th>
 								<th scope="col" >Saldo</th>
-								{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 							</tr>
 						</thead>
 						<tbody>
@@ -87,8 +86,6 @@
 								<th scope="col" >Calon Macet Awal</th>
 								<th scope="col" >Angsuran</th>
 								<th scope="col" >Saldo</th>
-
-								{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 							</tr>
 						</thead>
 						<tbody>
