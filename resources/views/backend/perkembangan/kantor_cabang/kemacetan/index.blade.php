@@ -159,9 +159,52 @@
 		<h5>Grafik Angsuran Kemacetan</h5>
 		<div class="row">
 			<div class="col">
-				<div id="grafikKemacetan"></div>
+				<canvas id="grafikKemacetan"></canvas>
 			</div>
 		</div>
 	</div>
 	<hr>
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var labelGrafik  = <?= $labelGrafik ?>;
+		var dataGrafik  = <?= $dataGrafik ?>;
+		const data = {
+			labels: labelGrafik,
+			datasets: dataGrafik,
+		};
+		const config = {
+			type: 'line',
+			data,
+			options: {
+				elements: {
+					line: {
+						tension: 0,
+						fill: false
+					}
+				},
+				plugins: {
+					colorschemes: {
+						scheme: 'brewer.Paired12'
+					}
+				},
+				tooltips: {
+					mode: 'index',
+					bodySpacing : 10,
+					callbacks: {
+						label: function(tooltipItem, data) {
+                        	// console.log(tooltipItem);
+                        	return 'Rp.'+number_format(tooltipItem.yLabel);
+                        }
+                    }
+                },
+            }
+        };
+        var perbandinganDrop = new Chart(
+        	$('#grafikKemacetan'),
+        	config
+        	);
+
+    });
+</script>

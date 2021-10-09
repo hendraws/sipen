@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\AngsuranCalonMacet;
+use App\AngsuranKemacetan;
 use App\CalonMacet;
 use App\KantorCabang;
 use App\Kemacetan;
@@ -462,7 +464,38 @@ class PerkembanganController extends Controller
     				return [$item->nama_resort => $item];
     			});
 
-    			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan','evaluasiBerjalan'));
+    			// grafik
+    			$anggsuran = AngsuranKemacetan::whereMonth('tanggal',$bulan)
+    			->selectRaw('tanggal, 
+    				MONTH(tanggal) as bulan, 
+    				DAY(tanggal) as hari,angsuran,cabang_id, resort_id')
+    			->where('cabang_id', auth()->user()->cabang_id) 
+    			->orderBy('tanggal')
+    			->get();
+
+
+    			$anggsuranLabels = $anggsuran->mapToGroups(function ($item, $key) {
+    				return [ $item->getResort->nama => $item->angsuran];
+    			});
+    			foreach($anggsuranLabels as $jumlahHari){
+    				$jmlHari[] = count($jumlahHari);
+    			}
+    			if(count($jmlHari) > 0){
+    				for ($i=1; $i <= max($jmlHari) ; $i++) { 
+    					$dataLabel[] = 'HK '.$i;
+    				}
+    			}
+
+    			$dataMappping = [];
+    			foreach ($anggsuranLabels as $key => $value) {
+    				$dataMappping[] = [ 
+    					'label' => $key , 
+    					'data' => $value->toArray(), 
+    				];
+    			}
+    			$labelGrafik = json_encode($dataLabel);
+    			$dataGrafik = json_encode($dataMappping);
+    			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan','evaluasiBerjalan','labelGrafik','dataGrafik'));
     		}    		
 
     		if($request->data == 'calonMacet'){
@@ -474,7 +507,7 @@ class PerkembanganController extends Controller
     			$groupCalonMacet = $calonMacet->mapToGroups(function ($item, $key) {
     				return [$item->getResort->nama => $item];
     			});
-    
+
     			$evaluasi = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
     			->join('pasarans','pasarans.id', 'calon_macets.pasaran')
     			->leftjoin('resorts','resorts.id', 'calon_macets.resort_id')
@@ -494,12 +527,42 @@ class PerkembanganController extends Controller
     			->groupBy('calon_macets.resort_id')
     			->groupBy('calon_macets.pasaran')
     			->get();
-  
+
     			$evaluasiBerjalan = $evaluasi->mapToGroups(function ($item, $key) {
     				return [$item->nama_resort => $item];
     			});
 
-    			return view('backend.perkembangan.kantor_cabang.calon_macet.index', compact('groupCalonMacet','evaluasiBerjalan'));
+    			// grafik
+    			$anggsuran = AngsuranCalonMacet::whereMonth('tanggal',$bulan)
+    			->selectRaw('tanggal, 
+    				MONTH(tanggal) as bulan, 
+    				DAY(tanggal) as hari,angsuran,cabang_id, resort_id')
+    			->where('cabang_id', auth()->user()->cabang_id) 
+    			->orderBy('tanggal')
+    			->get();
+
+    			$anggsuranLabels = $anggsuran->mapToGroups(function ($item, $key) {
+    				return [ $item->getResort->nama => $item->angsuran];
+    			});
+    			foreach($anggsuranLabels as $jumlahHari){
+    				$jmlHari[] = count($jumlahHari);
+    			}
+    			if(count($jmlHari) > 0){
+    				for ($i=1; $i <= max($jmlHari) ; $i++) { 
+    					$dataLabel[] = 'HK '.$i;
+    				}
+    			}
+
+    			$dataMappping = [];
+    			foreach ($anggsuranLabels as $key => $value) {
+    				$dataMappping[] = [ 
+    					'label' => $key , 
+    					'data' => $value->toArray(), 
+    				];
+    			}
+    			$labelGrafik = json_encode($dataLabel);
+    			$dataGrafik = json_encode($dataMappping);
+    			return view('backend.perkembangan.kantor_cabang.calon_macet.index', compact('groupCalonMacet','evaluasiBerjalan','labelGrafik','dataGrafik'));
     		}
 
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
