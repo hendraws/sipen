@@ -101,15 +101,15 @@
 						<td class="text-center bg-gray-dark"> {{ $val->anggota - $val->anggota_keluar  }} </td>
 						<td> {{ number_format($val->total_cma_saldo)  }} </td>
 						<td> {{ number_format($val->jml_angsuran)  }} </td>
-						<td class="bg-gray-dark"> {{ number_format($val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran)  }} </td>
+						<td class="bg-gray-dark"> {{ number_format($val->total_cma_saldo - $val->jml_angsuran)  }} </td>
 					</tr>
 					@php
 					$anggota += $val->anggota;
 					$anggota_keluar += $val->anggota_keluar ;
 					$anggota_kini +=  $val->anggota - $val->anggota_keluar;
-					$saldo_macet += $val->total_ma_saldo + $val->total_mb_saldo;
+					$saldo_macet += $val->total_cma_saldo;
 					$angsuran_masuk += $val->jml_angsuran;
-					$macet_kini +=$val->total_ma_saldo + $val->total_mb_saldo - $val->jml_angsuran;
+					$macet_kini += $val->total_cma_saldo - $val->jml_angsuran;
 					@endphp
 					@empty
 					<tr>
