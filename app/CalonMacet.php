@@ -15,6 +15,10 @@ class CalonMacet extends Model
 		'cma_pinjaman',
 		'cma_target',
 		'cma_saldo',
+		'sisa_hk',
+		'total_saldo',
+		'sisa_angsuran',
+		'target',
 		'created_by',
 		'updated_by',
 	];

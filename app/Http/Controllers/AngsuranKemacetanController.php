@@ -137,6 +137,11 @@ class AngsuranKemacetanController extends Controller
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
     		}
+			$sisa_angsuran = $kemacetan->sisa_angsuran - $request->angsuran; 
+    		$kemacetan->update([
+    			'sisa_angsuran' => $sisa_angsuran
+    		]);
+    		
     		AngsuranKemacetan::create($angsuran);
     	} catch (\Exception $e) {
     		DB::rollback();

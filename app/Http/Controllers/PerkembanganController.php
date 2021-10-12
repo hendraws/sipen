@@ -9,6 +9,7 @@ use App\KantorCabang;
 use App\Kemacetan;
 use App\Perkembangan;
 use App\ProgramKerja;
+use App\Resort;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -477,6 +478,7 @@ class PerkembanganController extends Controller
     			$anggsuranLabels = $anggsuran->mapToGroups(function ($item, $key) {
     				return [ $item->getResort->nama => $item->angsuran];
     			});
+    			$jmlHari =$dataLabel= [];
     			foreach($anggsuranLabels as $jumlahHari){
     				$jmlHari[] = count($jumlahHari);
     			}
@@ -497,6 +499,7 @@ class PerkembanganController extends Controller
     			$dataGrafik = json_encode($dataMappping);
     			return view('backend.perkembangan.kantor_cabang.kemacetan.index', compact('groupKemacetan','evaluasiBerjalan','labelGrafik','dataGrafik'));
     		}    		
+
 
     		if($request->data == 'calonMacet'){
 
@@ -563,6 +566,47 @@ class PerkembanganController extends Controller
     			$labelGrafik = json_encode($dataLabel);
     			$dataGrafik = json_encode($dataMappping);
     			return view('backend.perkembangan.kantor_cabang.calon_macet.index', compact('groupCalonMacet','evaluasiBerjalan','labelGrafik','dataGrafik'));
+    		}
+
+    		if($request->data == 'dataKalkulasi'){
+    			
+    			// $calonMacet = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
+    			// ->join('pasarans','pasarans.id', 'calon_macets.pasaran')
+    			// ->leftjoin('resorts','resorts.id', 'calon_macets.resort_id')
+    			// ->where('calon_macets.cabang_id', auth()->user()->cabang_id) 
+    			// ->whereMonth('calon_macets.tanggal',$bulan)
+    			// ->selectRaw('
+    			// 	sum(cma_saldo) as total_cma_saldo,
+    			// 	sum(angsuran) as jml_angsuran,
+    			// 	calon_macets.resort_id, 
+    			// 	resorts.nama as nama_resort,
+    			// 	sisa_hk,
+    			// 	target
+    			// 	')
+    			// ->groupBy('calon_macets.resort_id')
+    			// ->get();			
+    			$calonMacet = CalonMacet::where('calon_macets.cabang_id', auth()->user()->cabang_id) 
+    			->whereMonth('calon_macets.tanggal',$bulan)
+    			->selectRaw('
+    				sum(target) as target,
+    				sisa_hk,
+    				sum(sisa_angsuran) as sisa_angsuran,
+    				resort_id
+    				')
+    			->groupBy('calon_macets.resort_id')
+    			->get();
+
+    			$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    			->whereMonth('tanggal',$bulan)
+    			->selectRaw('
+    				sum(target) as target,
+    				sisa_hk,
+    				sum(sisa_angsuran) as sisa_angsuran,
+    				resort_id
+    				')
+    			->groupBy('resort_id')
+    			->get();
+    			return view('backend.perkembangan.kantor_cabang.kalkulasi.index', compact('calonMacet', 'request','kemacetan'));
     		}
 
     		$dashboard = Perkembangan::selectRaw('sum(drops) as sum_drop, 
@@ -875,6 +919,66 @@ class PerkembanganController extends Controller
     	
     	$data = Perkembangan::find($id);
     	return view('backend.perkembangan.data.delete', compact('data'));
+    }
+
+    public function setHk(Request $request)
+    {
+
+    	$data = $request->all();
+    	return view('backend.perkembangan.kantor_cabang.kalkulasi.create_modal', compact('data'));
+    }
+
+    public function storeHk(Request $request)
+    {
+    	$request->validate([
+    		'sisa_hk' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+    		$pecah = explode( '/',$request->tanggal);
+    		$tahun = $pecah[0];
+    		$bulan = $pecah[1];
+    		// dd($request);
+    		$calonMacet = CalonMacet::where('cabang_id', auth()->user()->cabang_id) 
+    		->whereMonth('tanggal',$bulan)
+    		->get();
+
+    		foreach($calonMacet as $val){
+    			$target = $val->sisa_angsuran / $request->sisa_hk;
+    			$val->update([
+    				'sisa_hk' => $request->sisa_hk,
+    				'target' => $target,
+    			]);
+    		}
+
+    		$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id) 
+    		->whereMonth('tanggal',$bulan)
+    		->get();
+    		
+    		foreach($kemacetan as $val){
+    			$target = $val->sisa_angsuran / $request->sisa_hk;
+    			$val->update([
+    				'sisa_hk' => $request->sisa_hk,
+    				'target' => $target,
+    			]);
+    		}
+
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->success($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah ditambahkan', 'Berhasil');
+    	return back();
+
+    	return view('backend.perkembangan.kantor_cabang.kalkulasi.create_modal');
     }
 
 }

@@ -139,7 +139,7 @@
 
 <div class="card card-maroon card-outline">
 	<div class="card-body">
-		<h5>Grafik Angsuran Kemacetan</h5>
+		<h5>Grafik Angsuran Calon Kemacetan</h5>
 		<div class="row">
 			<div class="col">
 				<canvas id="grafikCalonMacet"></canvas>

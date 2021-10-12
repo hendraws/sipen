@@ -65,7 +65,9 @@ class CalonMacetController extends Controller
     		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
     		$pasaran['tanggal'] = date('Y-m-d'); 
     		$pasaran['created_by'] = auth()->user()->id; 
-
+    		$pasaran['total_saldo'] = $request->cma_saldo; 
+    		$pasaran['sisa_angsuran'] = $request->cma_saldo; 
+    		
     		$cekKemacetan  = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort_id)
     		->where('pasaran', $request->pasaran)

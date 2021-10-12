@@ -68,6 +68,8 @@ class KemacetanController extends Controller
     	try {
     		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
     		$pasaran['tanggal'] = date('Y-m-d'); 
+			$pasaran['total_saldo'] = $request->ma_saldo + $request->mb_saldo; 
+    		$pasaran['sisa_angsuran'] = $request->ma_saldo + $request->mb_saldo;
 
     		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort_id)

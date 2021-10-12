@@ -49,9 +49,11 @@
 			var cabang = this.value;
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
 			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getData(cabang, false, $('#tanggal').val(),'dataCabang');
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet');
 		});	
 		if($('#cabang').val().length != 0)
 		{
@@ -60,9 +62,11 @@
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			var urlKalkulasi = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
 			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
+			getDataTable(urlKalkulasi, '#dataKalkulasi'); //get Data Kemacetan
 		}
 
 
@@ -72,9 +76,11 @@
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
 			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataKalkulasi'); //get Data Kemacetan
 		});
 
 		$(document).on('click', '#cetak', function(){
@@ -128,6 +134,9 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">Perkembangan</a>
+				</li>		
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-kalkulasi-tab" data-toggle="pill" href="#custom-tabs-kalkulasi" role="tab" aria-controls="custom-tabs-kalkulasi" aria-selected="false">Kalkulasi</a>
 				</li>
 			</ul>
 		</div>
@@ -141,7 +150,11 @@
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
 					<div id="dataCabang"></div>
+				</div>	
+				<div class="tab-pane fade" id="custom-tabs-kalkulasi" role="tabpanel" aria-labelledby="custom-tabs-kalkulasi-tab">
+					<div id="dataKalkulasi"></div>
 				</div>
+
 			</div>
 		</div>
 		<!-- /.card -->

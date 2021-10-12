@@ -30,6 +30,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/perkembangan-data/{id}/delete', 'PerkembanganController@delete');
 	Route::get('/perkembangan-data/{id}/reset-modal', 'PerkembanganController@resetModal');
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
+	Route::get('/set-hk', 'PerkembanganController@setHk');
+	Route::post('/store-hk', 'PerkembanganController@storeHk');
 
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');

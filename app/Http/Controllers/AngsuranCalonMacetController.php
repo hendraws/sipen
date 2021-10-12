@@ -118,6 +118,7 @@ class AngsuranCalonMacetController extends Controller
     	try {
 
     		$calonMacet = CalonMacet::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
+
     		if(empty($calonMacet)){
     			toastr()->error('Silahkan membuat data master calon macet terlebih dahulu!');
     			return back();
@@ -138,6 +139,11 @@ class AngsuranCalonMacetController extends Controller
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
     		}
+    		$sisa_angsuran = $calonMacet->sisa_angsuran - $request->angsuran; 
+    		$calonMacet->update([
+    			'sisa_angsuran' => $sisa_angsuran
+    		]);
+
     		AngsuranCalonMacet::create($angsuran);
     	} catch (\Exception $e) {
     		DB::rollback();
@@ -154,8 +160,6 @@ class AngsuranCalonMacetController extends Controller
     	DB::commit();
     	toastr()->success('Data telah ditambahkan', 'Berhasil');
     	return back();
-
-        dd($request);
     }
 
     /**
