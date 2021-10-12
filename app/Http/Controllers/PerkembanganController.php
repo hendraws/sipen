@@ -547,6 +547,7 @@ class PerkembanganController extends Controller
     			$anggsuranLabels = $anggsuran->mapToGroups(function ($item, $key) {
     				return [ $item->getResort->nama => $item->angsuran];
     			});
+    			$jmlHari = $dataLabel = [];
     			foreach($anggsuranLabels as $jumlahHari){
     				$jmlHari[] = count($jumlahHari);
     			}
@@ -955,7 +956,7 @@ class PerkembanganController extends Controller
     		$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id) 
     		->whereMonth('tanggal',$bulan)
     		->get();
-    		
+
     		foreach($kemacetan as $val){
     			$target = $val->sisa_angsuran / $request->sisa_hk;
     			$val->update([
