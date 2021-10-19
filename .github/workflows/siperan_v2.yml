@@ -17,4 +17,4 @@ jobs:
         server: ftp.wijayatech.my.id
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: public_html/siperan_v2/
+        server-dir:   /home3/wijayate/wijayatech.my.id/hendraws/public_html/
