@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/management-user/{id}/delete', 'UserController@delete');
 	Route::resource('/management-user', 'UserController');
 	
+	Route::resource('/target', 'TargetController');
 	// ----------------------------------------------------------------------------------------- //
 	Route::resource('/resort', 'ResortController');
 	Route::get('/resort/{resort}/delete/', 'ResortController@delete');

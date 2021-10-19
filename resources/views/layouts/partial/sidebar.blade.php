@@ -155,8 +155,15 @@
 					</li>
 				</ul>
 			</li>
-
 			@endcan
+			<li class="nav-item">
+				<a href="{{ action('TargetController@index') }}" class="nav-link">
+					<i class="nav-icon fa fa-bullseye"></i>
+					<p>
+						Target
+					</p>
+				</a>
+			</li>
 			@can('management-user')
 			<li class="nav-item">
 				<a href="{{ action('UserController@index') }}" class="nav-link">
