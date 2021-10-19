@@ -1,8 +1,11 @@
 <div class="card card-success card-outline">
 	<div class="card-body">
 		<div class="row">
-			<div class="col-md-12">
-				<h4>Bulan : {{date_format(date_create_from_format('Y/m/d', $getTanggal), 'F Y')}}</h4>
+			<div class="col-md-6">
+				<h6>Tanggal : {{date_format(date_create_from_format('Y-m-d', $getTanggal), 'd F Y')}}</h6>
+			</div>
+			<div class="col-md-6">
+				<h6 class="float-right">Pasaran : {{ $psrn }}</h6>
 			</div>
 		</div>
 		<div class="table-responsive">

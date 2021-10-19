@@ -18,66 +18,64 @@ class TargetController extends Controller
     public function index(Request $request)
     {
     	if($request->ajax()) {
-    		$pecah = explode( '/',$request->tanggal);
-    		$getTanggal = $request->tanggal."/01";
-    		$tahun = $pecah[0];
-    		$bulan = $pecah[1];
+	    	$cekWeekend = date('w', strtotime($request->tanggal));
+    		if($cekWeekend == 1 || $cekWeekend == 4){
+    			$psrn = "Senin - Kamis";
+    		}
 
-    		if($request->data == 'dataTarget'){
-    			$today =  date('Y-m-d');
+    		if($cekWeekend == 2 || $cekWeekend == 5){
+    			$psrn = "Selasa - Jum'at";
+    		}
 
-    			$cekWeekend = date('w', strtotime($today));
-
-    			$pasaran =  0;
-
-    			if($cekWeekend == 1 || $cekWeekend == 4){
-    				// $pasaran[1] = "Senin - Kamis";
-    				$pasaran = 1;
-    			}
-
-    			if($cekWeekend == 2 || $cekWeekend == 5){
-    				// $pasaran[2] = "Selasa - Jum'at"; 
-    				$pasaran = 2; 
-    			}
-
-    			if($cekWeekend == 3 || $cekWeekend == 6){
-    				// $pasaran[3] = "Rabu - Sabtu"; 
-    				$pasaran = 3;
-    			}
-
-    			$data = Target::select("*")
-    			->whereMonth('tanggal',$bulan)
-    			->where('cabang_id', auth()->user()->cabang_id)
+    		if($cekWeekend == 3 || $cekWeekend == 6){
+    			$psrn = "Rabu - Sabtu"; 
+    		}	
+    		$getTanggal = $request->tanggal;
+    		$data = Target::select("*")
+    		->where('tanggal',$request->tanggal)
+    		->where('cabang_id', auth()->user()->cabang_id)
     			// ->where('pasaran', $pasaran)
-    			->orderBy('created_at', 'desc')
-    			->get()
-    			->unique('resort_id')
-    			;
-    			
-    			return view('backend.target.table', compact('getTanggal','data'));
-    		}    		
+    		->orderBy('created_at', 'desc')
+    		->get()
+    		->unique('resort_id')
+    		;
+
+    		return view('backend.target.table', compact('getTanggal','data','psrn'));
 
     	}
     	// dd('dd');
     	$today =  date('Y-m-d');
     	$resort = Resort::get();
-
+    	$getTanggal = $today;
     	$cekWeekend = date('w', strtotime($today));
     	
     	$pasaran =  [];
 
     	if($cekWeekend == 1 || $cekWeekend == 4){
     		$pasaran[1] = "Senin - Kamis"; 
+    		$psrn = "Senin - Kamis";
     	}
 
     	if($cekWeekend == 2 || $cekWeekend == 5){
-    		$pasaran[2] = "Selasa - Jum'at"; 
+    		$pasaran[2] = "Selasa - Jum'at";
+    		$psrn = "Selasa - Jum'at";
     	}
 
     	if($cekWeekend == 3 || $cekWeekend == 6){
-    		$pasaran[3] = "Rabu - Sabtu"; 
+    		$pasaran[3] = "Rabu - Sabtu";
+    		$psrn = "Rabu - Sabtu"; 
     	}
-    	return view('backend.target.index', compact('today', 'resort','pasaran' ));
+
+    	$data = Target::select("*")
+    	->where('tanggal',$today)
+    	->where('cabang_id', auth()->user()->cabang_id)
+    			// ->where('pasaran', $pasaran)
+    	->orderBy('created_at', 'desc')
+    	->get()
+    	->unique('resort_id')
+    	;
+
+    	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ));
     }
 
     /**

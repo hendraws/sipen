@@ -23,9 +23,9 @@
 
 	$(document).ready(function () {
 		$("#bulan").datepicker( {
-			format: "yyyy/mm",
-			startView: "months", 
-			minViewMode: "months"
+			format: "yyyy-mm-dd",
+			// startView: "months", 
+			// minViewMode: "months"
 		});
 		$("#tanggal").datepicker( {
 			format: "yyyy-mm-dd",
@@ -34,10 +34,10 @@
 		});
 
 		// var resort = $('#resort_id').val();
-		var tanggal = $('#bulan').val();
-		var url = "{{ url()->current() }}?tanggal="+tanggal+"&data=dataTarget";
+		// var tanggal = $('#bulan').val();
+		{{-- var url = "{{ url()->current() }}?tanggal="+tanggal+"&data=dataTarget"; --}}
 		// getDataTable(url, '#dataTarget')
-		getDataTable(url, '#dataTarget')
+		// getDataTable(url, '#dataTarget')
 
 	});
 
@@ -66,13 +66,13 @@
 
 	
 	$(document).on('click', '#filter', function(){
-		var resort = $('#resort_id').val();
+		// var resort = $('#resort_id').val();
 		var tanggal = $('#bulan').val();
-		var url = "{{ url()->current() }}?tanggal="+tanggal+"&resort="+resort;
-		if(resort == null){
-			return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
-		}
+		var url = "{{ url()->current() }}?tanggal="+tanggal;
 		getDataTable(url, '#dataTarget');
+		// if(resort == null){
+		// 	return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
+		// }
 		// getDataTable(url, '#data-table')
 	});
 </script>
@@ -96,7 +96,7 @@
 			<div class="col-md-5 ml-auto">
 				
 				<div class="input-group mb-3 input-sm">
-					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y/m') }}">
+					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y-m-d') }}">
 					<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
 					<a href="" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a>
 					<div class="card-tools ml-2">
@@ -136,7 +136,9 @@
 		<div class="card-body">
 			<div class="tab-content" id="custom-tabs-two-tabContent">
 				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
-					<div id="dataTarget"></div>
+					<div id="dataTarget">
+						@includeIf('backend.target.table')
+					</div>
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
 					<div id="dataCalonMacet"></div>
