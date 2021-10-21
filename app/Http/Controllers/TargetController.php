@@ -81,7 +81,7 @@ class TargetController extends Controller
 
     	$data = Target::select("*")
     	->where('cabang_id', auth()->user()->cabang_id)
-    	->where('pasaran', 1)
+    	->where('pasaran', $psrn)
     	->whereMonth('tanggal', date('m', strtotime($today)))
     	->orderBy('tanggal')
     	->get();
