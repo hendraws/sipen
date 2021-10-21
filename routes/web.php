@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/management-user', 'UserController');
 	
 	Route::resource('/target', 'TargetController');
+	Route::get('/target/{target}/delete/', 'TargetController@delete');
 	// ----------------------------------------------------------------------------------------- //
 	Route::resource('/resort', 'ResortController');
 	Route::get('/resort/{resort}/delete/', 'ResortController@delete');

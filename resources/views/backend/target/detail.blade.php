@@ -130,9 +130,9 @@
 						}
 						@endphp
 					</td>
-					<td>
-						<a href="">Edit</a>
-						<a href="">Hapus</a>
+					<td class="text-center">
+						<a class="btn btn-warning btn-sm" href="{{ action('TargetController@edit', $val->id) }}">Edit</a>
+						<a class="btn btn-sm btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('TargetController@delete', $val) }}"  data-toggle="tooltip" data-placement="top" title="Edit" >Hapus</a>
 					</td>
 				</tr>
 				@empty

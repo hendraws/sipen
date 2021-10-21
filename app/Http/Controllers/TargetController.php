@@ -40,7 +40,7 @@ class TargetController extends Controller
     		->where('cabang_id', auth()->user()->cabang_id)
     		->where('pasaran', $psrn)
     		->whereMonth('tanggal',$pecahTanggal[1])
-			->where('tanggal','<=',$request->tanggal)
+    		->where('tanggal','<=',$request->tanggal)
     		->get()
     		;
 
@@ -195,7 +195,7 @@ class TargetController extends Controller
     {
     	$data = Target::where('resort_id',$id)->whereMonth('tanggal', Date('m'))->orderBy('tanggal')->get();
 
-        return view('backend.target.detail', compact('data'));
+    	return view('backend.target.detail', compact('data'));
     }
 
     /**
@@ -204,9 +204,11 @@ class TargetController extends Controller
      * @param  \App\Target  $target
      * @return \Illuminate\Http\Response
      */
-    public function edit(Target $target)
+    public function edit($id)
     {
-        //
+    	$data = Target::where('id', $id)->first();
+
+    	return view('backend.target.edit', compact('data'));
     }
 
     /**
@@ -216,9 +218,49 @@ class TargetController extends Controller
      * @param  \App\Target  $target
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Target $target)
+    public function update(Request $request, $id)
     {
-        //
+    	
+    	$target = $request->validate([
+    		'resort_id' => 'required',
+    		'tanggal' => 'required',
+    		'target_drops' => 'required',
+    		'storting_berjalan' => 'required',
+    		'target_plnsn' => 'required',
+    		'anggota_lama' => 'required',
+    		'anggota_baru' => 'required',
+    		'anggota_out' => 'required',
+    		'pasaran' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+    		$data = Target::find($id);
+    		$cekData  = Target::where('resort_id', $request->resort_id)->where('tanggal', $request->tanggal)->first();
+    		if(!empty($cekData) && ($request->tanggal != $data->tanggal)){
+    			toastr()->error('Tanggal Yang Di input Sudah Ada, Silahkan Edit Di tanggal Tersebut !!!', 'Warning');
+    			return back();
+    		}
+    		
+    		$target['cabang_id'] = auth()->user()->cabang_id; 
+    		$target['created_by'] = auth()->user()->id; 
+    		$target['target_20_drop'] = ($request->target_drops * 20) / 100;
+    		$target['target_20_plnsn'] = ($request->target_plnsn * 20) / 100;
+    
+    		Target::where('id',$id)->update($target);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah diubah', 'Berhasil');
+    	return redirect(action('TargetController@show', $request->resort_id));
     }
 
     /**
@@ -229,7 +271,14 @@ class TargetController extends Controller
      */
     public function destroy(Target $target)
     {
-        //
+        $target->delete();
+    	toastr()->success('Data telah hapus', 'Berhasil');
+    	return back();
+    }
+
+    public function delete(Target $target)
+    {
+        return view('backend.target.delete', compact('target'));
     }
 
     public function index2(Request $request)

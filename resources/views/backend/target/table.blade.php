@@ -60,7 +60,7 @@
 							<td>{{ $target_20_drop }}</td>
 							<td>{{ $target_20_plnsn }}</td>
 							<td>{{ $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') }}</td>
-							<td><a href="{{ action('TargetController@show', $resort_id) }}" target="_blank" >Detail</a></td>
+							<td><a class="btn btn-info btn-sm" href="{{ action('TargetController@show', $resort_id) }}" target="_blank" >Detail</a></td>
 					</tr>
 					@empty
 					<tr>

@@ -27,7 +27,7 @@
 	<div class="form-group row">
 		<label for="storting" class="col-sm-2 col-form-label">Storting</label>
 		<div class="col-md-10">
-			<input  required type="number" id="storting" class="form-control hitung" name="storting_kini">
+			<input  required type="number" id="storting" class="form-control hitung" name="storting_berjalan">
 		</div>
 	</div>	
 	<div class="form-group row">
@@ -66,7 +66,7 @@
 	</div>
 	<hr>
 	<div class="modal-footer">
-		<a href="{{ action('ProgramKerjaController@index') }}" class="btn btn-secondary">Kembali</a>
+		<a href="{{ action('TargetController@index') }}" class="btn btn-secondary">Kembali</a>
 		<button class="btn btn-brand btn-square btn-primary">Simpan</button>
 	</div>
 </form>
