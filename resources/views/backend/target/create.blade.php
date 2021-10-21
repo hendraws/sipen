@@ -5,7 +5,7 @@
 		<label for="resort" class="col-sm-2 col-form-label">Resort</label>
 		<div class="col-md-10">
 			<select class="form-control" name="resort_id" required>
-				<option disabled="" selected>Pilih Resort</option>
+				<option disabled selected>Pilih Resort</option>
 				@foreach ($resort as $row)
 				<option value="{{ $row->id }}" >{{ $row->nama }}</option>
 				@endforeach

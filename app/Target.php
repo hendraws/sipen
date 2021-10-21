@@ -13,6 +13,11 @@ class Target extends Model
 		return $this->belongsTo(Resort::class,  'resort_id', 'id' );
 	}
 
+	public function getPasaran()
+	{
+		return $this->belongsTo(Pasaran::class,  'pasaran', 'id' );
+	}
+
 	public function getPrevious(){
         // get previous  preregister
 		// return PreRegister::with('uktCriteria', 'hasilUkt', 'dokumenPendukung')
