@@ -18,7 +18,12 @@ class TargetController extends Controller
     public function index(Request $request)
     {
     	if($request->ajax()) {
-    		$cekWeekend = date('w', strtotime($request->tanggal));
+
+    		if(empty($request->tanggal)){
+	    		$cekWeekend = date('w', strtotime(date('Y-m-d')));
+    		}else{
+	    		$cekWeekend = date('w', strtotime($request->tanggal));
+    		}
     		if($cekWeekend == 1 || $cekWeekend == 4){
     			$psrn = "Senin - Kamis";
     			$psrn = 1;
@@ -34,20 +39,35 @@ class TargetController extends Controller
     			$psrn = 3;
     		}	
     		$getTanggal = $request->tanggal;
-
     		$pecahTanggal = explode('-', $request->tanggal);
+
+
     		$data = Target::select("*")
     		->where('cabang_id', auth()->user()->cabang_id)
     		->where('pasaran', $psrn)
-    		->whereMonth('tanggal',$pecahTanggal[1])
-    		->where('tanggal','<=',$request->tanggal)
+    		->when(request()->filled('tanggal'), function($q){
+	    		$q->whereMonth('tanggal',$pecahTanggal[1])
+    			->where('tanggal','<=',$request->tanggal);
+    		})
+    		->when(request()->missing('tanggal'), function($q){
+	    		$q->whereMonth('tanggal',date('m'));
+    		})
     		->get()
     		;
 
     		$data = $data->mapToGroups(function ($item, $key) {
-
-    			return [$item->getResort->nama => $item ];
+    			$item['total'] = Target::selectRaw('sum(drop_kini) as total_drops')
+					    		->where('cabang_id', auth()->user()->cabang_id)
+					    		->where('resort_id', $item->resort_id)
+					    		->where('pasaran', $item->pasaran)
+								->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
+					    		->first()->total_drops;
+    			return [$item->getResort->nama => $item->toArray() ];
     		}); 
+
+    		if($request->data == 'drop'){
+    			return view('backend.target.drop.table', compact('data'));
+    		}
 
     		return view('backend.target.table', compact('getTanggal','data','psrn'));
 
@@ -140,7 +160,7 @@ class TargetController extends Controller
 
     		$target['cabang_id'] = auth()->user()->cabang_id; 
     		$target['created_by'] = auth()->user()->id; 
-
+    		$target['drop_kini'] = $request->target_drops;
     		if(empty($cekTarget)){
     			if(empty($anggota)){
     				toastr()->warning('Silahkan Input Data Master Anggota Terlebih Dahulu!', 'Perhatian');
@@ -225,7 +245,7 @@ class TargetController extends Controller
     		'resort_id' => 'required',
     		'tanggal' => 'required',
     		'target_drops' => 'required',
-    		'storting_berjalan' => 'required',
+    		'storting_kini' => 'required',
     		'target_plnsn' => 'required',
     		'anggota_lama' => 'required',
     		'anggota_baru' => 'required',

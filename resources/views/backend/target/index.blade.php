@@ -68,13 +68,18 @@
 	$(document).on('click', '#filter', function(){
 		// var resort = $('#resort_id').val();
 		var tanggal = $('#bulan').val();
-		var url = "{{ url()->current() }}?tanggal="+tanggal;
+		var url = "{{ url()->current() }}?data=target&tanggal="+tanggal;
 		getDataTable(url, '#dataTarget');
 		// if(resort == null){
 		// 	return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
 		// }
 		// getDataTable(url, '#data-table')
 	});
+
+	var urlDrop =  "{{ url()->current() }}?data=drop";
+	getDataTable(urlDrop, '#dataDrop');
+
+
 </script>
 @endsection
 
@@ -141,8 +146,7 @@
 					</div>
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
-					<div id="dataCalonMacet"></div>
-					drop
+					<div id="dataDrop"></div>
 				</div>
 				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
 					<div id="dataCabang"></div>

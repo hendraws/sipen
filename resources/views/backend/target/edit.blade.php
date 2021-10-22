@@ -66,7 +66,7 @@
 	<div class="form-group row">
 		<label for="storting" class="col-sm-2 col-form-label">Storting</label>
 		<div class="col-md-10">
-			<input  required type="number" id="storting" class="form-control hitung" name="storting_berjalan" value="{{ $data->storting_kini }}" >
+			<input  required type="number" id="storting" class="form-control hitung" name="storting_kini" value="{{ $data->storting_kini }}" >
 		</div>
 	</div>	
 	<div class="form-group row">
