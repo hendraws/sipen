@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/pasaran', 'PasaranController');
 
 	Route::resource('/anggota-lalu', 'AnggotaLaluController');
+	Route::get('/anggota-lalu/{anggotaLalu}/delete', 'AnggotaLaluController@delete');
 	
 	Route::resource('/angsuran-kemacetan', 'AngsuranKemacetanController');
 	Route::resource('/angsuran-calon-macet', 'AngsuranCalonMacetController');

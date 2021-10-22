@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AnggotaLalu;
 use App\Resort;
+use App\Target;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,15 +17,15 @@ class AnggotaLaluController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()) {
+    	if($request->ajax()) {
     		$pecah = explode( '/',$request->tanggal);
     		$getTanggal = $request->tanggal."/01";
     		$tahun = $pecah[0];
     		$bulan = $pecah[1];
     		$data = AnggotaLalu::where('cabang_id', auth()->user()->cabang_id)
-    				->where('resort_id', $request->resort)
-    				->whereMonth('tanggal',$bulan)
-    				->get();
+    		->where('resort_id', $request->resort)
+    		->whereMonth('tanggal',$bulan)
+    		->get();
 
     		return view('backend.anggota_lalu.table', compact('data', 'getTanggal'));
     	}
@@ -51,7 +52,7 @@ class AnggotaLaluController extends Controller
      */
     public function store(Request $request)
     {
-        $pasaran = $request->validate([
+    	$pasaran = $request->validate([
     		'resort_id' => 'required',
     		'pasaran' => 'required',
     		'anggota' => 'required',
@@ -103,7 +104,8 @@ class AnggotaLaluController extends Controller
      */
     public function edit(AnggotaLalu $anggotaLalu)
     {
-        //
+
+    	return view('backend.anggota_lalu.edit', compact('anggotaLalu'));
     }
 
     /**
@@ -115,7 +117,30 @@ class AnggotaLaluController extends Controller
      */
     public function update(Request $request, AnggotaLalu $anggotaLalu)
     {
-        //
+
+    	DB::beginTransaction();
+    	try {
+    		$anggotaLalu->update(['anggota' => $request->anggota]);
+
+    		$bulan = date('m', strtotime($anggotaLalu->tanggal));
+    		$target = Target::where('pasaran',$anggotaLalu->pasaran)
+    		->where('resort_id', $anggotaLalu->resort_id)
+    		->orderBy('tanggal','asc')
+    		->first();
+    		$target->update(['anggota_lalu' => $request->anggota]);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah diubah', 'Berhasil');
+    	return back();
     }
 
     /**
@@ -126,6 +151,18 @@ class AnggotaLaluController extends Controller
      */
     public function destroy(AnggotaLalu $anggotaLalu)
     {
-        //
+    	$anggotaLalu->delete();
+
+    	$target =  Target::where('pasaran',$anggotaLalu->pasaran)
+    		->where('resort_id', $anggotaLalu->resort_id)
+    		->delete();
+    		
+    	toastr()->success('Data telah hapus', 'Berhasil');
+    	return back();
+    }
+
+    public function delete(AnggotaLalu $anggotaLalu)
+    {
+    	return view('backend.anggota_lalu.delete', compact('anggotaLalu'));
     }
 }

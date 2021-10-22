@@ -21,4 +21,10 @@ class AnggotaLalu extends Model
 	{
 		return $this->belongsTo(Pasaran::class,  'pasaran', 'id' );
 	}
+
+	
+	public function getResort()
+	{
+		return $this->belongsTo(Resort::class,  'resort_id', 'id' );
+	}
 }

@@ -12,6 +12,7 @@
 						<th scope="col" >NO.</th>
 						<th scope="col" >PASARAN</th>
 						<th scope="col" >ANGGOTA</th>
+						<th scope="col" ></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -19,12 +20,12 @@
 					<tr class="text-center">
 						<td> {{ $loop->index +1 }} </td>
 						<td> {{ $val->getPasaran->hari  }} </td>
-						<td> {{ $val->anggota  }} </td>
-						<td>  </td>
-						{{-- <td class="text-center">
-							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KemacetanController@delete',$val->id) }}">Hapus</a>
-						</td> --}}
+						<td> {{ $val->anggota  }}</td>
+						<td class="text-center">
+							
+							<a class="btn btn-xs btn-info modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('AnggotaLaluController@edit',$val) }}">Edit</a>
+							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('AnggotaLaluController@delete',$val) }}">Hapus</a>
+						</td>
 					</tr>
 					@empty
 					<tr>
