@@ -127,7 +127,9 @@ class AnggotaLaluController extends Controller
     		->where('resort_id', $anggotaLalu->resort_id)
     		->orderBy('tanggal','asc')
     		->first();
-    		$target->update(['anggota_lalu' => $request->anggota]);
+    		if(!empty($target)){
+	    		$target->update(['anggota_lalu' => $request->anggota]);
+    		}
     	} catch (\Exception $e) {
     		DB::rollback();
     		toastr()->error($e->getMessage(), 'Error');
@@ -156,7 +158,7 @@ class AnggotaLaluController extends Controller
     	$target =  Target::where('pasaran',$anggotaLalu->pasaran)
     		->where('resort_id', $anggotaLalu->resort_id)
     		->delete();
-    		
+
     	toastr()->success('Data telah hapus', 'Berhasil');
     	return back();
     }
