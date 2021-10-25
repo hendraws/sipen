@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\AnggotaLalu;
+use App\Perkembangan;
+use App\ProgramKerja;
 use App\Resort;
 use App\Target;
 use Illuminate\Http\Request;
@@ -17,13 +19,27 @@ class TargetController extends Controller
      */
     public function index(Request $request)
     {
+    	$psrn = 0;
+    	$getTanggal = $request->tanggal;
+    	$pecahTanggal = explode('-', $request->tanggal);
+
+    	$programKerja = ProgramKerja::where('cabang', auth()->user()->cabang_id)
+    	->when(request()->filled('tanggal'), function($q){
+    		$q->whereMonth('tanggal', date('m', strtotime(request()->tanggal)));
+    	})
+    	->when(request()->missing('tanggal'), function($q){
+    		$q->whereMonth('tanggal',date('m'));
+    	})
+    	->first();
+
     	if($request->ajax()) {
 
     		if(empty($request->tanggal)){
-	    		$cekWeekend = date('w', strtotime(date('Y-m-d')));
+    			$cekWeekend = date('w', strtotime(date('Y-m-d')));
     		}else{
-	    		$cekWeekend = date('w', strtotime($request->tanggal));
+    			$cekWeekend = date('w', strtotime($request->tanggal));
     		}
+
     		if($cekWeekend == 1 || $cekWeekend == 4){
     			$psrn = "Senin - Kamis";
     			$psrn = 1;
@@ -38,41 +54,43 @@ class TargetController extends Controller
     			$psrn = "Rabu - Sabtu"; 
     			$psrn = 3;
     		}	
-    		$getTanggal = $request->tanggal;
-    		$pecahTanggal = explode('-', $request->tanggal);
-
 
     		$data = Target::select("*")
     		->where('cabang_id', auth()->user()->cabang_id)
     		->where('pasaran', $psrn)
     		->when(request()->filled('tanggal'), function($q){
-	    		$q->whereMonth('tanggal',$pecahTanggal[1])
-    			->where('tanggal','<=',$request->tanggal);
+    			$q->whereMonth('tanggal', date('m', strtotime(request()->tanggal)))
+    			->where('tanggal','<=',request()->tanggal);
     		})
     		->when(request()->missing('tanggal'), function($q){
-	    		$q->whereMonth('tanggal',date('m'));
+    			$q->whereMonth('tanggal',date('m'));
     		})
-    		->get()
-    		;
+    		->get();
 
     		$data = $data->mapToGroups(function ($item, $key) {
-    			$item['total'] = Target::selectRaw('sum(drop_kini) as total_drops')
-					    		->where('cabang_id', auth()->user()->cabang_id)
-					    		->where('resort_id', $item->resort_id)
-					    		->where('pasaran', $item->pasaran)
-								->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
-					    		->first()->total_drops;
-    			return [$item->getResort->nama => $item->toArray() ];
+    			$targetAll = Target::selectRaw('sum(drop_kini) as total_drops,sum(storting_kini) as total_storting ')
+    			->where('cabang_id', auth()->user()->cabang_id)
+    			->where('resort_id', $item->resort_id)
+    			->where('pasaran', $item->pasaran)
+    			->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
+    			->first();
+    			$item['total_drops'] = $targetAll->total_drops;
+    			$item['total_storting'] = $targetAll->total_storting;
+    			return [ $item->getResort->nama => $item->toArray() ];
     		}); 
 
     		if($request->data == 'drop'){
-    			return view('backend.target.drop.table', compact('data'));
+    			return view('backend.target.drop.table', compact('data','programKerja'));
+    		}
+    		if($request->data == 'storting'){
+    			return view('backend.target.storting.table', compact('data','programKerja'));
     		}
 
-    		return view('backend.target.table', compact('getTanggal','data','psrn'));
+
+    		return view('backend.target.table', compact('getTanggal','data','psrn','programKerja'));
 
     	}
-    	// dd('dd');
+
     	$today =  date('Y-m-d');
     	$resort = Resort::get();
     	$getTanggal = $today;
@@ -98,7 +116,6 @@ class TargetController extends Controller
     		$psrn = 3; 
     	}
 
-
     	$data = Target::select("*")
     	->where('cabang_id', auth()->user()->cabang_id)
     	->where('pasaran', $psrn)
@@ -107,11 +124,10 @@ class TargetController extends Controller
     	->get();
 
     	$data = $data->mapToGroups(function ($item, $key) {
-    		return [$item->getResort->nama => $item ];
+    		return [$item->getResort->nama => $item->toArray() ];
     	}); 
-			// dd($data);
 
-    	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ));
+    	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ,'programKerja'));
     }
 
     /**
@@ -266,7 +282,7 @@ class TargetController extends Controller
     		$target['created_by'] = auth()->user()->id; 
     		$target['target_20_drop'] = ($request->target_drops * 20) / 100;
     		$target['target_20_plnsn'] = ($request->target_plnsn * 20) / 100;
-    
+
     		Target::where('id',$id)->update($target);
     	} catch (\Exception $e) {
     		DB::rollback();
@@ -291,14 +307,14 @@ class TargetController extends Controller
      */
     public function destroy(Target $target)
     {
-        $target->delete();
+    	$target->delete();
     	toastr()->success('Data telah hapus', 'Berhasil');
     	return back();
     }
 
     public function delete(Target $target)
     {
-        return view('backend.target.delete', compact('target'));
+    	return view('backend.target.delete', compact('target'));
     }
 
     public function index2(Request $request)

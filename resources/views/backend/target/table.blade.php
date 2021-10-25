@@ -31,42 +31,75 @@
 					</tr>
 				</thead>
 				<tbody>
+					@php
+					// $jumlahLalu = $jumlahLama = $jumlahBaru = 0;
+					@endphp
 					@forelse ($data as $key => $val)
-					<?php $anggota_lalu  ?>
 					<tr>
 							{{-- <td class="text-center">{{ 'Ke - '. $val->count() }}</td> --}}
 							<td>{{ $key }}</td>
 							@foreach($val as $v)
 							@php
-								$anggota_lalu = $v->anggota_lalu;
-								$anggota_lama = $v->anggota_lama;
-								$anggota_baru = $v->anggota_baru;
-								$anggota_out = $v->anggota_out;
-								$anggota_kini = $v->anggota_kini;
-								$target_lalu = $v->target_lalu;
-								$target_20_drop = $v->target_20_drop;
-								$target_20_plnsn = $v->target_20_plnsn;
-								$target_kini = $v->target_kini;
+								$anggota_lalu = $v['anggota_lalu'];
+								$anggota_lama = $v['anggota_lama'];
+								$anggota_baru = $v['anggota_baru'];
+								$anggota_out = $v['anggota_out'];
+								$anggota_kini = $v['anggota_kini'];
+								$target_lalu = $v['target_lalu'];
+								$target_20_drop = $v['target_20_drop'];
+								$target_20_plnsn = $v['target_20_plnsn'];
+								$target_kini = $v['target_kini'];
 								$sekarang = $anggota_lama -   $anggota_baru +  $anggota_out;
-								$resort_id = $v->resort_id;
+								$resort_id = $v['resort_id'];
+								$lalu = $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out') - $sekarang;
+								$kini = $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out');
+								$targetLalu = $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') - $target_20_drop +  $target_20_plnsn;
+								$targetKini = $val->sum('target_20_drop') -  $val->sum('target_20_plnsn');
 							@endphp
 							@endforeach
-							<td>{{ $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out') - $sekarang }}</td>
-							<td>{{ $anggota_lama }}</td>
-							<td>{{ $anggota_baru }}</td>
-							<td>{{ $anggota_out }}</td>
-							<td>{{ $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out') }}</td>
-							<td>{{ $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') - $target_20_drop +  $target_20_plnsn}}</td>
-							<td>{{ $target_20_drop }}</td>
-							<td>{{ $target_20_plnsn }}</td>
-							<td>{{ $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') }}</td>
+							<td class="text-right">{{ number_format($lalu) }}</td>
+							<td class="text-right">{{ number_format($anggota_lama) }}</td>
+							<td class="text-right">{{ number_format($anggota_baru) }}</td>
+							<td class="text-right">{{ number_format($anggota_out) }}</td>
+							<td class="text-right">{{ number_format($kini) }}</td>
+							<td class="text-right">{{ number_format($targetLalu) }}</td>
+							<td class="text-right">{{ number_format($target_20_drop) }}</td>
+							<td class="text-right">{{ number_format($target_20_plnsn) }}</td>
+							<td class="text-right">{{ number_format($targetKini) }}</td>
 							<td><a class="btn btn-info btn-sm" href="{{ action('TargetController@show', $resort_id) }}" >Detail</a></td>
+							@php
+							$jumlahLalu[] = $lalu;
+							$jumlahLama[] = $anggota_lama;
+							$jumlahBaru[] = $anggota_baru;
+							$jumlahOut[] = $anggota_out;
+							$jumlahKini[] = $kini;
+							$jumlahTargetLalu[] = $targetLalu;
+							$jumlah20Drop[] = $target_20_drop;
+							$jumlah20Plnsn[] = $target_20_plnsn;
+							$jumlahTargetKini[] = $targetKini;
+							@endphp
+
 					</tr>
 					@empty
 					<tr>
 						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5></td>
 					</tr>
 					@endforelse
+					@if(count($data) > 0)
+					<tr class="text-bold">
+						<td>Jumlah</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahLalu)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahLama)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahBaru)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahOut)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahKini)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahTargetLalu)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlah20Drop)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlah20Plnsn)) }}</td>
+						<td class="text-right">{{ number_format(array_sum($jumlahTargetKini)) }}</td>
+						<td></td>
+					</tr>
+					@endif
 				</tbody>
 			</table>
 		</div>

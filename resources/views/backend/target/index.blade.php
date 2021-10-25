@@ -70,6 +70,11 @@
 		var tanggal = $('#bulan').val();
 		var url = "{{ url()->current() }}?data=target&tanggal="+tanggal;
 		getDataTable(url, '#dataTarget');
+
+		var urlDrop =  "{{ url()->current() }}?data=drop&tanggal="+tanggal;
+		var urlStorting =  "{{ url()->current() }}?data=storting&tanggal="+tanggal;
+		getDataTable(urlDrop, '#dataDrop');
+		getDataTable(urlStorting, '#dataStorting');
 		// if(resort == null){
 		// 	return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
 		// }
@@ -77,7 +82,9 @@
 	});
 
 	var urlDrop =  "{{ url()->current() }}?data=drop";
+	var urlStorting =  "{{ url()->current() }}?data=storting";
 	getDataTable(urlDrop, '#dataDrop');
+	getDataTable(urlStorting, '#dataStorting');
 
 
 </script>
@@ -123,41 +130,41 @@
 </div>
 
 <div id="data-table"></div>
-	<div class="card card-lightblue card-tabs">
-		<div class="card-header p-0 pt-1">
-			<ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
-				{{-- <li class="pt-2 px-3"><h3 class="card-title"></h3></li> --}}
-				<li class="nav-item">
-					<a class="nav-link active" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="true">TARGET</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">DROP</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">STORTING</a>
-				</li>
-			</ul>
-		</div>
-		<div class="card-body">
-			<div class="tab-content" id="custom-tabs-two-tabContent">
-				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
-					<div id="dataTarget">
-						@includeIf('backend.target.table')
-					</div>
-				</div>
-				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
-					<div id="dataDrop"></div>
-				</div>
-				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
-					<div id="dataCabang"></div>
-					storting
-				</div>	
-				<div class="tab-pane fade" id="custom-tabs-kalkulasi" role="tabpanel" aria-labelledby="custom-tabs-kalkulasi-tab">
-					<div id="dataKalkulasi"></div>
-				</div>
-
-			</div>
-		</div>
-		<!-- /.card -->
+<div class="card card-lightblue card-tabs">
+	<div class="card-header p-0 pt-1">
+		<ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+			{{-- <li class="pt-2 px-3"><h3 class="card-title"></h3></li> --}}
+			<li class="nav-item">
+				<a class="nav-link active" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="true">TARGET</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">DROP</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">STORTING</a>
+			</li>
+		</ul>
 	</div>
+	<div class="card-body">
+		<div class="tab-content" id="custom-tabs-two-tabContent">
+			<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+				<div id="dataTarget">
+					@includeIf('backend.target.table')
+				</div>
+			</div>
+			<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+				<div id="dataDrop"></div>
+			</div>
+			<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+				<div id="dataStorting"></div>
+
+			</div>	
+			<div class="tab-pane fade" id="custom-tabs-kalkulasi" role="tabpanel" aria-labelledby="custom-tabs-kalkulasi-tab">
+				<div id="dataKalkulasi"></div>
+			</div>
+
+		</div>
+	</div>
+	<!-- /.card -->
+</div>
 @endsection
