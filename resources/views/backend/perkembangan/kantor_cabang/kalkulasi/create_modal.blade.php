@@ -19,6 +19,5 @@
 	<div class="modal-footer">
 		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 		<button class="btn btn-brand btn-square btn-primary">Simpan</button>
-
 	</div>
 </form>

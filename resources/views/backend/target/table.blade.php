@@ -2,10 +2,11 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-6">
-				{{-- <h6>Tanggal : {{date_format(date_create_from_format('Y-m-d', $getTanggal), 'd F Y')}}</h6> --}}
+				<div class="text-bold">
+					Pasaran : {{ $psrn_name }}
+				</div>
 			</div>
 			<div class="col-md-6">
-				{{-- <h6 class="float-right">Pasaran : Senin - Kamis</h6> --}}
 			</div>
 		</div>
 		<div class="table-responsive">

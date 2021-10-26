@@ -2,10 +2,13 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-6">
+				<div class="text-bold">
+					Pasaran : {{ $psrn_name }}
+				</div>
 				{{-- <h6>Tanggal : {{date_format(date_create_from_format('Y-m-d', $getTanggal), 'd F Y')}}</h6> --}}
 			</div>
 			<div class="col-md-6">
-				{{-- <h6 class="float-right">Pasaran : Senin - Kamis</h6> --}}
+				<h6 class="float-right">Pasaran : Senin - Kamis</h6>
 			</div>
 		</div>
 		<div class="table-responsive">
@@ -166,9 +169,9 @@
 						@endphp
 						@endforeach
 						@php
-						$targetProgram =  $programKerja->drops / 6;
-						$evaluasi = $dropTotal - $programKerja->drops / 6;
-						$ip = ($dropTotal / $targetProgram) * 100; 
+						$targetProgram =  !empty($programKerja) ? $programKerja->drops / 6 : 0;
+						$evaluasi = $dropTotal - $targetProgram;
+						$ip = !empty($programKerja) ? ($dropTotal / $targetProgram) * 100 : 0; 
 						if($evaluasi >= 0){
 							$color = 'bg-success'; 
 						}else{
@@ -200,7 +203,7 @@
 						<td class="text-right">{{ number_format(array_sum($jumlahTotal)) }}</td>
 						<td class="text-right">{{ number_format(array_sum($totalTargetProgram)) }}</td>
 						<td class="text-right">{{ number_format(array_sum($totalEvaluasiProgram)) }}</td>
-						<td class="text-right">{{ round(array_sum($totalIp), 3) }}</td>
+						<td class="text-right">{{ round(array_sum($totalIp), 3) }} %</td>
 					</tr>
 					@endif
 				</tbody>

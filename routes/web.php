@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
 	
 	Route::resource('/target', 'TargetController');
 	Route::get('/target/{target}/delete/', 'TargetController@delete');
+	Route::post('/target/simpan-hk', 'TargetController@storeHk');
 	// ----------------------------------------------------------------------------------------- //
 	Route::resource('/resort', 'ResortController');
 	Route::get('/resort/{resort}/delete/', 'ResortController@delete');

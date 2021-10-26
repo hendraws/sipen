@@ -69,12 +69,13 @@
 		// var resort = $('#resort_id').val();
 		var tanggal = $('#bulan').val();
 		var url = "{{ url()->current() }}?data=target&tanggal="+tanggal;
-		getDataTable(url, '#dataTarget');
-
 		var urlDrop =  "{{ url()->current() }}?data=drop&tanggal="+tanggal;
 		var urlStorting =  "{{ url()->current() }}?data=storting&tanggal="+tanggal;
+		var urlKalkulasi =  "{{ url()->current() }}?data=kalkulasi&tanggal="+tanggal;
+		getDataTable(url, '#dataTarget');
 		getDataTable(urlDrop, '#dataDrop');
 		getDataTable(urlStorting, '#dataStorting');
+		getDataTable(urlKalkulasi, '#dataKalkulasi');
 		// if(resort == null){
 		// 	return Swal.fire({title: 'Pilih Resort Terlebih dahulu', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
 		// }
@@ -83,8 +84,12 @@
 
 	var urlDrop =  "{{ url()->current() }}?data=drop";
 	var urlStorting =  "{{ url()->current() }}?data=storting";
+	var urlKalkulasi =  "{{ url()->current() }}?data=kalkulasi";
+	var url = "{{ url()->current() }}?data=target";
+	getDataTable(url, '#dataTarget');
 	getDataTable(urlDrop, '#dataDrop');
 	getDataTable(urlStorting, '#dataStorting');
+	getDataTable(urlKalkulasi, '#dataKalkulasi');
 
 
 </script>
@@ -143,13 +148,16 @@
 			<li class="nav-item">
 				<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">STORTING</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="custom-tabs-kalkulasi-tab" data-toggle="pill" href="#custom-tabs-kalkulasi" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">KALKULASI</a>
+			</li>
 		</ul>
 	</div>
 	<div class="card-body">
 		<div class="tab-content" id="custom-tabs-two-tabContent">
 			<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
 				<div id="dataTarget">
-					@includeIf('backend.target.table')
+					{{-- @includeIf('backend.target.table') --}}
 				</div>
 			</div>
 			<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">

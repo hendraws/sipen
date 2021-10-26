@@ -2,6 +2,9 @@
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-6">
+				<div class="text-bold">
+					Pasaran : {{ $psrn_name }}
+				</div>
 				{{-- <h6>Tanggal : {{date_format(date_create_from_format('Y-m-d', $getTanggal), 'd F Y')}}</h6> --}}
 			</div>
 			<div class="col-md-6">
@@ -166,9 +169,9 @@
 						@endphp
 						@endforeach
 						@php
-						$targetProgram =  $programKerja->storting / 6;
+						$targetProgram =  !empty($programKerja) ?  $programKerja->storting / 6 : 0;
 						$evaluasi = $stortingTotal - $targetProgram;
-						$ip = ($stortingTotal / $targetProgram) * 100; 
+						$ip = !empty($programKerja) ? ($stortingTotal / $targetProgram) * 100 : 0; 
 						if($evaluasi >= 0){
 							$color = 'bg-success'; 
 						}else{
@@ -178,7 +181,7 @@
 						$jumlahKini[] = $stortingKini;
 						$jumlahBerjalan[] = $val->sum('storting_kini');
 						$jumlahTotal[] = $stortingTotal;
-						$totalTargetProgram[] = $programKerja->storting / 6;
+						$totalTargetProgram[] = $targetProgram;
 						$totalEvaluasiProgram[] = $evaluasi;
 						$totalIp[] = $ip;
 						@endphp
@@ -186,7 +189,7 @@
 						<td class="text-right">{{ number_format($stortingKini) }}</td>
 						<td class="text-right">{{ number_format($val->sum('storting_kini')) }}</td>
 						<td class="text-right">{{ number_format($stortingTotal) }}</td>
-						<td class="text-right">{{ number_format($programKerja->storting / 6) }}</td>
+						<td class="text-right">{{ number_format($targetProgram) }}</td>
 						<td class="{{ $color }} text-right">{{ number_format($evaluasi) }}</td>
 						<td class="text-right">{{ round($ip,3) }} %</td>
 					</tr>
@@ -204,7 +207,7 @@
 						<td class="text-right">{{ number_format(array_sum($jumlahTotal)) }}</td>
 						<td class="text-right">{{ number_format(array_sum($totalTargetProgram)) }}</td>
 						<td class="text-right">{{ number_format(array_sum($totalEvaluasiProgram)) }}</td>
-						<td class="text-right">{{ round(array_sum($totalIp), 3) }}</td>
+						<td class="text-right">{{ round(array_sum($totalIp), 3) }} %</td>
 					</tr>
 					@endif
 				</tbody>

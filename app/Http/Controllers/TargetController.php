@@ -32,6 +32,11 @@ class TargetController extends Controller
     	})
     	->first();
 
+    	if(empty($programKerja)){
+    		toastr()->error('Silahkan Mengisi Program Kerja Terlebih Dahulu', 'Warning !!!');
+    		return redirect(action('ProgramKerjaController@index'));
+    	}
+
     	if($request->ajax()) {
 
     		if(empty($request->tanggal)){
@@ -41,17 +46,17 @@ class TargetController extends Controller
     		}
 
     		if($cekWeekend == 1 || $cekWeekend == 4){
-    			$psrn = "Senin - Kamis";
+    			$psrn_name = "Senin - Kamis";
     			$psrn = 1;
     		}
 
     		if($cekWeekend == 2 || $cekWeekend == 5){
-    			$psrn = "Selasa - Jum'at";
+    			$psrn_name = "Selasa - Jum'at";
     			$psrn = 2;
     		}
 
     		if($cekWeekend == 3 || $cekWeekend == 6){
-    			$psrn = "Rabu - Sabtu"; 
+    			$psrn_name = "Rabu - Sabtu"; 
     			$psrn = 3;
     		}	
 
@@ -80,14 +85,18 @@ class TargetController extends Controller
     		}); 
 
     		if($request->data == 'drop'){
-    			return view('backend.target.drop.table', compact('data','programKerja'));
+    			return view('backend.target.drop.table', compact('data','programKerja','psrn_name'));
     		}
     		if($request->data == 'storting'){
-    			return view('backend.target.storting.table', compact('data','programKerja'));
+    			return view('backend.target.storting.table', compact('data','programKerja','psrn_name'));
+    		}
+
+    		if($request->data == 'kalkulasi'){
+    			return view('backend.target.kalkulasi.table', compact('data','programKerja','psrn_name'));
     		}
 
 
-    		return view('backend.target.table', compact('getTanggal','data','psrn','programKerja'));
+    		return view('backend.target.table', compact('getTanggal','data','psrn_name','programKerja','psrn'));
 
     	}
 
@@ -116,18 +125,9 @@ class TargetController extends Controller
     		$psrn = 3; 
     	}
 
-    	$data = Target::select("*")
-    	->where('cabang_id', auth()->user()->cabang_id)
-    	->where('pasaran', $psrn)
-    	->whereMonth('tanggal', date('m', strtotime($today)))
-    	->orderBy('tanggal')
-    	->get();
+    
 
-    	$data = $data->mapToGroups(function ($item, $key) {
-    		return [$item->getResort->nama => $item->toArray() ];
-    	}); 
-
-    	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ,'programKerja'));
+    	return view('backend.target.index', compact('today', 'resort','pasaran','getTanggal','psrn' ,'programKerja'));
     }
 
     /**
@@ -315,6 +315,27 @@ class TargetController extends Controller
     public function delete(Target $target)
     {
     	return view('backend.target.delete', compact('target'));
+    }
+
+    public function storeHk(Request $request)
+    {
+    	DB::beginTransaction();
+    	try {
+    		// dd($request);
+    		ProgramKerja::where('id',$request->program_kerja_id)->update(['sisa_hk' => $request->sisa_hk]);	
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Berhasil Setting Sisa Kerja', 'Berhasil');
+    	return back();
     }
 
     public function index2(Request $request)
