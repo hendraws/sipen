@@ -338,67 +338,72 @@ class TargetController extends Controller
     	return back();
     }
 
-    public function index2(Request $request)
+    public function cetak(Request $request)
     {
-    	if($request->ajax()) {
-    		$cekWeekend = date('w', strtotime($request->tanggal));
-    		if($cekWeekend == 1 || $cekWeekend == 4){
-    			$psrn = "Senin - Kamis";
-    		}
-
-    		if($cekWeekend == 2 || $cekWeekend == 5){
-    			$psrn = "Selasa - Jum'at";
-    		}
-
-    		if($cekWeekend == 3 || $cekWeekend == 6){
-    			$psrn = "Rabu - Sabtu"; 
-    		}	
-    		$getTanggal = $request->tanggal;
-    		$data = Target::select("*")
-    		->where('tanggal',$request->tanggal)
-    		->where('cabang_id', auth()->user()->cabang_id)
-    			// ->where('pasaran', $pasaran)
-    		->orderBy('created_at', 'desc')
-    		->get()
-    		->unique('resort_id')
-    		;
-
-    		return view('backend.target.table', compact('getTanggal','data','psrn'));
-
-    	}
-    	// dd('dd');
-    	$today =  date('Y-m-d');
-    	$resort = Resort::get();
-    	$getTanggal = $today;
-    	$cekWeekend = date('w', strtotime($today));
-    	
-    	$pasaran =  [];
-
-    	if($cekWeekend == 1 || $cekWeekend == 4){
-    		$pasaran[1] = "Senin - Kamis"; 
-    		$psrn = "Senin - Kamis";
-    	}
-
-    	if($cekWeekend == 2 || $cekWeekend == 5){
-    		$pasaran[2] = "Selasa - Jum'at";
-    		$psrn = "Selasa - Jum'at";
-    	}
-
-    	if($cekWeekend == 3 || $cekWeekend == 6){
-    		$pasaran[3] = "Rabu - Sabtu";
-    		$psrn = "Rabu - Sabtu"; 
-    	}
-
-    	$data = Target::select("*")
-    	->where('tanggal',$today)
-    	->where('cabang_id', auth()->user()->cabang_id)
-    			// ->where('pasaran', $pasaran)
-    	->orderBy('created_at', 'desc')
-    	->get()
-    	->unique('resort_id')
-    	;
-
-    	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ));
+    	dd($request);
     }
+
+    // public function index2(Request $request)
+    // {
+    // 	if($request->ajax()) {
+    // 		$cekWeekend = date('w', strtotime($request->tanggal));
+    // 		if($cekWeekend == 1 || $cekWeekend == 4){
+    // 			$psrn = "Senin - Kamis";
+    // 		}
+
+    // 		if($cekWeekend == 2 || $cekWeekend == 5){
+    // 			$psrn = "Selasa - Jum'at";
+    // 		}
+
+    // 		if($cekWeekend == 3 || $cekWeekend == 6){
+    // 			$psrn = "Rabu - Sabtu"; 
+    // 		}	
+    // 		$getTanggal = $request->tanggal;
+    // 		$data = Target::select("*")
+    // 		->where('tanggal',$request->tanggal)
+    // 		->where('cabang_id', auth()->user()->cabang_id)
+    // 			// ->where('pasaran', $pasaran)
+    // 		->orderBy('created_at', 'desc')
+    // 		->get()
+    // 		->unique('resort_id')
+    // 		;
+
+    // 		return view('backend.target.table', compact('getTanggal','data','psrn'));
+
+    // 	}
+    // 	// dd('dd');
+    // 	$today =  date('Y-m-d');
+    // 	$resort = Resort::get();
+    // 	$getTanggal = $today;
+    // 	$cekWeekend = date('w', strtotime($today));
+    	
+    // 	$pasaran =  [];
+
+    // 	if($cekWeekend == 1 || $cekWeekend == 4){
+    // 		$pasaran[1] = "Senin - Kamis"; 
+    // 		$psrn = "Senin - Kamis";
+    // 	}
+
+    // 	if($cekWeekend == 2 || $cekWeekend == 5){
+    // 		$pasaran[2] = "Selasa - Jum'at";
+    // 		$psrn = "Selasa - Jum'at";
+    // 	}
+
+    // 	if($cekWeekend == 3 || $cekWeekend == 6){
+    // 		$pasaran[3] = "Rabu - Sabtu";
+    // 		$psrn = "Rabu - Sabtu"; 
+    // 	}
+
+    // 	$data = Target::select("*")
+    // 	->where('tanggal',$today)
+    // 	->where('cabang_id', auth()->user()->cabang_id)
+    // 			// ->where('pasaran', $pasaran)
+    // 	->orderBy('created_at', 'desc')
+    // 	->get()
+    // 	->unique('resort_id')
+    // 	;
+
+    // 	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ));
+    // }
 
 }

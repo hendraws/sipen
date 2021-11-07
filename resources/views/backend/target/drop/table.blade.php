@@ -8,7 +8,7 @@
 				{{-- <h6>Tanggal : {{date_format(date_create_from_format('Y-m-d', $getTanggal), 'd F Y')}}</h6> --}}
 			</div>
 			<div class="col-md-6">
-				<h6 class="float-right">Pasaran : Senin - Kamis</h6>
+				{{-- <h6 class="float-right">Pasaran : Senin - Kamis</h6> --}}
 			</div>
 		</div>
 		<div class="table-responsive">

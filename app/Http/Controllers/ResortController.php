@@ -26,7 +26,7 @@ class ResortController extends Controller
     			return $nama;
     		})     
     		->addColumn('action', function ($row) {
-    			$action =  '<a class="btn btn-sm btn-warning modal-button" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ResortController@edit',$row).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Edit</a>';
+    			$action =  '<a class="btn btn-warning btn-sm modal-button" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ResortController@edit',$row).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Edit</a>';
     			$action = $action .  '<a class="btn btn-sm btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="'.action('ResortController@delete',$row).'"  data-toggle="tooltip" data-placement="top" title="Edit" >Hapus</a>';
 
     			return $action;

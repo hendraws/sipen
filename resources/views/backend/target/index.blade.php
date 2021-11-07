@@ -82,6 +82,11 @@
 		// getDataTable(url, '#data-table')
 	});
 
+	$(document).on('click', '#cetak', function(){
+		var tanggal = $('#bulan').val();
+		console.log("{{ action('TargetController@cetak') }}?data=cetak&tanggal="+tanggal);
+	});
+
 	var urlDrop =  "{{ url()->current() }}?data=drop";
 	var urlStorting =  "{{ url()->current() }}?data=storting";
 	var urlKalkulasi =  "{{ url()->current() }}?data=kalkulasi";
@@ -91,7 +96,7 @@
 	getDataTable(urlStorting, '#dataStorting');
 	getDataTable(urlKalkulasi, '#dataKalkulasi');
 
-
+	
 </script>
 @endsection
 
@@ -115,7 +120,7 @@
 				<div class="input-group mb-3 input-sm">
 					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y-m-d') }}">
 					<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
-					<a href="" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a>
+					<button type="button"  id="cetak" class="btn btn-success  mx-2 float-right" >Cetak</button>
 					<div class="card-tools ml-2">
 						<button type="button" class="btn btn-primary" data-card-widget="collapse">Tambah
 						</button>
