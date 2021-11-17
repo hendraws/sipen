@@ -34,6 +34,7 @@
 				</thead>
 				<tbody>
 
+					
 					@forelse ($data as $key => $val)
 					<tr>
 						<td>{{ $key }}</td>
@@ -77,6 +78,10 @@
 							$color2 = 'bg-danger'; 
 						}
 						$lalu = $val->sum('drop_kini') - $dropKini;
+						// dd($dropTotal, $v);
+						// $getTotalResort = App\Target::where('resort_id',$resort)
+						// ->selectRaw('sum()')
+						// ->whereMonth('tanggal', date('m', strtotime($tanggal)))
 						@endphp
 						<td class="text-right">{{ number_format($lalu)  }}</td>
 						<td class="text-right">{{ number_format($dropKini) }}</td>

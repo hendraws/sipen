@@ -76,7 +76,7 @@ class TargetController extends Controller
     			$targetAll = Target::selectRaw('sum(drop_kini) as total_drops,sum(storting_kini) as total_storting ')
     			->where('cabang_id', auth()->user()->cabang_id)
     			->where('resort_id', $item->resort_id)
-    			->where('pasaran', $item->pasaran)
+    			// ->where('pasaran', $item->pasaran)
     			->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
     			->first();
     			$item['total_drops'] = $targetAll->total_drops;
