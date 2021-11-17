@@ -31,7 +31,7 @@ class TargetController extends Controller
     		$q->whereMonth('tanggal',date('m'));
     	})
     	->first();
-
+    	
     	if(empty($programKerja)){
     		toastr()->error('Silahkan Mengisi Program Kerja Terlebih Dahulu', 'Warning !!!');
     		return redirect(action('ProgramKerjaController@index'));
@@ -166,9 +166,11 @@ class TargetController extends Controller
 
     		$anggota = AnggotaLalu::where('pasaran', $request->pasaran)
     		->where('resort_id',$request->resort_id)
+    		->whereMonth('tanggal', date('m'))
     		->first();
     		$cekTarget = Target::where('pasaran', $request->pasaran)
     		->where('resort_id',$request->resort_id)
+    		->whereMonth('tanggal', date('m'))
     		->first();
     		$cekDropLalu = Target::where('resort_id',$request->resort_id)
     		->latest()

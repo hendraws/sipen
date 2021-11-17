@@ -63,7 +63,11 @@ class AnggotaLaluController extends Controller
     		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
     		$pasaran['tanggal'] = date('Y-m-d'); 
 
-    		$cekKemacetan  = AnggotaLalu::where('cabang_id', auth()->user()->cabang_id)->where('resort_id', $request->resort_id)->where('pasaran', $request->pasaran)->first();
+    		$cekKemacetan  = AnggotaLalu::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal', date('m'))
+    		->first();
     		
     		if(!empty($cekKemacetan)){
     			toastr()->warning('Data Sudah Ada', 'Error');
