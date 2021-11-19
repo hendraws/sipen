@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/angsuran-kemacetan', 'AngsuranKemacetanController');
 	Route::resource('/angsuran-calon-macet', 'AngsuranCalonMacetController');
 
+	Route::resource('/Target-lalu', 'TargetLaluController');
 
 
 	// command

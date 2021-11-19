@@ -64,6 +64,12 @@
 							<i class="far fa-circle nav-icon"></i>
 							<p>Anggota Lalu</p>
 						</a>
+					</li>	
+					<li class="nav-item">
+						<a href="{{ action('TargetLaluController@index') }}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Target Lalu</p>
+						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{ action('ResortController@index') }}" class="nav-link">
