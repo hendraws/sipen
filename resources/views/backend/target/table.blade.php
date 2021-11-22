@@ -54,8 +54,8 @@
 								$resort_id = $v['resort_id'];
 								$lalu = $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out') - $sekarang;
 								$kini = $val->sum('anggota_lalu') + $val->sum('anggota_lama') +  $val->sum('anggota_baru') - $val->sum('anggota_out');
-								$targetLalu = $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') - $target_20_drop +  $target_20_plnsn;
-								$targetKini = $val->sum('target_20_drop') -  $val->sum('target_20_plnsn');
+								$targetLalu = $val->sum('target_lalu') + $val->sum('target_20_drop') -  $val->sum('target_20_plnsn') - $target_20_drop +  $target_20_plnsn;
+								$targetKini = $val->sum('target_lalu') + $val->sum('target_20_drop') -  $val->sum('target_20_plnsn');
 							@endphp
 							@endforeach
 							<td class="text-right">{{ number_format($lalu) }}</td>

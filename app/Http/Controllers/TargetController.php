@@ -7,6 +7,7 @@ use App\Perkembangan;
 use App\ProgramKerja;
 use App\Resort;
 use App\Target;
+use App\TargetLalu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -175,6 +176,10 @@ class TargetController extends Controller
     		$cekDropLalu = Target::where('resort_id',$request->resort_id)
     		->latest()
     		->first();
+    		$targetLalu = TargetLalu::where('pasaran', $request->pasaran)
+    		->where('resort_id',$request->resort_id)
+    		->whereMonth('tanggal', date('m'))
+    		->first();
 
     		$target['cabang_id'] = auth()->user()->cabang_id; 
     		$target['created_by'] = auth()->user()->id; 
@@ -184,8 +189,15 @@ class TargetController extends Controller
     				toastr()->warning('Silahkan Input Data Master Anggota Terlebih Dahulu!', 'Perhatian');
     				return back();
     			}
+    			if(empty($targetLalu)){
+    				toastr()->warning('Silahkan Input Data Master Target Lalu Terlebih Dahulu!', 'Perhatian');
+    				return back();
+    			}
     			$target['anggota_lalu'] = $anggota->anggota;
+    			$target['target_lalu'] = $targetLalu->target_lalu;
     		}
+
+
     		// $target['anggota_kini'] = $target['anggota_lalu'] + $target['anggota_lama'] + $target['anggota_baru'] - $target['anggota_out'];
 
     		// if(!empty($cekDropLalu)){
