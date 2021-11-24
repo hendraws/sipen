@@ -424,7 +424,7 @@ class PerkembanganController extends Controller
     		->whereMonth('tanggal',$bulan)
     		->whereYear('tanggal',$tahun)
     		->first();
-
+    		// dd($dashboard);
     		$kasTerbaru = Perkembangan::where('cabang', $request->cabang)
     		->whereMonth('tanggal',$bulan)
     		->whereYear('tanggal',$tahun)
