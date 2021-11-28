@@ -10,6 +10,7 @@ use App\Target;
 use App\TargetLalu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class TargetController extends Controller
 {
@@ -355,6 +356,7 @@ class TargetController extends Controller
     public function cetak(Request $request)
     {
     	dd($request);
+
     }
 
     // public function index2(Request $request)
@@ -420,4 +422,24 @@ class TargetController extends Controller
     // 	return view('backend.target.index', compact('today', 'resort','pasaran','data','getTanggal','psrn' ));
     // }
 
+    public function report(Request $request)
+    {
+    	if($request->has('tanggal')){
+    		$target  = Target::with('getResort')
+    					->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
+    					->get();
+
+    		$data = $target->mapToGroups(function($item, $key){
+    			return [$item->tanggal => [ optional($item->getResort)->nama => $item ] ];
+    		});
+    		// $first_key = array_key_first($data->toArray());
+    		$tanggal_awal = date('d F Y', strtotime(array_key_first($data->toArray())));
+    		$tanggal_akhir = date('d F Y', strtotime(array_key_last($data->toArray())));
+    		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir'))->setPaper('a4', 'landscape');
+
+			return $pdf->download('invoice.pdf');
+	    	// return view('backend.target.report', compact('data'));
+    	}
+    	return abort(404);
+    }
 }

@@ -65,7 +65,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::resource('/angsuran-calon-macet', 'AngsuranCalonMacetController');
 
 	Route::resource('/Target-lalu', 'TargetLaluController');
-
+	Route::get('sirkulasi-perkembangan', 'TargetController@report');
+	// Route::get('report/sirkulasi-perkembangan', 'PerkembanganController@')
 
 	// command
 	Route::group(['prefix'=>'/command/artisan','as'=>'account.'], function(){ 
