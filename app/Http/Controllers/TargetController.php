@@ -427,6 +427,7 @@ class TargetController extends Controller
     	if($request->has('tanggal')){
     		$target  = Target::with('getResort')
     					->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
+    					->orderBy('tanggal')
     					->get();
 
     		$data = $target->mapToGroups(function($item, $key){

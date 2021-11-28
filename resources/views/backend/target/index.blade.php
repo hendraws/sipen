@@ -126,8 +126,7 @@
 				<div class="input-group mb-3 input-sm">
 					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y-m-d') }}">
 					<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
-					<button type="button"  id="cetak" class="btn btn-success  mx-2 float-right" >Cetak</button>
-					<button type="button"  id="print" class="btn btn-success  mx-2 float-right" >REport</button>
+					<button type="button"  id="print" class="btn btn-success  mx-2 float-right" >Cetak Report</button>
 					<div class="card-tools ml-2">
 						<button type="button" class="btn btn-primary" data-card-widget="collapse">Tambah
 						</button>
