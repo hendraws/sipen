@@ -46,44 +46,92 @@
 		</thead>
 		<tbody>
 			<?php 
-				$target = [];
+			$kini_1 = $lalu_1 = $kini_2 = $lalu_2 = $kini_3 = $lalu_3 = 0;  
+			$target_kini_1 = $target_lalu_1 = $target_kini_2 = $target_lalu_2 = $target_kini_3 = $target_lalu_3 = 0;  
 			?>
 			@forelse ($data as $key => $val)
 			@php
-			if(!array_key_exists($val->pasaran, $target)){
-				$target[$val->pasaran]['anggota_lalu'] = $anggotaLalu[$val->pasaran];
-				$target[$val->pasaran]['anggota_kini'] = $target[$val->pasaran]['anggota_lalu'] + $val->anggota_lama + $val->anggota_baru - $val->anggota_out;
-				$target[$val->pasaran]['target_lalu'] = $targetLalu[$val->pasaran];
-				$target[$val->pasaran]['target_kini'] = $target[$val->pasaran]['target_lalu'] + $val->target_20_drop - $val->target_20_plnsn;
-				$target[$val->pasaran]['background'] = 'bg-lightblue';
-			}else{
-				$target[$val->pasaran]['anggota_lalu'] = $anggotaLalu[$val->pasaran];
-				$target[$val->pasaran]['anggota_kini'] = $anggotaLalu[$val->pasaran] + $val->anggota_lama + $val->anggota_baru - $val->anggota_out;
-				$target[$val->pasaran]['target_lalu'] = $targetLalu[$val->pasaran];
-				$target[$val->pasaran]['target_kini'] = $targetLalu[$val->pasaran] + $val->target_20_drop - $val->target_20_plnsn;
-				$target[$val->pasaran]['background'] = 'bg-lightblue';
+			if($val->pasaran == 1){
+				$background = 'bg-lightblue';
+				$lalu_1 = $val->anggota_lalu + $kini_1;
+				$kini_1 = $val->anggota_lama + $val->anggota_baru + $lalu_1 - $val->anggota_out;
+				$target_lalu_1 = $val->target_lalu + $target_kini_1;
+				$target_kini_1 = $val->target_20_drop + $target_lalu_1 - $val->target_20_plnsn;
+			}
+			if($val->pasaran == 2){
+				$background = 'bg-secondary';
+				$lalu_2 = $val->anggota_lalu + $kini_2;
+				$kini_2 = $val->anggota_lama + $val->anggota_baru + $lalu_2 - $val->anggota_out;
+				$target_lalu_2 = $val->target_lalu + $target_kini_2;
+				$target_kini_2 = $val->target_20_drop + $target_lalu_1 - $val->target_20_plnsn;
+			}
+			if($val->pasaran == 3){
+				$background = 'bg-navy';
+				$lalu_3 = $val->anggota_lalu + $kini_3;
+				$kini_3 = $val->anggota_lama + $val->anggota_baru + $lalu_3 - $val->anggota_out;	
+				$target_lalu_3 = $val->target_lalu + $target_kini_3;
+				$target_kini_3 = $val->target_20_drop + $target_lalu_1 - $val->target_20_plnsn;
 			}
 			@endphp
 			<tr >
 				<td>{{ $val->tanggal }}</td>
-				<td class="">{{ $val->getPasaran->hari }}</td>
+				<td class="{{ $background }}">{{ $val->getPasaran->hari }}</td>
 				<td class="text-right">
-					 {{ number_format($target[$val->pasaran]['anggota_lalu']) }}
-					
+					@php
+					if($val->pasaran == 1){
+						echo number_format($lalu_1);
+					}
+					if($val->pasaran == 2){
+						echo number_format($lalu_2);
+					}
+					if($val->pasaran == 3){
+						echo number_format($lalu_3);
+					}
+					@endphp
 				</td>
 				<td class="text-right">{{ $val->anggota_lama }}</td>
 				<td class="text-right">{{ $val->anggota_baru }}</td>
 				<td class="text-right">{{ $val->anggota_out }}</td>
 				<td class="text-right">
-					 {{ number_format($target[$val->pasaran]['anggota_kini']) }}
+					@php
+					if($val->pasaran == 1){
+						echo number_format($kini_1);
+					}
+					if($val->pasaran == 2){
+						echo number_format($kini_2);
+					}
+					if($val->pasaran == 3){
+						echo number_format($kini_3);
+					}
+					@endphp
 				</td>
 				<td class="text-right">
-					 {{ number_format($target[$val->pasaran]['target_lalu']) }}
+					@php
+					if($val->pasaran == 1){
+						echo number_format($target_lalu_1);
+					}
+					if($val->pasaran == 2){
+						echo number_format($target_lalu_2);
+					}
+					if($val->pasaran == 3){
+						echo number_format($target_lalu_3);
+					}
+					@endphp
 				</td>
 				<td class="text-right">{{ number_format($val->target_20_drop) }}</td>
 				<td class="text-right">{{ number_format($val->target_20_plnsn) }}</td>
 				<td class="text-right">
-					 {{ number_format($target[$val->pasaran]['target_kini']) }}
+					@php
+					if($val->pasaran == 1){
+						echo number_format($target_kini_1);
+					}
+					if($val->pasaran == 2){
+						echo number_format($target_kini_2);
+					}
+					if($val->pasaran == 3){
+						echo number_format($target_kini_3);
+					}
+					@endphp
 				</td>
 				<td class="text-center">
 					<a class="btn btn-warning btn-sm" href="{{ action('TargetController@edit', $val->id) }}">Edit</a>

@@ -98,7 +98,26 @@ class TargetController extends Controller
     		}
 
 
-    		return view('backend.target.table', compact('getTanggal','data','psrn_name','programKerja','psrn'));
+    		$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->where('pasaran', $psrn)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get()
+    		->mapWithKeys(function ($item, $key) {
+    			return [$item->getResort->nama => $item->target_lalu];
+    		});
+
+    		$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->where('pasaran', $psrn)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get()
+    		->mapWithKeys(function ($item, $key) {
+    			return [$item->getResort->nama => $item->anggota];
+    		});
+
+
+    		return view('backend.target.table', compact('getTanggal','data','psrn_name','programKerja','psrn','targetLalu','anggotaLalu'));
 
     	}
 
@@ -127,7 +146,6 @@ class TargetController extends Controller
     		$psrn = 3; 
     	}
 
-    
 
     	return view('backend.target.index', compact('today', 'resort','pasaran','getTanggal','psrn' ,'programKerja'));
     }
@@ -244,9 +262,27 @@ class TargetController extends Controller
      */
     public function show($id)
     {
-    	$data = Target::where('resort_id',$id)->whereMonth('tanggal', Date('m'))->orderBy('tanggal')->get();
+    	// dd(auth()->user()->getCabang->id);
+    	$data = Target::where('cabang_id',auth()->user()->getCabang->id)->where('resort_id',$id)->whereMonth('tanggal', Date('m'))->orderBy('tanggal')->get();
+    	$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+    	->where('resort_id',$id)
+    	->whereMonth('tanggal', Date('m'))
+    	->orderBy('pasaran')
+    	->get();
 
-    	return view('backend.target.detail', compact('data'));
+    	$targetLalu = $targetLalu->mapWithKeys(function ($item, $key) {
+    		return [$item->pasaran => $item->target_lalu];
+    	});
+
+    	$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    	->where('resort_id',$id)
+    	->whereMonth('tanggal', Date('m'))
+    	->orderBy('pasaran')
+    	->get()
+    	->mapWithKeys(function ($item, $key) {
+    		return [$item->pasaran => $item->anggota];
+    	});
+    	return view('backend.target.detail', compact('data','targetLalu','anggotaLalu'));
     }
 
     /**
@@ -324,7 +360,7 @@ class TargetController extends Controller
     {
     	$target->delete();
     	toastr()->success('Data telah hapus', 'Berhasil');
-    	return back();
+    	return redirect(action('TargetController@show', $request->resort_id));
     }
 
     public function delete(Target $target)
@@ -392,7 +428,7 @@ class TargetController extends Controller
     // 	$resort = Resort::get();
     // 	$getTanggal = $today;
     // 	$cekWeekend = date('w', strtotime($today));
-    	
+
     // 	$pasaran =  [];
 
     // 	if($cekWeekend == 1 || $cekWeekend == 4){
@@ -426,9 +462,9 @@ class TargetController extends Controller
     {
     	if($request->has('tanggal')){
     		$target  = Target::with('getResort')
-    					->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
-    					->orderBy('tanggal')
-    					->get();
+    		->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
+    		->orderBy('tanggal')
+    		->get();
 
     		$data = $target->mapToGroups(function($item, $key){
     			return [$item->tanggal => [ optional($item->getResort)->nama => $item ] ];
@@ -438,7 +474,7 @@ class TargetController extends Controller
     		$tanggal_akhir = date('d F Y', strtotime(array_key_last($data->toArray())));
     		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir'))->setPaper('a4', 'landscape');
 
-			return $pdf->download('invoice.pdf');
+    		return $pdf->download('invoice.pdf');
 	    	// return view('backend.target.report', compact('data'));
     	}
     	return abort(404);
