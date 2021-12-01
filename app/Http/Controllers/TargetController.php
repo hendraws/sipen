@@ -472,10 +472,35 @@ class TargetController extends Controller
     		// $first_key = array_key_first($data->toArray());
     		$tanggal_awal = date('d F Y', strtotime(array_key_first($data->toArray())));
     		$tanggal_akhir = date('d F Y', strtotime(array_key_last($data->toArray())));
-    		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir'))->setPaper('a4', 'landscape');
+	    	
+	    	
+	    	$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get();
+
+    		$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get();
+    		
+    		$anggota_lalu = $target_lalu = [];
+    		// ->mapWithKeys(function ($item, $key) use ($resort){
+    		// 	$resort = $item->getResort->nama; 
+    		// 	return [ $item->getResort->nama =>   $item->anggota];
+    		// });
+    		foreach ($targetLalu as $key => $value) {
+    			
+    			$target_lalu[$value->getResort->nama][$value->pasaran] = $value->target_lalu; 
+    		}
+
+    		foreach ($anggotaLalu as $key => $value) {
+    			$anggota_lalu[$value->getResort->nama][$value->pasaran] = $value->anggota; 
+    		}
+    	
+    		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir','anggota_lalu', 'target_lalu'))->setPaper('a4', 'landscape');
 
     		return $pdf->download('invoice.pdf');
-	    	// return view('backend.target.report', compact('data'));
     	}
     	return abort(404);
     }

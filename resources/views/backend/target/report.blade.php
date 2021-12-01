@@ -71,6 +71,8 @@
 	$target_kini = []; 
 	$target_kini = []; 
 	$break = 1;
+	$totalDrop = 0;
+	$totalStorting = 0;
 	?>
 	@foreach($data as $tanggal => $items)
 	@php
@@ -126,61 +128,110 @@
 		@foreach($items as $item)
 		@foreach($item as $resort => $value)
 		@php
-		if(!array_key_exists($resort, $list)){
-			$list[$resort]['anggota_lalu'] = $value->anggota_lalu;
-			$list[$resort]['target_lalu'] = $value->target_lalu;
-			$list[$resort]['drop_lalu'] = $value->drop_lalu;
-			$list[$resort]['storting_lalu'] = $value->storting_lalu;
-		}else{
-			$list[$resort]['anggota_lalu'] = $list[$resort]['anggota_kini'];
-			$list[$resort]['target_lalu'] = $list[$resort]['target_kini'];
-			$list[$resort]['drop_lalu'] = $list[$resort]['drop_berjalan'];
-			$list[$resort]['storting_lalu'] = $list[$resort]['storting_berjalan'];
-		}
-		$list[$resort]['anggota_kini'] = $list[$resort]['anggota_lalu'] + $value->anggota_lama + $value->anggota_baru - $value->anggota_out;
-		$list[$resort]['target_kini'] = $list[$resort]['target_lalu'] + $value->target_20_drop - $value->target_20_plnsn;
-		$list[$resort]['drop_berjalan'] = $list[$resort]['drop_lalu'] + $value->drop_kini - $value->drop_berjalan;
-		$list[$resort]['storting_berjalan'] = $list[$resort]['storting_lalu'] + $value->storting_kini - $value->storting_berjalan;
 
-		$total['anggota_lalu'][] = $list[$resort]['anggota_lalu'];
+		if(!array_key_exists($resort, $list) || !array_key_exists($value->pasaran, $list[$resort])){
+			// anggota
+			$list[$resort][$value->pasaran]['anggota_lalu'] = $anggota_lalu[$resort][$value->pasaran];
+			$list[$resort][$value->pasaran]['anggota_lama'] = $value->anggota_lama;
+			$list[$resort][$value->pasaran]['anggota_baru'] = $value->anggota_baru;
+			$list[$resort][$value->pasaran]['anggota_out'] = $value->anggota_out;
+			$list[$resort][$value->pasaran]['anggota_kini'] = $anggota_lalu[$resort][$value->pasaran] + $value->anggota_lama + $value->anggota_baru - $value->anggota_out ;
+			// target
+
+			$list[$resort][$value->pasaran]['target_lalu'] = $target_lalu[$resort][$value->pasaran];
+			$list[$resort][$value->pasaran]['target_drop'] = $value->target_20_drop;
+			$list[$resort][$value->pasaran]['target_plnsn'] = $value->target_20_plnsn;
+			$list[$resort][$value->pasaran]['target_kini'] = $target_lalu[$resort][$value->pasaran] + $value->target_20_drop - $value->target_20_plnsn ;
+		
+			// perkembangan Drop
+			$list[$resort][$value->pasaran]['drop_lalu'] = $value->drop_lalu;
+			$list[$resort][$value->pasaran]['drop_kini'] = $value->drop_kini;
+			$list[$resort][$value->pasaran]['drop_berjalan'] = $value->drop_lalu + $value->drop_kini;
+			$list[$resort]['drop_total'][] = $value->drop_lalu + $value->drop_kini;
+			// perkemabangan storting
+			$list[$resort][$value->pasaran]['storting_lalu'] = $value->storting_lalu;
+			$list[$resort][$value->pasaran]['storting_kini'] = $value->storting_kini;
+			$list[$resort][$value->pasaran]['storting_berjalan'] = $value->storting_lalu + $value->storting_kini;
+			$list[$resort]['storting_total'][] = $value->storting_lalu + $value->storting_kini;
+
+
+		}else{
+			// anggota
+			$list[$resort][$value->pasaran]['anggota_lalu'] = $list[$resort][$value->pasaran]['anggota_kini'];
+
+			// dd($list[$resort][$value->pasaran]['anggota_lalu']);
+			$list[$resort][$value->pasaran]['anggota_lama'] = $value->anggota_lama;
+			$list[$resort][$value->pasaran]['anggota_baru'] = $value->anggota_baru;
+			$list[$resort][$value->pasaran]['anggota_out'] = $value->anggota_out;
+
+			$list[$resort][$value->pasaran]['anggota_kini'] = $list[$resort][$value->pasaran]['anggota_lalu'] + $value->anggota_lama + $value->anggota_baru - $value->anggota_out ;
+
+			// target
+			$list[$resort][$value->pasaran]['target_lalu'] = $list[$resort][$value->pasaran]['target_kini'];
+			$list[$resort][$value->pasaran]['target_drop'] = $value->target_20_drop;
+			$list[$resort][$value->pasaran]['target_plnsn'] = $value->target_20_plnsn;
+			$list[$resort][$value->pasaran]['target_kini'] = $list[$resort][$value->pasaran]['target_lalu'] + $value->target_20_drop - $value->target_20_plnsn ;
+		
+			// perkembangan Drop
+			$list[$resort][$value->pasaran]['drop_lalu'] = $list[$resort][$value->pasaran]['drop_berjalan'];
+			$list[$resort][$value->pasaran]['drop_kini'] = $value->drop_kini;
+			$list[$resort][$value->pasaran]['drop_berjalan'] = $value->drop_lalu + $value->drop_kini;
+			$list[$resort]['drop_total'][] = $value->drop_kini;
+			// perkemabangan storting
+			$list[$resort][$value->pasaran]['storting_lalu'] = $list[$resort][$value->pasaran]['storting_berjalan'];
+			$list[$resort][$value->pasaran]['storting_kini'] = $value->storting_kini;
+			$list[$resort][$value->pasaran]['storting_berjalan'] = $value->storting_lalu + $value->storting_kini;
+			$list[$resort]['storting_total'][] =  $value->storting_kini;
+
+		}
+
+		// $list[$resort]['anggota_kini'] = $list[$resort]['anggota_lalu'] + $value->anggota_lama + $value->anggota_baru - $value->anggota_out;
+		// $list[$resort]['target_kini'] = $list[$resort]['target_lalu'] + $value->target_20_drop - $value->target_20_plnsn;
+		// $list[$resort]['drop_berjalan'] = $list[$resort]['drop_lalu'] + $value->drop_kini - $value->drop_berjalan;
+		// $list[$resort]['storting_berjalan'] = $list[$resort]['storting_lalu'] + $value->storting_kini - $value->storting_berjalan;
+
+		$total['anggota_lalu'][] = $list[$resort][$value->pasaran]['anggota_lalu'];
 		$total['anggota_lama'][] = $value->anggota_lama;
 		$total['anggota_baru'][] = $value->anggota_baru;
 		$total['anggota_out'][] = $value->anggota_out;
-		$total['anggota_kini'][] = $list[$resort]['anggota_kini'] ;
-		$total['target_lalu'][] = $list[$resort]['target_lalu'] ;
+		$total['anggota_kini'][] = $list[$resort][$value->pasaran]['anggota_kini'] ;
+		$total['target_lalu'][] = $list[$resort][$value->pasaran]['target_lalu'] ;
 		$total['20_drop'][] = $value->target_20_drop;
 		$total['20_plnsn'][] = $value->target_20_plnsn;
-		$total['target_kini'][] = $list[$resort]['target_kini'];
-		$total['drop_lalu'][] = $list[$resort]['drop_lalu'];
+		$total['target_kini'][] = $list[$resort][$value->pasaran]['target_kini'];
+		$total['drop_lalu'][] = $list[$resort][$value->pasaran]['drop_lalu'];
 		$total['drop_kini'][] = $value->drop_kini;
-		$total['drop_berjalan'][] = $list[$resort]['drop_berjalan'];
-		$total['storting_lalu'][] = $list[$resort]['storting_lalu'];
+		$total['drop_berjalan'][] = $list[$resort][$value->pasaran]['drop_berjalan'];
+		$total['storting_lalu'][] = $list[$resort][$value->pasaran]['storting_lalu'];
 		$total['storting_kini'][] = $value->storting_kini;
-		$total['storting_berjalan'][] = $list[$resort]['storting_berjalan'];
+		$total['storting_berjalan'][] = $list[$resort][$value->pasaran]['storting_berjalan'];
+		$totalDrop += $value->drop_kini;
+		$totalStorting += $value->storting_kini;
 		@endphp
 		<tr>
 			<td>{{ $no++ }}</td>
 			<td>{{ $resort }}</td>
-			<td class="text-right">{{ $list[$resort]['anggota_lalu']  }}</td>
-			<td class="text-right">{{ $value->anggota_lama }}</td>
-			<td class="text-right">{{ $value->anggota_baru }}</td>
-			<td class="text-right">{{ $value->anggota_out }}</td>
-			<td class="text-right">{{ $list[$resort]['anggota_kini']   }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['target_lalu'] ) }}</td>
-			<td class="text-right">{{ number_format($value->target_20_drop ) }}</td>
-			<td class="text-right">{{ number_format($value->target_20_plnsn ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['target_kini'] ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['drop_lalu'] ) }}</td>
-			<td class="text-right">{{ number_format($value->drop_kini ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['drop_berjalan'] ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['drop_berjalan'] ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['storting_lalu'] ) }}</td>
-			<td class="text-right">{{ number_format($value->storting_kini ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['storting_berjalan'] ) }}</td>
-			<td class="text-right">{{ number_format($list[$resort]['storting_berjalan'] ) }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['anggota_lalu'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['anggota_lama'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['anggota_baru'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['anggota_out'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['anggota_kini'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['target_lalu'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['target_drop'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['target_plnsn'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['target_kini'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['drop_lalu'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['drop_kini'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['drop_berjalan'] )  }}</td>
+			<td class="text-right">{{ number_format(array_sum($list[$resort]['drop_total'])  ) }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['storting_lalu'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['storting_kini'] )  }}</td>
+			<td class="text-right">{{ number_format($list[$resort][$value->pasaran]['storting_berjalan'] )  }}</td>
+			<td class="text-right">{{ number_format(array_sum($list[$resort]['storting_total'])  ) }}</td>
 		</tr>
 		@endforeach
 		@endforeach
+
 		<tr>
 			<th colspan="2"> Jumlah</th>
 			<th class="text-right">{{ number_format(array_sum($total['anggota_lalu'])) }}</th>
@@ -195,17 +246,16 @@
 			<th class="text-right">{{ number_format(array_sum($total['drop_lalu'])) }}</th>
 			<th class="text-right">{{ number_format(array_sum($total['drop_kini'])) }}</th>
 			<th class="text-right">{{ number_format(array_sum($total['drop_berjalan'])) }}</th>
-			<th class="text-right">{{ number_format(array_sum($total['drop_berjalan'])) }}</th>
+			<th class="text-right">{{ number_format($totalDrop) }}</th>
 			<th class="text-right">{{ number_format(array_sum($total['storting_lalu'])) }}</th>
 			<th class="text-right">{{ number_format(array_sum($total['storting_kini'])) }}</th>
 			<th class="text-right">{{ number_format(array_sum($total['storting_berjalan'])) }}</th>
-			<th class="text-right">{{ number_format(array_sum($total['storting_berjalan'])) }}</th>
+			<th class="text-right">{{ number_format($totalStorting) }}</th>
 		</tr>
 	</table>
 	@if($break % 3 == 0)
 	<div class="page-break"></div>
 	@endif
 	@endforeach
-
 </body>
 </html>
