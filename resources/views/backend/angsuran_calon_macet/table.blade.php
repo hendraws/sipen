@@ -54,6 +54,7 @@
 							</tr>
 						</thead>
 						<tbody>
+							@php $total = []; @endphp
 							@forelse ($calonMacet as $key => $val)
 							<tr>
 								<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
@@ -63,6 +64,10 @@
 								<td class="text-right"> {{ number_format($val->angsuran) ?? 0  }} </td>
 								<td class="text-right"> {{ number_format($val->cma_saldo - $val->angsuran)  }} </td>
 							</tr>
+							@php 
+								$total['anggota'][] = $val->cma_anggota;
+								$total['calonMacet'][] = $val->cma_saldo;
+							@endphp
 							@empty
 							<tr>
 								<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5></td>
@@ -91,12 +96,12 @@
 						<tbody>
 							<tr class="text-center">
 								<td>{{ $totalAngsuran->hk }}</td>
-								<td>{{ $totalAngsuran->total_anggota }}</td>
-								<td>{{ $totalAngsuran->total_anggota_keluar }}</td>
-								<td><b>{{ $totalAngsuran->total_anggota - $totalAngsuran->total_anggota_keluar }}</b></td>
-								<td class="text-right">{{ number_format($totalAngsuran->total_cma_saldo) }}</td>
+								<td>{{ number_format(array_sum($total['anggota'])) }}</td>
+								<td>{{ number_format($totalAngsuran->total_anggota_keluar) }}</td>
+								<td><b>{{ number_format(array_sum($total['anggota']) - $totalAngsuran->total_anggota_keluar) }}</b></td>
+								<td class="text-right">{{ number_format(array_sum($total['calonMacet'])) }}</td>
 								<td class="text-right">{{ number_format($totalAngsuran->total_angsuran) }}</td>
-								<td class="text-right"><b>{{ number_format($totalAngsuran->total_cma_saldo - $totalAngsuran->total_angsuran) }}</b></td>
+								<td class="text-right"><b>{{ number_format(array_sum($total['calonMacet']) - $totalAngsuran->total_angsuran) }}</b></td>
 							</tr>
 						</tbody>
 					</table>

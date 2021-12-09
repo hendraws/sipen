@@ -440,7 +440,7 @@ class PerkembanganController extends Controller
     			$groupKemacetan = $kemacetan->mapToGroups(function ($item, $key) {
     				return [$item->getResort->nama => $item];
     			});
-
+    			// dd($groupKemacetan->toArray());
     			$evaluasi = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
     			->join('pasarans','pasarans.id', 'kemacetans.pasaran')
     			->leftjoin('resorts','resorts.id', 'kemacetans.resort_id')
@@ -461,7 +461,7 @@ class PerkembanganController extends Controller
     			->groupBy('kemacetans.resort_id')
     			->groupBy('kemacetans.pasaran')
     			->get();
-
+    			
     			$evaluasiBerjalan = $evaluasi->mapToGroups(function ($item, $key) {
     				return [$item->nama_resort => $item];
     			});

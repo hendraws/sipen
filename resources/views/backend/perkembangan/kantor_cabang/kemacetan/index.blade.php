@@ -25,6 +25,7 @@
 				</thead>
 				<tbody>
 					@forelse($groupKemacetan as $resort => $data)
+					
 					@php
 					$ma_anggota = $ma_pinjaman = $ma_target = $ma_saldo = 0;
 					$mb_anggota = $mb_pinjaman = $mb_target = $mb_saldo = 0;

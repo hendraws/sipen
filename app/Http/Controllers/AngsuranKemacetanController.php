@@ -33,11 +33,11 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('kemacetans.tanggal',$bulan )
     		->where('kemacetans.cabang_id', auth()->user()->cabang_id)
     		->where('kemacetans.resort_id', $request->resort)
-    		->selectRaw('kemacetans.pasaran as pasaran,sum(ma_saldo) as ma_saldo, sum(mb_saldo) as mb_saldo, sum(angsuran) as angsuran, sum(ma_anggota) as ma_anggota, sum(mb_anggota) as mb_anggota, sum(anggota_keluar) as anggota_keluar')
+    		->selectRaw('kemacetans.pasaran as pasaran,sum(ma_saldo) as ma_saldo, sum(mb_saldo) as mb_saldo, sum(angsuran) as angsuran,  ma_anggota,  mb_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('kemacetans.pasaran')
     		->groupBy('kemacetans.pasaran')
     		->get();
-
+    		// dd($kemacetan);
     		// $totalAngsuran =  AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
     		// ->where('resort_id', $request->resort)
     		// ->whereMonth('tanggal',$bulan)
@@ -59,7 +59,7 @@ class AngsuranKemacetanController extends Controller
     			sum(anggota_keluar) as total_anggota_keluar
     			')
     		->first();
-
+    		
     		$totalKemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
     		->where('resort_id', $request->resort)
     		->whereMonth('tanggal',$bulan)

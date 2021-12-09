@@ -58,6 +58,7 @@
 							</tr>
 						</thead>
 						<tbody>
+							@php $total = []; @endphp
 							@forelse ($kemacetan as $key => $val)
 							<tr>
 								<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
@@ -70,6 +71,9 @@
 								<td class="text-right"> {{ number_format($val->angsuran ?? 0)  }} </td>
 								<td class="text-right"> {{ number_format($val->mb_saldo + $val->ma_saldo - $val->angsuran)  }} </td>
 							</tr>
+							@php 
+								$total['anggota'][] = $val->ma_anggota + $val->mb_anggota;
+							@endphp
 							@empty
 							<tr>
 								<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5></td>
@@ -101,9 +105,9 @@
 						<tbody>
 							<tr>
 								<td class="text-center"> {{ number_format($totalAngsuran->hk) }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->ma_anggota + $totalAngsuran->mb_anggota) }}</td>
+								<td class="text-center"> {{ number_format(array_sum($total['anggota'])) }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_anggota_keluar) }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->ma_anggota + $totalAngsuran->mb_anggota - $totalAngsuran->total_anggota_keluar)  }}</td>
+								<td class="text-center"> {{ number_format(array_sum($total['anggota']) - $totalAngsuran->total_anggota_keluar)  }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_ma_saldo) }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_mb_saldo) }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_mb_saldo + $totalAngsuran->total_ma_saldo) }}</td>
