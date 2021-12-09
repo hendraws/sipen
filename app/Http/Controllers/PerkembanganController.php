@@ -423,6 +423,7 @@ class PerkembanganController extends Controller
     	}
 
     	if($request->ajax()){
+    		$tgl = $request->tanggal;
     		$pecah = explode( '/',$request->tanggal);
     		$tanggal = Carbon::createFromFormat('Y/m/d', $request->tanggal."/01");
     		$getBulan = $tanggal->isoFormat('MMMM YYYY');
@@ -744,7 +745,8 @@ class PerkembanganController extends Controller
     		$perbandinganStortingTunda = json_encode($this->mappingData($perbandingan, 'sum_storting_tunda'));
 
     		if($request->print == 'true'){
-    			return view('backend.perkembangan.kantor_cabang.cetak', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda','getBulan'));
+    			$cabang = $request->cabang;
+    			return view('backend.perkembangan.kantor_cabang.cetak', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda','getBulan','tgl','cabang'));
     		}
     		return view('backend.perkembangan.kantor_cabang.data_cabang', compact('dashboard', 'kasTerbaru','target','pencapaian','perbandinganLabels','perbandinganDrop','pencapaianBulanLalu','perbandinganStorting','perbandinganTkp','perbandinganDropTunda','perbandinganStortingTunda'));
     	}

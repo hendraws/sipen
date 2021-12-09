@@ -23,9 +23,9 @@ class KemacetanController extends Controller
     		$tahun = $pecah[0];
     		$bulan = $pecah[1];
     		$data = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
-    				->where('resort_id', $request->resort)
-    				->whereMonth('tanggal',$bulan)
-    				->get();
+    		->where('resort_id', $request->resort)
+    		->whereMonth('tanggal',$bulan)
+    		->get();
     		return view('backend.kemacetan.table', compact('data', 'getTanggal'));
     	}
     	$resort = Resort::get();
@@ -68,7 +68,7 @@ class KemacetanController extends Controller
     	try {
     		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
     		$pasaran['tanggal'] = date('Y-m-d'); 
-			$pasaran['total_saldo'] = $request->ma_saldo + $request->mb_saldo; 
+    		$pasaran['total_saldo'] = $request->ma_saldo + $request->mb_saldo; 
     		$pasaran['sisa_angsuran'] = $request->ma_saldo + $request->mb_saldo;
 
     		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
@@ -115,7 +115,9 @@ class KemacetanController extends Controller
      */
     public function edit(Kemacetan $kemacetan)
     {
-        //
+
+    	$resort = Resort::get();
+    	return view('backend.kemacetan.edit', compact('resort','kemacetan'));
     }
 
     /**
@@ -127,7 +129,57 @@ class KemacetanController extends Controller
      */
     public function update(Request $request, Kemacetan $kemacetan)
     {
-        //
+
+    	$pasaran = $request->validate([
+    		'resort_id' => 'required',
+    		'pasaran' => 'required',
+    		'ma_anggota' => 'required',
+    		'ma_pinjaman' => 'required',
+    		'ma_target' => 'required',
+    		'ma_saldo' => 'required',
+    		'mb_anggota' => 'required',
+    		'mb_pinjaman' => 'required',
+    		'mb_target' => 'required',
+    		'mb_saldo' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+    		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
+    		$pasaran['tanggal'] = date('Y-m-d'); 
+    		$pasaran['total_saldo'] = $request->ma_saldo + $request->mb_saldo; 
+    		$pasaran['sisa_angsuran'] = $request->ma_saldo + $request->mb_saldo;
+
+    		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal',now()->month)
+    		->first();
+    		if($request->pasaran != $kemacetan->pasaran ||  $request->resort_id != $kemacetan->resort_id ){
+
+    			if(!empty($cekKemacetan)){
+
+    				toastr()->warning('Data Sudah Ada', 'Error');
+    				return back();
+    			}
+    		}
+
+    		$kemacetan->update($pasaran);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah diubah', 'Berhasil');
+    	return redirect()->action('KemacetanController@index');
+
+    	dd($kemacetan, $request);
     }
 
     /**
@@ -138,6 +190,9 @@ class KemacetanController extends Controller
      */
     public function destroy(Kemacetan $kemacetan)
     {
-        //
+
+    	$kemacetan->delete();
+    	$result['code'] = '200';
+    	return response()->json($result);
     }
 }

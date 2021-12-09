@@ -76,21 +76,6 @@
 		getDataTable(url, '#data-table')
 	});
 
-	$(document).on('click', '#cetak', function(){
-		if($('#bulan').val() === ''){
-			return Swal.fire({title: ' Silahkan Pilih Bulan terlebih dahulu', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
-		}
-
-		if($('#resort_id').val() == null){
-			return Swal.fire({title: ' Silahkan Pilih Resort terlebih dahulu', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 5000, timerProgressBar: true,});
-		}
-		var resort = $('#resort_id').val();
-		var tanggal = $('#bulan').val();
-		var url = "{{ url()->current() }}?tanggal="+tanggal+"&resort="+resort+"&cetak=cetak";
-		getDataTable(url, '.allprint');
-	});
-
-
 	$(document).on('click','.hapus',function(e){
 		e.preventDefault();
 		var tag = $(this);
@@ -130,46 +115,65 @@
 @endsection
 
 @section('content')
-<div class="allprint">
-	<div class="card card-outline card-primary collapsed-card">
-		<div class="card-header">
-			<div class="row">
-				<div class="col-md-4">
-					<h3 class="card-title">Input Data</h3>
-				</div>
-				<div class="col-md-3">
-					<select class="form-control" name="resort_id" id="resort_id">
+<div class="card card-outline card-primary">
+
+	<div class="card-body" >
+		<form action="{{ action('AngsuranCalonMacetController@update', $angsuran_calon_macet) }}" method="POST">
+			@csrf
+			@method('PUT')
+			<div class="form-group row">
+				<label for="resort" class="col-sm-2 col-form-label">Resort</label>
+				<div class="col-md-10">
+					<select class="form-control" name="resort_id" readonly disabled>
 						<option disabled="" selected>Pilih Resort</option>
 						@foreach ($resort as $row)
-						<option value="{{ $row->id }}" >{{ $row->nama }}</option>
+						<option value="{{ $row->id }}" {{ $angsuran_calon_macet->resort_id == $row->id ? 'selected' : '' }} >{{ $row->nama }}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="col-md-5 ml-auto">
-
-					<div class="input-group mb-3 input-sm">
-						<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y/m') }}">
-						<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
-						<button class="btn btn-success  mx-2 float-right" type="button" id="cetak">Cetak</button>
-						<div class="card-tools ml-2">
-							<button type="button" class="btn btn-primary" data-card-widget="collapse">Tambah
-							</button>
-						</div>
-					</div>
+			</div>
+			<div class="form-group row">
+				<label for="tanggal" class="col-sm-2 col-form-label">Tanggal</label>
+				<div class="col-md-10">
+					<input type="text" id="tanggal" class="form-control tanggal" name="tanggal"  autocomplete="off" value="{{ $angsuran_calon_macet->tanggal }}">
 				</div>
 			</div>
-
-
-			<!-- /.card-tools -->
-		</div>
-		<!-- /.card-header -->
-		<div class="card-body" style="display: none;">
-			@includeIf('backend.angsuran_calon_macet.create')
-		</div>
-		<!-- /.card-body -->
+			<div class="form-group row">
+				<label for="pinjaman" class="col-sm-2 col-form-label">Angsuran</label>
+				<div class="col-md-10">
+					<input type="number" id="pinjaman" class="form-control hitung" name="angsuran" value="{{ $angsuran_calon_macet->angsuran }}">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="ma_anggota" class="col-sm-2 col-form-label">Anggota Keluar</label>
+				<div class="col-md-10">
+					<input type="number" id="ma_anggota" class="form-control" name="anggota_keluar" value="{{ $angsuran_calon_macet->anggota_keluar }}">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="pasaran" class="col-sm-2 col-form-label">Pasaran</label>
+				<div class="col-md-10">
+					<select class="form-control" name="pasaran" readonly id="pasaran">
+						@foreach($pasaran as $k => $v)
+						<option value="{{ $k }}" selected>{{ $v }}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+			<hr>
+			<div class="modal-footer">
+				<a href="{{ action('AngsuranCalonMacetController@index') }}" class="btn btn-secondary">Kembali</a>
+				<button class="btn btn-brand btn-square btn-primary">Simpan</button>
+			</div>
+		</form>
 	</div>
-
-	<div id="data-table"></div>
-
+	<!-- /.card-body -->
 </div>
+
+<div id="data-table"></div>
+
 @endsection
+
+<script type="text/javascript">
+
+</script>

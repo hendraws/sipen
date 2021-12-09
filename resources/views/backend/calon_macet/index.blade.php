@@ -45,6 +45,42 @@
 		}
 		getDataTable(url, '#data-table')
 	});
+
+		$(document).on('click','.hapus',function(e){
+				e.preventDefault();
+				var tag = $(this);
+				var url = $(this).data('url');
+				Swal.fire({
+					title: 'Apakah Anda Yakin ?',
+					text: "Data akan dihapus dan data tidak dapat dikembalikan lagi !",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Iya, Hapus!'
+				}).then((result) => {
+					if (result.value == true) {
+						$.ajax({
+							type:'DELETE',
+							url:url,
+							data:{
+								"_token": "{{ csrf_token() }}",
+							},
+							success:function(data) {
+								if (data.code == '200'){
+									Swal.fire(
+										'Deleted!',
+										'Your file has been deleted.',
+										'success'
+										);
+									$(location).prop('href', '{{ url()->full() }}')
+								}
+							}
+						});
+
+					}
+				})
+			});
 </script>
 @endsection
 
@@ -68,7 +104,7 @@
 				<div class="input-group mb-3 input-sm">
 					<input type="text" class="form-control input-sm " placeholder="Pilih Bulan" readonly="" id="bulan" value="{{ date('Y/m') }}">
 					<button class="btn btn-outline-info ml-2" type="button" id="filter">Filter</button>
-					<a href="" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a>
+					{{-- <a href="" class="btn btn-success  mx-2 float-right" target="_blank">Cetak</a> --}}
 					<div class="card-tools ml-2">
 						<button type="button" class="btn btn-primary" data-card-widget="collapse">Tambah
 						</button>

@@ -54,10 +54,10 @@ class AngsuranKemacetanController extends Controller
     			sum(ma_saldo) as total_ma_saldo, 
     			sum(ma_anggota) as ma_anggota, 
     			sum(mb_anggota) as mb_anggota, 
-    			sum(mb_saldo) as total_ma_saldo, 
+    			sum(ma_saldo) as total_ma_saldo, 
     			sum(mb_saldo) as total_mb_saldo, 
     			sum(anggota_keluar) as total_anggota_keluar
-    		')
+    			')
     		->first();
 
     		$totalKemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
@@ -65,6 +65,10 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('tanggal',$bulan)
     		->selectRaw('sum(ma_saldo) as total_ma_saldo ,sum(mb_saldo) as total_mb_saldo, sum(mb_anggota) as total_mb_anggota, sum(ma_anggota) as total_ma_anggota')
     		->first();
+
+    		if($request->has('cetak')){
+    			return view('backend.angsuran_kemacetan.cetak', compact('data', 'getTanggal','kemacetan', 'totalAngsuran', 'totalKemacetan'));
+    		}
     		// dd($totalKemacetan);
     		return view('backend.angsuran_kemacetan.table', compact('data', 'getTanggal','kemacetan', 'totalAngsuran', 'totalKemacetan'));
     	}
@@ -120,7 +124,17 @@ class AngsuranKemacetanController extends Controller
     	DB::beginTransaction();
     	try {
 
-    		$kemacetan = Kemacetan::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
+    		$kemacetan = Kemacetan::where('resort_id', $request->resort_id)
+    		->where('cabang_id', auth()->user()->cabang_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal', date('m',strtotime($request->tanggal)))
+    		->first();
+
+
+    		if(empty($kemacetan)){
+    			toastr()->warning('Silahkan mengisi data kemacetan terlebih dahulu', 'Error');
+    			return redirect()->action('KemacetanController@index');
+    		}
 
     		$angsuran['kemacetan_id'] = $kemacetan->id; 
     		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
@@ -137,7 +151,7 @@ class AngsuranKemacetanController extends Controller
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
     		}
-			$sisa_angsuran = $kemacetan->sisa_angsuran - $request->angsuran; 
+    		$sisa_angsuran = $kemacetan->sisa_angsuran - $request->angsuran; 
     		$kemacetan->update([
     			'sisa_angsuran' => $sisa_angsuran
     		]);
@@ -161,10 +175,10 @@ class AngsuranKemacetanController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\AngsuranKemacetan  $angsuranKemacetan
+     * @param  \App\AngsuranKemacetan  $angsuran_kemacetan
      * @return \Illuminate\Http\Response
      */
-    public function show(AngsuranKemacetan $angsuranKemacetan)
+    public function show(AngsuranKemacetan $angsuran_kemacetan)
     {
         //
     }
@@ -172,34 +186,108 @@ class AngsuranKemacetanController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\AngsuranKemacetan  $angsuranKemacetan
+     * @param  \App\AngsuranKemacetan  $angsuran_kemacetan
      * @return \Illuminate\Http\Response
      */
-    public function edit(AngsuranKemacetan $angsuranKemacetan)
+    public function edit(AngsuranKemacetan $angsuran_kemacetan)
     {
-        //
+
+    	$today =  date('Y-m-d');
+    	$resort = Resort::get();
+
+    	$cekWeekend = date('w', strtotime($angsuran_kemacetan->tanggal));
+    	
+    	$pasaran =  [];
+
+    	if($cekWeekend == 1 || $cekWeekend == 4){
+    		$pasaran[1] = "Senin - Kamis"; 
+    	}
+
+    	if($cekWeekend == 2 || $cekWeekend == 5){
+    		$pasaran[2] = "Selasa - Jum'at"; 
+    	}
+
+    	if($cekWeekend == 3 || $cekWeekend == 6){
+    		$pasaran[3] = "Rabu - Sabtu"; 
+    	}
+    	// dd($angsuran_kemacetan);
+    	return view('backend.angsuran_kemacetan.edit',compact('angsuran_kemacetan', 'resort','today','pasaran'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\AngsuranKemacetan  $angsuranKemacetan
+     * @param  \App\AngsuranKemacetan  $angsuran_kemacetan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AngsuranKemacetan $angsuranKemacetan)
+    public function update(Request $request, AngsuranKemacetan $angsuran_kemacetan)
     {
-        //
+
+
+    	$angsuran = $request->validate([
+    		'pasaran' => 'required',
+    		'anggota_keluar' => 'required',
+    		'angsuran' => 'required',
+    		'tanggal' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+
+    		$kemacetan = Kemacetan::where('resort_id', $angsuran_kemacetan->resort_id)
+    		->where('cabang_id', auth()->user()->cabang_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal', date('m',strtotime($request->tanggal)))
+    		->first();
+
+    		if(empty($kemacetan)){
+    			toastr()->warning('Silahkan mengisi data kemacetan terlebih dahulu', 'Error');
+    			return redirect()->action('KemacetanController@index');
+    		}
+
+    		$angsuran['kemacetan_id'] = $kemacetan->id; 
+    		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
+    		$angsuran['created_by'] = auth()->user()->id; 
+
+    		$cekAngsuran  = AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->where('tanggal', $request->tanggal)
+    		->where('kemacetan_id', $kemacetan->id)
+    		->first();
+
+    		if(!empty($cekAngsuran) && $request->tanggal != $angsuran_kemacetan->tanggal){
+    			toastr()->warning('Data Sudah Ada', 'Error');
+    			return back();
+    		}
+    		$angsuran_kemacetan->update($angsuran);
+
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah ditambahkan', 'Berhasil');
+    	return redirect()->action('AngsuranKemacetanController@index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\AngsuranKemacetan  $angsuranKemacetan
+     * @param  \App\AngsuranKemacetan  $angsuran_kemacetan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AngsuranKemacetan $angsuranKemacetan)
+    public function destroy(AngsuranKemacetan $angsuran_kemacetan)
     {
-        //
+    	$angsuran_kemacetan->delete();
+    	$result['code'] = '200';
+    	return response()->json($result);
     }
 }

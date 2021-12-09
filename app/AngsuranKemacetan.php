@@ -18,4 +18,9 @@ class AngsuranKemacetan extends Model
 		return $this->belongsTo(Resort::class,  'resort_id', 'id' );
 	}
 
+	public function getCabang()
+	{
+		return $this->belongsTo(KantorCabang::class,  'cabang_id', 'id' );
+	}
+
 }

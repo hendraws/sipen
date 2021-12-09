@@ -12,7 +12,7 @@
 						<th scope="col" rowspan="2">NO.</th>
 						<th scope="col" rowspan="2">PASARAN</th>
 						<th scope="col" colspan="4">Calon Macet</th>
-						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
+						<th scope="col"	rowspan="2"></th>
 					</tr>
 					<tr>
 						<th scope="col">ANGGOTA</th>
@@ -30,10 +30,10 @@
 						<td> {{ number_format($val->cma_pinjaman)  }} </td>
 						<td> {{ number_format($val->cma_target)  }} </td>
 						<td> {{ number_format($val->cma_saldo)  }} </td>
-						{{-- <td class="text-center">
-							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KemacetanController@delete',$val->id) }}">Hapus</a>
-						</td> --}}
+						<td class="text-center">
+							<a class="btn btn-xs btn-info" href="{{   action('CalonMacetController@edit', $val)   }}" >Edit</a>
+							<a class="btn btn-xs btn-danger hapus ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('CalonMacetController@destroy',$val) }}">Hapus</a>
+						</td>
 					</tr>
 					@empty
 					<tr>

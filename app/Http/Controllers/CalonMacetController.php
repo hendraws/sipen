@@ -51,7 +51,7 @@ class CalonMacetController extends Controller
      */
     public function store(Request $request)
     {
-        $pasaran = $request->validate([
+    	$pasaran = $request->validate([
     		'resort_id' => 'required',
     		'pasaran' => 'required',
     		'cma_anggota' => 'required',
@@ -77,7 +77,7 @@ class CalonMacetController extends Controller
     			toastr()->warning('Data Sudah Ada', 'Error');
     			return back();
     		}
-			CalonMacet::create($pasaran);
+    		CalonMacet::create($pasaran);
     	} catch (\Exception $e) {
     		DB::rollback();
     		toastr()->error($e->getMessage(), 'Error');
@@ -112,7 +112,8 @@ class CalonMacetController extends Controller
      */
     public function edit(CalonMacet $calonMacet)
     {
-        //
+    	$resort = Resort::get();
+    	return view('backend.calon_macet.edit', compact('resort','calonMacet'));
     }
 
     /**
@@ -124,7 +125,49 @@ class CalonMacetController extends Controller
      */
     public function update(Request $request, CalonMacet $calonMacet)
     {
-        //
+    	$pasaran = $request->validate([
+    		'resort_id' => 'required',
+    		'pasaran' => 'required',
+    		'cma_anggota' => 'required',
+    		'cma_pinjaman' => 'required',
+    		'cma_target' => 'required',
+    		'cma_saldo' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+    		$pasaran['cabang_id'] = auth()->user()->cabang_id; 
+    		$pasaran['tanggal'] = date('Y-m-d'); 
+    		$pasaran['created_by'] = auth()->user()->id; 
+    		$pasaran['total_saldo'] = $request->cma_saldo; 
+    		$pasaran['sisa_angsuran'] = $request->cma_saldo; 
+    		
+    		$cekKemacetan  = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal',now()->month)
+    		->first();
+    		if($request->pasaran != $calonMacet->pasaran ||  $request->resort_id != $calonMacet->resort_id ){
+
+    			if(!empty($cekKemacetan)){
+    				toastr()->warning('Data Sudah Ada', 'Error');
+    				return back();
+    			}
+    		}
+    		$calonMacet->update($pasaran);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah diubah', 'Berhasil');
+    	return redirect()->action('CalonMacetController@index');
     }
 
     /**
@@ -135,6 +178,9 @@ class CalonMacetController extends Controller
      */
     public function destroy(CalonMacet $calonMacet)
     {
-        //
+
+    	$calonMacet->delete();
+    	$result['code'] = '200';
+    	return response()->json($result);
     }
 }

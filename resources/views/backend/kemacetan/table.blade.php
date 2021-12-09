@@ -14,6 +14,7 @@
 						<th scope="col" colspan="4">Macet Awal</th>
 						<th scope="col" colspan="4">Macet Baru</th>
 						<th scope="col"	rowspan="2">JUMLAH</th>
+						<th scope="col"	rowspan="2"></th>
 						{{-- <th scope="col"	rowspan="2">AKSI</th> --}}
 					</tr>
 					<tr>
@@ -40,11 +41,11 @@
 						<td> {{ $val->mb_pinjaman  }} </td>
 						<td> {{ $val->mb_target  }} </td>
 						<td> {{ $val->mb_saldo  }} </td>
-						<td>  </td>
-						{{-- <td class="text-center">
-							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val->id)   }}" >Edit</a>
-							<a class="btn btn-xs btn-danger modal-button ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KemacetanController@delete',$val->id) }}">Hapus</a>
-						</td> --}}
+						<td>  {{ $val->ma_saldo + $val->mb_saldo }}</td>
+						<td class="text-center">
+							<a class="btn btn-xs btn-info" href="{{   action('KemacetanController@edit', $val)   }}" >Edit</a>
+							<a class="btn btn-xs btn-danger hapus ml-2" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('KemacetanController@destroy',$val) }}">Hapus</a>
+						</td>
 					</tr>
 					@empty
 					<tr>

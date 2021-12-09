@@ -2,7 +2,7 @@
 		<div class="card-header">
 			<div class="row">
 				<div class="col-md-12 text-right">
-					<a class="btn btn-sm btn-danger modal-button" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('PerkembanganController@setHk') }}?tanggal={{ $request->tanggal }}&cabang={{ $request->cabang }}"  data-toggle="tooltip" data-placement="top"  >Setting Sisa Hari Kerja</a>
+					<a class="btn btn-sm btn-danger modal-button" id="settingHk" href="Javascript:void(0)"  data-target="ModalForm" data-url="{{ action('PerkembanganController@setHk') }}?tanggal={{ $request->tanggal }}&cabang={{ $request->cabang }}"  data-toggle="tooltip" data-placement="top"  >Setting Sisa Hari Kerja</a>
 				</div>
 			</div>
 		</div>

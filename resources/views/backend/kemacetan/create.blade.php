@@ -73,7 +73,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a href="{{ action('ProgramKerjaController@index') }}" class="btn btn-secondary">Kembali</a>
+				<a href="{{ action('KemacetanController@index') }}" class="btn btn-secondary">Kembali</a>
 				<button class="btn btn-brand btn-square btn-primary">Simpan</button>
 			</div>
 		</form>

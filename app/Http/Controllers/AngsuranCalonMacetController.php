@@ -64,6 +64,11 @@ class AngsuranCalonMacetController extends Controller
     		->selectRaw('sum(cma_saldo) as total_cma_saldo')
     		->first();
 
+
+    		if($request->has('cetak')){
+    		return view('backend.angsuran_calon_macet.cetak', compact('data', 'getTanggal','calonMacet', 'totalAngsuran', 'totalKemacetan'));
+    		}
+
     		return view('backend.angsuran_calon_macet.table', compact('data', 'getTanggal','calonMacet', 'totalAngsuran', 'totalKemacetan'));
     	}
 
@@ -117,11 +122,15 @@ class AngsuranCalonMacetController extends Controller
     	DB::beginTransaction();
     	try {
 
-    		$calonMacet = CalonMacet::where('resort_id', $request->resort_id)->where('cabang_id', auth()->user()->cabang_id)->where('pasaran', $request->pasaran)->first();
+    		$calonMacet = CalonMacet::where('resort_id', $request->resort_id)
+    		->where('cabang_id', auth()->user()->cabang_id)
+    		->where('pasaran', $request->pasaran)
+			->whereMonth('tanggal', date('m',strtotime($request->tanggal)))
+    		->first();
 
     		if(empty($calonMacet)){
     			toastr()->error('Silahkan membuat data master calon macet terlebih dahulu!');
-    			return back();
+    			return redirect()->action('CalonMacetController@index');
     		}
 
     		$angsuran['calon_macet_id'] = $calonMacet->id; 
@@ -168,7 +177,7 @@ class AngsuranCalonMacetController extends Controller
      * @param  \App\AngsuranCalonMacet  $angsuranCalonMacet
      * @return \Illuminate\Http\Response
      */
-    public function show(AngsuranCalonMacet $angsuranCalonMacet)
+    public function show(AngsuranCalonMacet $angsuran_calon_macet)
     {
         //
     }
@@ -179,9 +188,28 @@ class AngsuranCalonMacetController extends Controller
      * @param  \App\AngsuranCalonMacet  $angsuranCalonMacet
      * @return \Illuminate\Http\Response
      */
-    public function edit(AngsuranCalonMacet $angsuranCalonMacet)
+    public function edit(AngsuranCalonMacet $angsuran_calon_macet)
     {
-        //
+        $today =  date('Y-m-d');
+    	$resort = Resort::get();
+
+    	$cekWeekend = date('w', strtotime($angsuran_calon_macet->tanggal));
+    	
+    	$pasaran =  [];
+
+    	if($cekWeekend == 1 || $cekWeekend == 4){
+    		$pasaran[1] = "Senin - Kamis"; 
+    	}
+
+    	if($cekWeekend == 2 || $cekWeekend == 5){
+    		$pasaran[2] = "Selasa - Jum'at"; 
+    	}
+
+    	if($cekWeekend == 3 || $cekWeekend == 6){
+    		$pasaran[3] = "Rabu - Sabtu"; 
+    	}
+    	// dd($angsuran_calon_macet);
+    	return view('backend.angsuran_calon_macet.edit',compact('angsuran_calon_macet', 'resort','today','pasaran'));
     }
 
     /**
@@ -191,9 +219,60 @@ class AngsuranCalonMacetController extends Controller
      * @param  \App\AngsuranCalonMacet  $angsuranCalonMacet
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AngsuranCalonMacet $angsuranCalonMacet)
+    public function update(Request $request, AngsuranCalonMacet $angsuran_calon_macet)
     {
-        //
+        $angsuran = $request->validate([
+    		'pasaran' => 'required',
+    		'anggota_keluar' => 'required',
+    		'angsuran' => 'required',
+    		'tanggal' => 'required',
+    	]);
+
+    	DB::beginTransaction();
+    	try {
+
+    		$calonMacet = CalonMacet::where('resort_id', $angsuran_calon_macet->resort_id)
+    		->where('cabang_id', auth()->user()->cabang_id)
+    		->where('pasaran', $request->pasaran)
+    		->whereMonth('tanggal', date('m',strtotime($request->tanggal)))
+    		->first();
+
+    		if(empty($calonMacet)){
+    			toastr()->error('Silahkan membuat data master calon macet terlebih dahulu!');
+    			return redirect()->action('CalonMacetController@index');
+    		}
+
+    		$angsuran['calon_macet_id'] = $calonMacet->id; 
+    		$angsuran['cabang_id'] = auth()->user()->cabang_id; 
+    		$angsuran['created_by'] = auth()->user()->id; 
+
+    		$cekAngsuran  = AngsuranCalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $request->resort_id)
+    		->where('pasaran', $request->pasaran)
+    		->where('tanggal', $request->tanggal)
+    		->where('calon_macet_id', $calonMacet->id)
+    		->first();
+
+    		if(!empty($cekAngsuran) && $request->tanggal != $angsuran_calon_macet->tanggal){
+    			toastr()->warning('Data Sudah Ada', 'Error');
+    			return back();
+    		}
+   			$angsuran_calon_macet->update($angsuran);
+    	} catch (\Exception $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		// dd($e->getMessage());
+    		return back();
+    	}catch (\Throwable $e) {
+    		DB::rollback();
+    		toastr()->error($e->getMessage(), 'Error');
+    		// dd($e->getMessage());
+    		throw $e;
+    	}
+
+    	DB::commit();
+    	toastr()->success('Data telah diperbarui', 'Berhasil');
+    	return redirect()->action('AngsuranCalonMacetController@index');
     }
 
     /**
@@ -202,8 +281,11 @@ class AngsuranCalonMacetController extends Controller
      * @param  \App\AngsuranCalonMacet  $angsuranCalonMacet
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AngsuranCalonMacet $angsuranCalonMacet)
+    public function destroy(AngsuranCalonMacet $angsuran_calon_macet)
     {
-        //
+
+        $angsuran_calon_macet->delete();
+    	$result['code'] = '200';
+    	return response()->json($result);
     }
 }

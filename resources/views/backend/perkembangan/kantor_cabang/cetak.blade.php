@@ -1,5 +1,18 @@
+<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('js/print-this.js')}}"></script>
 <script type="text/javascript">
+var tanggal = "{{ $tgl }}";
+var cabang = "{{ $cabang }}";
+var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+var urlKalkulasi = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
+getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
+getDataTable(urlKalkulasi, '#dataKalkulasi'); //get Data Kemacetan
+$(document).ready(function () {
+	$('#settingHk').hide();
 	setTimeout(function(){ window.print() }, 2000);
+})
 </script>
 <style type="text/css">
 
@@ -27,9 +40,9 @@
 
 <div class="card card-primary card-outline card-outline-tabs">
 	<div class="card-header p-0 border-bottom-0">
-			<div class="col-md-12 my-4" id="getBulan">
-				<h5>Bulan {{ $getBulan }}</h5>
-			</div>
+		<div class="col-md-12 my-4" id="getBulan">
+			<h5>Bulan {{ $getBulan }}</h5>
+		</div>
 		<hr>
 		<div class="row">
 			<div class="col-md-3">
@@ -183,7 +196,27 @@
 			@includeIf('backend.perkembangan.kantor_cabang.perbandingan.storting_tunda')
 			
 		</div>
-		
+		<div class="display" id="break_page" style='page-break-after:always'></div>
+		<h1 class="my-3">Kemacetan</h1>
+		<div class="row">
+			<div class="col-md-12">
+				<div id="dataKemacetan"></div>
+			</div>
+		</div>
+		<div class="display" id="break_page" style='page-break-after:always'></div>
+		<h1 class="my-3">Calon Macet</h1>
+		<div class="row">
+			<div class="col-md-12">
+				<div id="dataCalonMacet"></div>
+			</div>
+		</div>
+		<div class="display" id="break_page" style='page-break-after:always'></div>
+		<h1 class="my-3">Kalkulasi</h1>
+		<div class="row">
+			<div class="col-md-12">
+				<div id="dataKalkulasi"></div>
+			</div>
+		</div>
 	</div>
 	<!-- /.card -->
 </div>
