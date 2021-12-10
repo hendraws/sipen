@@ -39,6 +39,8 @@ class User extends Authenticatable
     	'email_verified_at' => 'datetime',
     ];
 
+    protected $with = ['getCabang'];
+    
     public function getCabang() {
     	return $this->belongsTo(KantorCabang::class, 'cabang_id', 'id');
     }

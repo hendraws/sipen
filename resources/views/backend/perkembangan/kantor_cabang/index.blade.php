@@ -39,22 +39,48 @@
 		}).fail(function(jqXHR, ajaxOptions, thrownError){
 			Swal.fire({html: 'No response from server', icon: 'error', toast: true, position: 'top-end', showConfirmButton: false, timer: 10000, timerProgressBar: true,});
 		});
-	}
+	}	
+
+
 	
 	$(document).ready(function () {
 		$('#cabang').on('change', function() {
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-			getData(this.value, false, $('#tanggal').val(),'dataCabang');
+			var cabang = this.value;
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
+			getData(cabang, false, $('#tanggal').val(),'dataCabang');
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet');
 		});	
 		if($('#cabang').val().length != 0)
 		{
-			getData($('#cabang').val(),false, $('#tanggal').val(), 'dataCabang');
+			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
+			var cabang = $('#cabang').val();
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			var urlKalkulasi = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
+			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
+			getDataTable(urlKalkulasi, '#dataKalkulasi'); //get Data Kemacetan
 		}
 
 
 		$(document).on('click', '#filter', function(){
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
-			getData($('#cabang').val(),false, $('#tanggal').val(),'dataCabang');
+			var cabang = $('#cabang').val();
+			var tanggal = $('#tanggal').val();
+			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
+			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
+			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
+			getDataTable(urlCalonMacet, '#dataKalkulasi'); //get Data Kemacetan
 		});
 
 		$(document).on('click', '#cetak', function(){
@@ -96,6 +122,43 @@
 			</div>
 		</div>
 	</div>
-	<div id="dataCabang"></div>
+	<div class="card card-olive card-tabs">
+		<div class="card-header p-0 pt-1">
+			<ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+				{{-- <li class="pt-2 px-3"><h3 class="card-title"></h3></li> --}}
+				<li class="nav-item">
+					<a class="nav-link active" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="true">Kemacetan</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-two-messages-tab" data-toggle="pill" href="#custom-tabs-two-messages" role="tab" aria-controls="custom-tabs-two-messages" aria-selected="false">Calon Macet</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="false">Perkembangan</a>
+				</li>		
+				<li class="nav-item">
+					<a class="nav-link" id="custom-tabs-kalkulasi-tab" data-toggle="pill" href="#custom-tabs-kalkulasi" role="tab" aria-controls="custom-tabs-kalkulasi" aria-selected="false">Kalkulasi</a>
+				</li>
+			</ul>
+		</div>
+		<div class="card-body">
+			<div class="tab-content" id="custom-tabs-two-tabContent">
+				<div class="tab-pane fade active show" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+					<div id="dataKemacetan"></div>
+				</div>
+				<div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+					<div id="dataCalonMacet"></div>
+				</div>
+				<div class="tab-pane fade" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+					<div id="dataCabang"></div>
+				</div>	
+				<div class="tab-pane fade" id="custom-tabs-kalkulasi" role="tabpanel" aria-labelledby="custom-tabs-kalkulasi-tab">
+					<div id="dataKalkulasi"></div>
+				</div>
+
+			</div>
+		</div>
+		<!-- /.card -->
+	</div>
+
 </div>
 @endsection

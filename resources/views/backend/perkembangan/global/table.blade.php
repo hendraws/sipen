@@ -2,6 +2,7 @@
 	<thead class="thead-dark">
 		<tr>
 			<th scope="col">UNIT</th>
+			<th scope="col">HK</th>
 			<th scope="col">DROP</th>
 			<th scope="col">STORTING</th>
 			<th scope="col">PSP</th>
@@ -20,8 +21,10 @@
 
 
 		@forelse($globalTable as $k => $val)
+		{{-- {{ dd($val) }} --}}
 		<tr>
 			<td>{{ $k }}</td>
+			<td>{{ number_format($val['hk']) }}</td>
 			<td>{{ number_format($val['sum_drop']) }}</td>
 			<td>{{ number_format($val['sum_storting']) }}</td>
 			<td>{{ number_format($val['sum_psp']) }}</td>
@@ -47,7 +50,7 @@
 		@endforelse
 	</tbody>
 	<tr class="bg-success" id="bg-total">
-		<th scope="col">TOTAL</th>
+		<th scope="col" colspan="2">TOTAL</th>
 		<th scope="col">{{ number_format($drop) }}</th>
 		<th scope="col">{{ number_format($storting) }}</th>
 		<th scope="col">{{ number_format($psp) }}</th>

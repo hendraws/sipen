@@ -20,11 +20,11 @@
 						</tr>
 						<tr>
 							<td class="">LALU</td>
-							<td class="text-right">{{ number_format($pencapaianBulanLalu->sum_drop) ?? 0  }}</td>
+							<td class="text-right">{{ number_format($pencapaianBulanLalu['sum_drop']) ?? 0  }}</td>
 						</tr>
 						<tr>
 							<td class="">Keterangan</td>
-							@php $keteranganDrop = $pencapaian->sum_drop - $pencapaianBulanLalu->sum_drop ; @endphp
+							@php $keteranganDrop = $pencapaian->sum_drop - $pencapaianBulanLalu['sum_drop'] ; @endphp
 							<td class=" {{ $keteranganDrop <= 0 ? 'text-danger' : 'text-success'}} text-right"><b>{{ number_format($keteranganDrop)  }}</b></td>
 						</tr>
 					</table>
