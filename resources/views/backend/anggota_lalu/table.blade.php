@@ -19,7 +19,7 @@
 					@forelse ($data as $key => $val)
 					<tr class="text-center">
 						<td> {{ $loop->index +1 }} </td>
-						<td> {{ $val->getPasaran->hari  }} </td>
+						<td> {{ optional($val->getPasaran)->hari  }} </td>
 						<td> {{ $val->anggota  }}</td>
 						<td class="text-center">
 							
