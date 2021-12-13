@@ -162,6 +162,7 @@
 				</ul>
 			</li>
 			@endcan
+			@role('user')
 			<li class="nav-item">
 				<a href="{{ action('TargetController@index') }}" class="nav-link">
 					<i class="nav-icon fa fa-bullseye"></i>
@@ -170,6 +171,17 @@
 					</p>
 				</a>
 			</li>
+			@endrole
+			@role('admin')
+			<li class="nav-item">
+				<a href="{{ action('TargetController@index2') }}" class="nav-link">
+					<i class="nav-icon fa fa-bullseye"></i>
+					<p>
+						Target
+					</p>
+				</a>
+			</li>
+			@endrole
 			@can('management-user')
 			<li class="nav-item">
 				<a href="{{ action('UserController@index') }}" class="nav-link">

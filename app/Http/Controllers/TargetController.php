@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AnggotaLalu;
+use App\KantorCabang;
 use App\Perkembangan;
 use App\ProgramKerja;
 use App\Resort;
@@ -148,6 +149,144 @@ class TargetController extends Controller
 
 
     	return view('backend.target.index', compact('today', 'resort','pasaran','getTanggal','psrn' ,'programKerja'));
+    }
+
+    public function index2(Request $request)
+    {
+    	$psrn = 0;
+    	$getTanggal = $request->tanggal;
+    	$pecahTanggal = explode('-', $request->tanggal);
+
+    	$programKerja = ProgramKerja::where('cabang', auth()->user()->cabang_id)
+    	->when(request()->filled('tanggal'), function($q){
+    		$q->whereMonth('tanggal', date('m', strtotime(request()->tanggal)));
+    	})
+    	->when(request()->missing('tanggal'), function($q){
+    		$q->whereMonth('tanggal',date('m'));
+    	})
+    	->first();
+    	
+    	$cabang = KantorCabang::pluck('cabang','id');
+    	
+    	if(empty($programKerja)){
+    		toastr()->error('Silahkan Mengisi Program Kerja Terlebih Dahulu', 'Warning !!!');
+    		return redirect(action('ProgramKerjaController@index'));
+    	}
+
+    	if($request->ajax()) {
+
+    		if(empty($request->tanggal)){
+    			$cekWeekend = date('w', strtotime(date('Y-m-d')));
+    		}else{
+    			$cekWeekend = date('w', strtotime($request->tanggal));
+    		}
+
+    		if($cekWeekend == 1 || $cekWeekend == 4){
+    			$psrn_name = "Senin - Kamis";
+    			$psrn = 1;
+    		}
+
+    		if($cekWeekend == 2 || $cekWeekend == 5){
+    			$psrn_name = "Selasa - Jum'at";
+    			$psrn = 2;
+    		}
+
+    		if($cekWeekend == 3 || $cekWeekend == 6){
+    			$psrn_name = "Rabu - Sabtu"; 
+    			$psrn = 3;
+    		}	
+
+    		$data = Target::select("*")
+    		->where('pasaran', $psrn)
+    		->when(request()->filled('tanggal'), function($q){
+    			$q->whereMonth('tanggal', date('m', strtotime(request()->tanggal)))
+    			->where('tanggal','<=',request()->tanggal);
+    		})
+    		->when(request()->missing('tanggal'), function($q){
+    			$q->whereMonth('tanggal',date('m'));
+    		})
+    		->when(request()->filled('cabang'), function($q){
+    			$q->where('cabang_id', request()->cabang);
+    		})
+    		->when(request()->missing('cabang'), function($q){
+    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		})
+    		->get();
+
+    		$data = $data->mapToGroups(function ($item, $key) {
+    			$targetAll = Target::selectRaw('sum(drop_kini) as total_drops,sum(storting_kini) as total_storting ')
+    			->where('cabang_id', auth()->user()->cabang_id)
+    			->where('resort_id', $item->resort_id)
+    			// ->where('pasaran', $item->pasaran)
+    			->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
+    			->first();
+    			$item['total_drops'] = $targetAll->total_drops;
+    			$item['total_storting'] = $targetAll->total_storting;
+    			return [ $item->getResort->nama => $item->toArray() ];
+    		}); 
+
+    		if($request->data == 'drop'){
+    			return view('backend.target.drop.table', compact('data','programKerja','psrn_name'));
+    		}
+    		if($request->data == 'storting'){
+    			return view('backend.target.storting.table', compact('data','programKerja','psrn_name'));
+    		}
+
+    		if($request->data == 'kalkulasi'){
+    			return view('backend.target.kalkulasi.table', compact('data','programKerja','psrn_name'));
+    		}
+
+
+    		$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->where('pasaran', $psrn)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get()
+    		->mapWithKeys(function ($item, $key) {
+    			return [$item->getResort->nama => $item->target_lalu];
+    		});
+
+    		$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		->where('pasaran', $psrn)
+    		->whereMonth('tanggal', Date('m'))
+    		->orderBy('pasaran')
+    		->get()
+    		->mapWithKeys(function ($item, $key) {
+    			return [$item->getResort->nama => $item->anggota];
+    		});
+
+
+    		return view('backend.target.table', compact('getTanggal','data','psrn_name','programKerja','psrn','targetLalu','anggotaLalu'));
+
+    	}
+
+    	$today =  date('Y-m-d');
+    	$resort = Resort::get();
+    	$getTanggal = $today;
+    	$cekWeekend = date('w', strtotime($today));
+
+    	$pasaran =  [];
+
+    	if($cekWeekend == 1 || $cekWeekend == 4){
+    		$pasaran[1] = "Senin - Kamis"; 
+    		// $psrn = "Senin - Kamis";
+    		$psrn = 1;
+    	}
+
+    	if($cekWeekend == 2 || $cekWeekend == 5){
+    		$pasaran[2] = "Selasa - Jum'at";
+    		// $psrn = "Selasa - Jum'at";
+    		$psrn = 2;
+    	}
+
+    	if($cekWeekend == 3 || $cekWeekend == 6){
+    		$pasaran[3] = "Rabu - Sabtu";
+    		// $psrn = "Rabu - Sabtu"; 
+    		$psrn = 3; 
+    	}
+
+
+    	return view('backend.target.index_admin', compact('today', 'resort','pasaran','getTanggal','psrn' ,'programKerja','cabang'));
     }
 
     /**
@@ -460,10 +599,17 @@ class TargetController extends Controller
 
     public function report(Request $request)
     {
+    	dd($request);
     	if($request->has('tanggal')){
     		$target  = Target::with('getResort')
     		->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
     		->orderBy('tanggal')
+    		->when(request()->filled('cabang'), function($q){
+    			$q->where('cabang_id', request()->cabang);
+    		})
+    		->when(request()->missing('cabang'), function($q){
+    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		})
     		->get();
 
     		$data = $target->mapToGroups(function($item, $key){
@@ -472,14 +618,24 @@ class TargetController extends Controller
     		// $first_key = array_key_first($data->toArray());
     		$tanggal_awal = date('d F Y', strtotime(array_key_first($data->toArray())));
     		$tanggal_akhir = date('d F Y', strtotime(array_key_last($data->toArray())));
-	    	
-	    	
-	    	$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+
+
+    		$targetLalu = TargetLalu::when(request()->filled('cabang'), function($q){
+    			$q->where('cabang_id', request()->cabang);
+    		})
+    		->when(request()->missing('cabang'), function($q){
+    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		})
     		->whereMonth('tanggal', Date('m'))
     		->orderBy('pasaran')
     		->get();
 
-    		$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		$anggotaLalu = AnggotaLalu::when(request()->filled('cabang'), function($q){
+    			$q->where('cabang_id', request()->cabang);
+    		})
+    		->when(request()->missing('cabang'), function($q){
+    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		})
     		->whereMonth('tanggal', Date('m'))
     		->orderBy('pasaran')
     		->get();
@@ -497,7 +653,7 @@ class TargetController extends Controller
     		foreach ($anggotaLalu as $key => $value) {
     			$anggota_lalu[$value->getResort->nama][$value->pasaran] = $value->anggota; 
     		}
-    	
+
     		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir','anggota_lalu', 'target_lalu'))->setPaper('a4', 'landscape');
 
     		return $pdf->download('invoice.pdf');

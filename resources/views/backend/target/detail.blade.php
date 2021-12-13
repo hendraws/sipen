@@ -66,7 +66,7 @@
 			@endphp
 			<tr >
 				<td>{{ $val->tanggal }}</td>
-				<td class="">{{ $val->getPasaran->hari }}</td>
+				<td class="">{{ optional($val->getPasaran)->hari }}</td>
 				<td class="text-right">
 					 {{ number_format($target[$val->pasaran]['anggota_lalu']) }}
 					

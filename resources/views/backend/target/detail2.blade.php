@@ -75,7 +75,7 @@
 			@endphp
 			<tr >
 				<td>{{ $val->tanggal }}</td>
-				<td class="{{ $background }}">{{ $val->getPasaran->hari }}</td>
+				<td class="{{ $background }}">{{ optional($val->getPasaran)->hari }}</td>
 				<td class="text-right">
 					@php
 					if($val->pasaran == 1){
