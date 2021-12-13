@@ -15,15 +15,15 @@
 						<table class="table table-sm">
 							<tr>
 								<td class="">KINI</td>
-								<td class="text-right">{{ number_format($pencapaian->sum_storting) }}</td>
+								<td class="text-right">{{ number_format($pencapaian->sum_storting) ?? 0 }}</td>
 							</tr>
 							<tr>
 								<td class="">LALU</td>
-								<td class="text-right">{{ number_format($pencapaianBulanLalu->sum_storting) ?? 0  }}</td>
+								<td class="text-right">{{ number_format($pencapaianBulanLalu['sum_storting']) ?? 0  }}</td>
 							</tr>
 							<tr>
 								<td class="">Keterangan</td>
-								@php $keteranganStorting = $pencapaian->sum_storting - $pencapaianBulanLalu->sum_storting ; @endphp
+								@php $keteranganStorting = $pencapaian->sum_storting - $pencapaianBulanLalu['sum_storting'] ; @endphp
 								<td class=" {{ $keteranganStorting <= 0 ? 'text-danger' : 'text-success'}} text-right"><b>{{ number_format($keteranganStorting)  }}</b></td>
 							</tr>
 						</table>

@@ -30,6 +30,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/perkembangan-data/{id}/delete', 'PerkembanganController@delete');
 	Route::get('/perkembangan-data/{id}/reset-modal', 'PerkembanganController@resetModal');
 	Route::match(['get','post'],'/perkembangan', 'ReportController@perkembangan');
+	Route::get('/set-hk', 'PerkembanganController@setHk');
+	Route::post('/store-hk', 'PerkembanganController@storeHk');
 
 	Route::match(['get','post'],'/perkembangan-global', 'PerkembanganController@global');
 	Route::match(['get','post'],'/perkembangan-cabang', 'PerkembanganController@cabang');
@@ -39,6 +41,34 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/under-contraction', 'HomeController@underContraction');
 	Route::get('/management-user/{id}/delete', 'UserController@delete');
 	Route::resource('/management-user', 'UserController');
+	
+	Route::resource('/target', 'TargetController');
+	Route::get('/target/{target}/delete/', 'TargetController@delete');
+	Route::post('/target/simpan-hk', 'TargetController@storeHk');
+	Route::post('/target/cetak', 'TargetController@cetak');
+	Route::get('/target-all', 'TargetController@index2');
+	// ----------------------------------------------------------------------------------------- //
+	Route::resource('/resort', 'ResortController');
+	Route::get('/resort/{resort}/delete/', 'ResortController@delete');
+
+	Route::get('/kemacetan/{kemacetan}/delete', 'KemacetanController@delete');
+	Route::resource('/kemacetan', 'KemacetanController');
+
+	Route::get('/calon-macet/{calon_macet}/delete', 'CalonMacetController@delete');
+	Route::resource('/calon-macet', 'CalonMacetController');
+	
+	Route::resource('/pasaran', 'PasaranController');
+
+	Route::resource('/anggota-lalu', 'AnggotaLaluController');
+	Route::get('/anggota-lalu/{anggotaLalu}/delete', 'AnggotaLaluController@delete');
+	
+	Route::resource('/angsuran-kemacetan', 'AngsuranKemacetanController');
+	Route::resource('/angsuran-calon-macet', 'AngsuranCalonMacetController');
+
+	Route::resource('/Target-lalu', 'TargetLaluController');
+	Route::get('sirkulasi-perkembangan', 'TargetController@report');
+	// Route::get('report/sirkulasi-perkembangan', 'PerkembanganController@')
+
 	// command
 	Route::group(['prefix'=>'/command/artisan','as'=>'account.'], function(){ 
 		Route::get('/migrate', function(){
@@ -51,8 +81,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 			return 'Clear Cache';
 		});
-
-		
 	});
 	
 });

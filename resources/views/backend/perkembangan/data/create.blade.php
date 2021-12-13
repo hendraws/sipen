@@ -25,15 +25,27 @@
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="drop_tunda" class="col-sm-2 col-form-label">Drop Tunda</label>
+				<label for="drop_tunda" class="col-sm-2 col-form-label">Drop Tunda Masuk</label>
 				<div class="col-md-10">
-					<input type="number" id="drop_tunda" class="form-control" name="drop_tunda">
+					<input type="number" id="drop_tunda" class="form-control" name="drop_tunda_masuk">
 				</div>
 			</div>
 			<div class="form-group row">
-				<label for="storting_tunda" class="col-sm-2 col-form-label">Storting Tunda</label>
+				<label for="drop_tunda" class="col-sm-2 col-form-label">Drop Tunda Keluar</label>
 				<div class="col-md-10">
-					<input type="number" id="storting_tunda" class="form-control" name="storting_tunda">
+					<input type="number" id="drop_tunda" class="form-control" name="drop_tunda keluar">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="drop_tunda" class="col-sm-2 col-form-label">Angsuran Tunda Masuk</label>
+				<div class="col-md-10">
+					<input type="number" id="drop_tunda" class="form-control" name="angsuran_tunda_masuk">
+				</div>
+			</div>
+				<div class="form-group row">
+				<label for="drop_tunda" class="col-sm-2 col-form-label">Angsuran Tunda Keluar</label>
+				<div class="col-md-10">
+					<input type="number" id="drop_tunda" class="form-control" name="angsuran_tunda_keluar">
 				</div>
 			</div>
 			<div class="form-group row">
