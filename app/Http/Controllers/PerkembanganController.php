@@ -433,7 +433,8 @@ class PerkembanganController extends Controller
 
     		// get data kemacetan 
     		if($request->data == 'kemacetan'){
-    			$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+
+    			$kemacetan = Kemacetan::where('cabang_id', $request->cabang)
     			->whereMonth('tanggal',$bulan)
     			->get();
 
@@ -444,7 +445,7 @@ class PerkembanganController extends Controller
     			$evaluasi = Kemacetan::leftjoin('angsuran_kemacetans','angsuran_kemacetans.kemacetan_id', 'kemacetans.id' )
     			->join('pasarans','pasarans.id', 'kemacetans.pasaran')
     			->leftjoin('resorts','resorts.id', 'kemacetans.resort_id')
-    			->where('kemacetans.cabang_id', auth()->user()->cabang_id) 
+    			->where('kemacetans.cabang_id', $request->cabang) 
     			->whereMonth('kemacetans.tanggal',$bulan)
     			->selectRaw('
     				ma_saldo as total_ma_saldo,
@@ -471,7 +472,7 @@ class PerkembanganController extends Controller
     			->selectRaw('tanggal, 
     				MONTH(tanggal) as bulan, 
     				DAY(tanggal) as hari,angsuran,cabang_id, resort_id')
-    			->where('cabang_id', auth()->user()->cabang_id) 
+    			->where('cabang_id', $request->cabang) 
     			->orderBy('tanggal')
     			->get();
 
@@ -504,7 +505,7 @@ class PerkembanganController extends Controller
 
     		if($request->data == 'calonMacet'){
 
-    			$calonMacet = CalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    			$calonMacet = CalonMacet::where('cabang_id', $request->cabang)
     			->whereMonth('tanggal',$bulan)
     			->get();
 
@@ -515,7 +516,7 @@ class PerkembanganController extends Controller
     			$evaluasi = CalonMacet::leftjoin('angsuran_calon_macets','angsuran_calon_macets.calon_macet_id', 'calon_macets.id' )
     			->join('pasarans','pasarans.id', 'calon_macets.pasaran')
     			->leftjoin('resorts','resorts.id', 'calon_macets.resort_id')
-    			->where('calon_macets.cabang_id', auth()->user()->cabang_id) 
+    			->where('calon_macets.cabang_id', $request->cabang) 
     			->whereMonth('calon_macets.tanggal',$bulan)
     			->selectRaw('
     				cma_saldo as total_cma_saldo,
@@ -541,7 +542,7 @@ class PerkembanganController extends Controller
     			->selectRaw('tanggal, 
     				MONTH(tanggal) as bulan, 
     				DAY(tanggal) as hari,angsuran,cabang_id, resort_id')
-    			->where('cabang_id', auth()->user()->cabang_id) 
+    			->where('cabang_id', $request->cabang) 
     			->orderBy('tanggal')
     			->get();
 
@@ -587,7 +588,7 @@ class PerkembanganController extends Controller
     			// 	')
     			// ->groupBy('calon_macets.resort_id')
     			// ->get();			
-    			$calonMacet = CalonMacet::where('calon_macets.cabang_id', auth()->user()->cabang_id) 
+    			$calonMacet = CalonMacet::where('calon_macets.cabang_id', $request->cabang) 
     			->whereMonth('calon_macets.tanggal',$bulan)
     			->selectRaw('
     				sum(target) as target,
@@ -598,7 +599,7 @@ class PerkembanganController extends Controller
     			->groupBy('calon_macets.resort_id')
     			->get();
 
-    			$kemacetan = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    			$kemacetan = Kemacetan::where('cabang_id', $request->cabang)
     			->whereMonth('tanggal',$bulan)
     			->selectRaw('
     				sum(target) as target,

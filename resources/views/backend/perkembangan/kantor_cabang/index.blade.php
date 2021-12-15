@@ -50,11 +50,13 @@
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
+			var urlKalkulasi = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
 			// getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getData(cabang, false, $('#tanggal').val(),'dataCabang');
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 			getDataTable(urlCalonMacet, '#dataCalonMacet');
-		});	
+						getDataTable(urlKalkulasi, '#dataKalkulasi'); //get Data Kemacetan
+					});	
 		if($('#cabang').val().length != 0)
 		{
 			Swal.fire({title: 'Memuat data..', icon: 'info', toast: true, position: 'top-end', showConfirmButton: false, timer: 0, timerProgressBar: true,});
@@ -76,11 +78,11 @@
 			var tanggal = $('#tanggal').val();
 			var urlKemacetan = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=kemacetan";
 			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=calonMacet";
-			var urlCalonMacet = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
+			var urlKalkulasi = "{{ url()->current() }}?tanggal="+tanggal+"&cabang="+cabang+"&data=dataKalkulasi";
 			getData(cabang,false, tanggal, 'dataCabang'); // get perkembangan
 			getDataTable(urlKemacetan, '#dataKemacetan'); //get Data Kemacetan
 			getDataTable(urlCalonMacet, '#dataCalonMacet'); //get Data Kemacetan
-			getDataTable(urlCalonMacet, '#dataKalkulasi'); //get Data Kemacetan
+			getDataTable(urlKalkulasi, '#dataKalkulasi'); //get Data Kemacetan
 		});
 
 		$(document).on('click', '#cetak', function(){

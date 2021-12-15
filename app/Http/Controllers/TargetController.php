@@ -599,7 +599,7 @@ class TargetController extends Controller
 
     public function report(Request $request)
     {
-    	dd($request);
+
     	if($request->has('tanggal')){
     		$target  = Target::with('getResort')
     		->whereMonth('tanggal', date('m',strtotime($request->tanggal)) )
@@ -656,7 +656,7 @@ class TargetController extends Controller
 
     		$pdf = PDF::loadView('backend.target.report', compact('data', 'tanggal_awal', 'tanggal_akhir','anggota_lalu', 'target_lalu'))->setPaper('a4', 'landscape');
 
-    		return $pdf->download('invoice.pdf');
+    		return $pdf->download('report-target.pdf');
     	}
     	return abort(404);
     }
