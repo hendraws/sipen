@@ -18,7 +18,9 @@ class ResortController extends Controller
     {
 
     	if ($request->ajax()) {
-    		$data = Resort::get();
+    		$data = Resort::when(auth()->user()->hasRole('user'), function($q){
+    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		})->get();
     		return Datatables::of($data)
     		->addIndexColumn()
     		->addColumn('nama', function ($row) {
