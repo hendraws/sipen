@@ -28,7 +28,9 @@ class CalonMacetController extends Controller
     		
     		return view('backend.calon_macet.table', compact('data', 'getTanggal'));
     	}
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
     	$today =  date('Y-m-d');
     	return view('backend.calon_macet.index', compact('today', 'resort'));
     }
@@ -112,7 +114,9 @@ class CalonMacetController extends Controller
      */
     public function edit(CalonMacet $calonMacet)
     {
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
     	return view('backend.calon_macet.edit', compact('resort','calonMacet'));
     }
 

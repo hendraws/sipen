@@ -28,7 +28,9 @@ class KemacetanController extends Controller
     		->get();
     		return view('backend.kemacetan.table', compact('data', 'getTanggal'));
     	}
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
     	$today =  date('Y-m-d');
     	return view('backend.kemacetan.index', compact('today', 'resort'));
     }
@@ -116,7 +118,9 @@ class KemacetanController extends Controller
     public function edit(Kemacetan $kemacetan)
     {
 
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
     	return view('backend.kemacetan.edit', compact('resort','kemacetan'));
     }
 

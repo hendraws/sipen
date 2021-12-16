@@ -29,7 +29,9 @@ class TargetLaluController extends Controller
 
     		return view('backend.target_lalu.table', compact('data', 'getTanggal'));
     	}
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
     	$today =  date('Y-m-d');
     	return view('backend.target_lalu.index', compact('today', 'resort'));
     }
