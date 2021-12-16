@@ -19,9 +19,6 @@ class ProgramKerjaController extends Controller
     public function index(Request $request)
     {
     	
-
-    	
-
     	if ($request->ajax()) {
     		$pecah = explode( '/',$request->tanggal);
 

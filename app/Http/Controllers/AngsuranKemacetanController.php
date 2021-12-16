@@ -74,7 +74,9 @@ class AngsuranKemacetanController extends Controller
     	}
 
     	$today =  date('Y-m-d');
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
 
     	$cekWeekend = date('w', strtotime($today));
     	
@@ -193,7 +195,9 @@ class AngsuranKemacetanController extends Controller
     {
 
     	$today =  date('Y-m-d');
-    	$resort = Resort::get();
+    	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
+    		$q->where('cabang_id', auth()->user()->cabang_id);
+    	})->get();
 
     	$cekWeekend = date('w', strtotime($angsuran_kemacetan->tanggal));
     	
