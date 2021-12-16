@@ -569,8 +569,8 @@ class TargetController extends Controller
     // 	// dd('dd');
     // 	$today =  date('Y-m-d');
     // 	$resort = Resort::when(auth()->user()->hasRole('user'), function($q){
-    		$q->where('cabang_id', auth()->user()->cabang_id);
-    	})->get();
+    		// $q->where('cabang_id', auth()->user()->cabang_id);
+    	// })->get();
     // 	$getTanggal = $today;
     // 	$cekWeekend = date('w', strtotime($today));
 
