@@ -154,10 +154,10 @@ class KemacetanController extends Controller
     		$pasaran['total_saldo'] = $request->ma_saldo + $request->mb_saldo; 
     		$pasaran['sisa_angsuran'] = $request->ma_saldo + $request->mb_saldo;
 
-    		$cekKemacetan  = Kemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		$cekKemacetan  = Kemacetan::where('cabang_id', $kemacetan->cabang_id)
     		->where('resort_id', $request->resort_id)
     		->where('pasaran', $request->pasaran)
-    		->whereMonth('tanggal',now()->month)
+    		->whereMonth('tanggal',date('Y', strtotime($kemacetan->tanggal)))
     		->first();
     		if($request->pasaran != $kemacetan->pasaran ||  $request->resort_id != $kemacetan->resort_id ){
 

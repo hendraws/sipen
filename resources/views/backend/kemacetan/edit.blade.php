@@ -63,7 +63,7 @@
 					@php $pasaran = ['1'=>'Senin - Kamis','2'=>'Selasa - Jum\'at','3'=>'Rabu - Sabtu' ]@endphp
 					<select class="form-control" name="pasaran">
 						@foreach($pasaran as $k => $v)
-						<option value="{{ $k }}" {{ $kemacetan->pasaran_id == $k ? 'selected' : ''}} >{{ $v }}</option>
+						<option value="{{ $k }}" {{ $kemacetan->pasaran == $k ? 'selected' : ''}} >{{ $v }}</option>
 						@endforeach
 					</select>
 				</div>
