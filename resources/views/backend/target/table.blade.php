@@ -38,6 +38,7 @@
 					// $jumlahLalu = $jumlahLama = $jumlahBaru = 0;
 					@endphp
 					@forelse ($data as $key => $val)
+					{{-- {{ dd($val) }} --}}
 					<?php $anggota_lalu = $target_lalu = 0;  ?>
 					<tr>
 							{{-- <td class="text-center">{{ 'Ke - '. $val->count() }}</td> --}}
@@ -45,57 +46,53 @@
 							@foreach($val as $v)
 							@php
 							if(!array_key_exists($key, $target)){
-								// $target[$key]['anggota_lalu'][] = $anggotaLalu[$key];
-								$target[$key]['anggota_lama'][] = $v['anggota_lama']; 
-								$target[$key]['anggota_baru'][] = $v['anggota_baru']; 
-								$target[$key]['anggota_out'][] = $v['anggota_out']; 
-								$target[$key]['anggota_kini'][] = $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out']; 
-								$anggota_lalu = $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out'];
+								$target[$key]['anggota_lalu'] = $v['anggota_lalu'];
+								$target[$key]['anggota_lama'] = $v['anggota_lama'];
+								$target[$key]['anggota_baru'] = $v['anggota_baru'];
+								$target[$key]['anggota_out'] = $v['anggota_out'];
+								$target[$key]['anggota_kini'] = $v['anggota_lalu'] + $v['anggota_lama'] +$v['anggota_baru']- $v['anggota_out'];
+								$target[$key]['drop'] = $v['target_20_drop']; 
+								$target[$key]['plnsn'] = $v['target_20_plnsn']; 
+								$target[$key]['target_lalu'] = $targetLalu[$key];
+								$target[$key]['target_kini'] = $targetLalu[$key] + $v['target_20_drop'] - $v['target_20_plnsn']; 
 
-								$target[$key]['drop'][] = $v['target_20_drop']; 
-								$target[$key]['plnsn'][] = $v['target_20_plnsn']; 
-								$target[$key]['target_kini'][] = $v['target_20_drop'] - $v['target_20_plnsn']; 
-								$target_lalu = $v['target_20_drop'] - $v['target_20_plnsn'];
 							}else{
-								$target[$key]['anggota_lalu'][] = $anggota_lalu;
-								$target[$key]['anggota_lama'][] = $v['anggota_lama']; 
-								$target[$key]['anggota_baru'][] = $v['anggota_baru']; 
-								$target[$key]['anggota_out'][] = $v['anggota_out']; 
-								$target[$key]['anggota_kini'][] = $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out']; 
-								$anggota_lalu += $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out'];
-
-								$target[$key]['target_lalu'][] = $target_lalu;
-								$target[$key]['drop'][] = $v['target_20_drop']; 
-								$target[$key]['plnsn'][] = $v['target_20_plnsn']; 
-								$target[$key]['target_kini'][] = $v['target_20_drop'] - $v['target_20_plnsn']; 
-								$target_lalu += $v['target_20_drop'] - $v['target_20_plnsn'];
-
+								$target[$key]['anggota_lalu'] =  $target[$key]['anggota_kini'];
+								$target[$key]['anggota_lama'] = $v['anggota_lama'];
+								$target[$key]['anggota_baru'] = $v['anggota_baru'];
+								$target[$key]['anggota_out'] = $v['anggota_out'];
+								$target[$key]['anggota_kini'] = $target[$key]['anggota_lalu'] + $v['anggota_lama'] +$v['anggota_baru']- $v['anggota_out'];
+								$target[$key]['drop'] = $v['target_20_drop']; 
+								$target[$key]['plnsn'] = $v['target_20_plnsn']; 
+								$target[$key]['target_lalu'] = $target[$key]['target_kini'];
+								$target[$key]['target_kini'] = $target[$key]['target_lalu'] + $v['target_20_drop'] - $v['target_20_plnsn']; 
 							}
+
 								$resort_id = $v['resort_id'];
 							@endphp
 							@endforeach
-							<td class="text-right">{{ number_format($anggotaLalu[$key] + $anggota_lalu ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['anggota_lama']) ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['anggota_baru']) ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['anggota_out']) ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['anggota_kini'])  + $anggota_lalu + $anggotaLalu[$key]) }}</td>
+								
+							<td class="text-right">{{ number_format( $target[$key]['anggota_lalu']) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['anggota_lama'] ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['anggota_baru'] ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['anggota_out'] ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['anggota_kini']) }}</td>
 
-							<td class="text-right">{{ number_format( $targetLalu[$key] + $target_lalu ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['drop']) ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['plnsn']) ) }}</td>
-							<td class="text-right">{{ number_format( array_sum($target[$key]['target_kini']) + $targetLalu[$key] + $target_lalu  ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['target_lalu']  ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['drop'] ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['plnsn'] ) }}</td>
+							<td class="text-right">{{ number_format( $target[$key]['target_kini']   ) }}</td>
 							<td><a class="btn btn-info btn-sm" href="{{ action('TargetController@show', $resort_id) }}" >Detail</a></td>
 							@php
-							$jumlah['anggota_lalu'][] = $anggotaLalu[$key] + $anggota_lalu;
-							$jumlah['anggota_lama'][] = array_sum($target[$key]['anggota_lama']);
-							$jumlah['anggota_baru'][] = array_sum($target[$key]['anggota_baru']);
-							$jumlah['anggota_out'][] = array_sum($target[$key]['anggota_out']);
-							$jumlah['anggota_kini'][] = array_sum($target[$key]['anggota_kini'])  + $anggota_lalu + $anggotaLalu[$key];
-							
-							$jumlah['target_lalu'][] =$targetLalu[$key] + $target_lalu;
-							$jumlah['drop'][] =  array_sum($target[$key]['drop']); 
-							$jumlah['plnsn'][] = array_sum($target[$key]['plnsn']);
-							$jumlah['target_kini'][] =  array_sum($target[$key]['target_kini']) + $targetLalu[$key] + $target_lalu ;
+							$jumlah['anggota_lalu'][] = $target[$key]['anggota_lalu'];
+							$jumlah['anggota_lama'][] = $target[$key]['anggota_lama'];
+							$jumlah['anggota_baru'][] = $target[$key]['anggota_baru'];
+							$jumlah['anggota_out'][] = $target[$key]['anggota_out'];
+							$jumlah['anggota_kini'][] = $target[$key]['anggota_kini'];
+							$jumlah['target_lalu'][] =$target[$key]['target_lalu'];
+							$jumlah['drop'][] = $target[$key]['drop']; 
+							$jumlah['plnsn'][] =  $target[$key]['plnsn'];
+							$jumlah['target_kini'][] =  $target[$key]['target_kini'];
 							// $jumlah['targer_lalu'][] = 
 							// $jumlahLalu[] = $lalu;
 							// $jumlahLama[] = $anggota_lama;
@@ -142,3 +139,33 @@
 		</div>
 	</div><!-- /.card-body -->
 </div>
+
+{{-- 
+							if(!array_key_exists($key, $target)){
+								$target[$key]['anggota_lalu'] = $v['anggota_lalu'];
+								$target[$key]['anggota_lama'][] = $v['anggota_lama']; 
+								$target[$key]['anggota_baru'][] = $v['anggota_baru']; 
+								$target[$key]['anggota_out'][] = $v['anggota_out']; 
+								$target[$key]['anggota_kini'][] = $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out']; 
+								$anggota_lalu = $v['anggota_lalu'] + $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out'];
+
+								$target[$key]['drop'][] = $v['target_20_drop']; 
+								$target[$key]['plnsn'][] = $v['target_20_plnsn']; 
+								$target[$key]['target_kini'][] = $v['target_20_drop'] - $v['target_20_plnsn']; 
+								$target_lalu = $v['target_20_drop'] - $v['target_20_plnsn'];
+							}else{
+								// $target[$key]['anggota_lalu'] = $anggota_lalu;
+								// dd($anggota_lalu, $target[$key]['anggota_lalu']);
+								$target[$key]['anggota_lama'][] = $v['anggota_lama']; 
+								$target[$key]['anggota_baru'][] = $v['anggota_baru']; 
+								$target[$key]['anggota_out'][] = $v['anggota_out']; 
+								$target[$key]['anggota_kini'][] = $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out']; 
+								$anggota_lalu +=  $v['anggota_lama'] + $v['anggota_baru'] - $v['anggota_out'];
+
+								$target[$key]['target_lalu'][] = $target_lalu;
+								$target[$key]['drop'][] = $v['target_20_drop']; 
+								$target[$key]['plnsn'][] = $v['target_20_plnsn']; 
+								$target[$key]['target_kini'][] = $v['target_20_drop'] - $v['target_20_plnsn']; 
+								$target_lalu += $v['target_20_drop'] - $v['target_20_plnsn'];
+
+							} --}}

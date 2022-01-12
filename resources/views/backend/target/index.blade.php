@@ -23,11 +23,13 @@
 
 	$(document).ready(function () {
 		$("#bulan").datepicker( {
+			daysOfWeekDisabled: [0],
 			format: "yyyy-mm-dd",
 			// startView: "months", 
 			// minViewMode: "months"
 		});
 		$("#tanggal").datepicker( {
+			daysOfWeekDisabled: [0],
 			format: "yyyy-mm-dd",
 		}).on('changeDate', function(ev){
 			getPasaran($(this).val());

@@ -503,7 +503,7 @@ class TargetController extends Controller
     {
     	$target->delete();
     	toastr()->success('Data telah hapus', 'Berhasil');
-    	return redirect(action('TargetController@show', $request->resort_id));
+    	return redirect(action('TargetController@show', $target->resort_id));
     }
 
     public function delete(Target $target)

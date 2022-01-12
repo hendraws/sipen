@@ -48,19 +48,21 @@
 			<?php 
 				$target = [];
 			?>
+			{{-- {{ dd($data->toArray()) }} --}}
 			@forelse ($data as $key => $val)
 			@php
 			if(!array_key_exists($val->pasaran, $target)){
+				
 				$target[$val->pasaran]['anggota_lalu'] = $anggotaLalu[$val->pasaran];
 				$target[$val->pasaran]['anggota_kini'] = $target[$val->pasaran]['anggota_lalu'] + $val->anggota_lama + $val->anggota_baru - $val->anggota_out;
 				$target[$val->pasaran]['target_lalu'] = $targetLalu[$val->pasaran];
 				$target[$val->pasaran]['target_kini'] = $target[$val->pasaran]['target_lalu'] + $val->target_20_drop - $val->target_20_plnsn;
 				$target[$val->pasaran]['background'] = 'bg-lightblue';
 			}else{
-				$target[$val->pasaran]['anggota_lalu'] = $anggotaLalu[$val->pasaran];
-				$target[$val->pasaran]['anggota_kini'] = $anggotaLalu[$val->pasaran] + $val->anggota_lama + $val->anggota_baru - $val->anggota_out;
-				$target[$val->pasaran]['target_lalu'] = $targetLalu[$val->pasaran];
-				$target[$val->pasaran]['target_kini'] = $targetLalu[$val->pasaran] + $val->target_20_drop - $val->target_20_plnsn;
+				$target[$val->pasaran]['anggota_lalu'] = $target[$val->pasaran]['anggota_kini'];
+				$target[$val->pasaran]['anggota_kini'] = $target[$val->pasaran]['anggota_lalu'] + $val->anggota_lama + $val->anggota_baru - $val->anggota_out;
+				$target[$val->pasaran]['target_lalu'] = $target[$val->pasaran]['target_kini'];
+				$target[$val->pasaran]['target_kini'] = $target[$val->pasaran]['target_lalu'] + $val->target_20_drop - $val->target_20_plnsn;
 				$target[$val->pasaran]['background'] = 'bg-lightblue';
 			}
 			@endphp
