@@ -10,6 +10,7 @@
 				<thead class="text-center">
 					<tr class="text-center">
 						<th scope="col" >Hari Kerja</th>
+						<th scope="col" >Tanggal</th>
 						<th scope="col" >Pasaran</th>
 						<th scope="col" >Angsuran Kemacetan</th>
 						<th scope="col" >Anggota Keluar</th>
@@ -20,6 +21,7 @@
 					@forelse ($data as $key => $val)
 					<tr>
 						<td class="text-center"> {{ $loop->index +1 }} </td>
+						<td class="text-center"> {{ $val->tanggal }} </td>
 						<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
 						<td class="text-right" width="20%"> {{ number_format($val->angsuran)  }} </td>
 						<td class="text-center"> {{ $val->anggota_keluar  }} </td>
@@ -54,7 +56,6 @@
 								<th scope="col" >Total Macet</th>
 								<th scope="col" >Angsuran</th>
 								<th scope="col" >Saldo</th>
-								<th scope="col"	></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -73,6 +74,8 @@
 							</tr>
 							@php 
 								$total['anggota'][] = $val->ma_anggota + $val->mb_anggota;
+								$total['macetAwal'][] = $val->ma_saldo;
+								$total['macetBaru'][] = $val->mb_saldo;
 							@endphp
 							@empty
 							<tr>
@@ -108,11 +111,11 @@
 								<td class="text-center"> {{ number_format(array_sum($total['anggota'])) }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_anggota_keluar) }}</td>
 								<td class="text-center"> {{ number_format(array_sum($total['anggota']) - $totalAngsuran->total_anggota_keluar)  }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->total_ma_saldo) }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->total_mb_saldo) }}</td>
-								<td class="text-center"> {{ number_format($totalAngsuran->total_mb_saldo + $totalAngsuran->total_ma_saldo) }}</td>
+								<td class="text-center"> {{ number_format(array_sum($total['macetAwal'])) }}</td>
+								<td class="text-center"> {{ number_format(array_sum($total['macetBaru'])) }}</td>
+								<td class="text-center"> {{ number_format(array_sum($total['macetAwal']) + array_sum($total['macetBaru'])) }}</td>
 								<td class="text-center"> {{ number_format($totalAngsuran->total_angsuran)  }}</td>
-								<td class="text-center"> {{  number_format($totalAngsuran->total_mb_saldo + $totalAngsuran->total_ma_saldo - $totalAngsuran->total_angsuran)  }}</td>
+								<td class="text-center"> {{  number_format(array_sum($total['macetAwal']) + array_sum($total['macetBaru']) - $totalAngsuran->total_angsuran)  }}</td>
 							</tr>
 						</tbody>
 					</table>

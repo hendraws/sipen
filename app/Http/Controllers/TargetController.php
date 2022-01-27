@@ -86,7 +86,7 @@ class TargetController extends Controller
     			$item['total_storting'] = $targetAll->total_storting;
     			return [ $item->getResort->nama => $item->toArray() ];
     		}); 
-
+    		
     		if($request->data == 'drop'){
     			return view('backend.target.drop.table', compact('data','programKerja','psrn_name'));
     		}
@@ -117,7 +117,7 @@ class TargetController extends Controller
     			return [$item->getResort->nama => $item->anggota];
     		});
 
-
+    		    		
     		return view('backend.target.table', compact('getTanggal','data','psrn_name','programKerja','psrn','targetLalu','anggotaLalu'));
 
     	}
@@ -158,8 +158,8 @@ class TargetController extends Controller
     	$psrn = 0;
     	$getTanggal = $request->tanggal;
     	$pecahTanggal = explode('-', $request->tanggal);
-
-    	$programKerja = ProgramKerja::where('cabang', auth()->user()->cabang_id)
+    	$cabangId = $request->cabang ?? auth()->user()->cabang_id;
+    	$programKerja = ProgramKerja::where('cabang', $cabangId)
     	->when(request()->filled('tanggal'), function($q){
     		$q->whereMonth('tanggal', date('m', strtotime(request()->tanggal)));
     	})
@@ -167,7 +167,7 @@ class TargetController extends Controller
     		$q->whereMonth('tanggal',date('m'));
     	})
     	->first();
-    	
+    
     	$cabang = KantorCabang::pluck('cabang','id');
     	
     	if(empty($programKerja)){
@@ -210,14 +210,14 @@ class TargetController extends Controller
     		->when(request()->filled('cabang'), function($q){
     			$q->where('cabang_id', request()->cabang);
     		})
-    		->when(request()->missing('cabang'), function($q){
-    			$q->where('cabang_id', auth()->user()->cabang_id);
+    		->when(request()->missing('cabang'), function($q) use ($cabangId){
+    			$q->where('cabang_id', $cabangId);
     		})
     		->get();
 
-    		$data = $data->mapToGroups(function ($item, $key) {
+    		$data = $data->mapToGroups(function ($item, $key) use ($cabangId){
     			$targetAll = Target::selectRaw('sum(drop_kini) as total_drops,sum(storting_kini) as total_storting ')
-    			->where('cabang_id', auth()->user()->cabang_id)
+    			->where('cabang_id', $cabangId)
     			->where('resort_id', $item->resort_id)
     			// ->where('pasaran', $item->pasaran)
     			->whereMonth('tanggal',date('m', strtotime($item->tanggal)))
@@ -239,7 +239,7 @@ class TargetController extends Controller
     		}
 
 
-    		$targetLalu = TargetLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		$targetLalu = TargetLalu::where('cabang_id',$cabangId)
     		->where('pasaran', $psrn)
     		->whereMonth('tanggal', Date('m'))
     		->orderBy('pasaran')
@@ -248,7 +248,7 @@ class TargetController extends Controller
     			return [$item->getResort->nama => $item->target_lalu];
     		});
 
-    		$anggotaLalu = AnggotaLalu::where('cabang_id',auth()->user()->getCabang->id)
+    		$anggotaLalu = AnggotaLalu::where('cabang_id',$cabangId)
     		->where('pasaran', $psrn)
     		->whereMonth('tanggal', Date('m'))
     		->orderBy('pasaran')

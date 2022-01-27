@@ -33,7 +33,7 @@ class AngsuranKemacetanController extends Controller
     		->whereMonth('kemacetans.tanggal',$bulan )
     		->where('kemacetans.cabang_id', auth()->user()->cabang_id)
     		->where('kemacetans.resort_id', $request->resort)
-    		->selectRaw('kemacetans.pasaran as pasaran,sum(ma_saldo) as ma_saldo, sum(mb_saldo) as mb_saldo, sum(angsuran) as angsuran,  ma_anggota,  mb_anggota, sum(anggota_keluar) as anggota_keluar')
+    		->selectRaw('kemacetans.pasaran as pasaran,ma_saldo as ma_saldo, mb_saldo as mb_saldo, sum(angsuran) as angsuran,  ma_anggota,  mb_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('kemacetans.pasaran')
     		->groupBy('kemacetans.pasaran')
     		->get();
@@ -51,11 +51,10 @@ class AngsuranKemacetanController extends Controller
     		->selectRaw('
     			count(angsuran_kemacetans.tanggal) as hk, 
     			sum(angsuran_kemacetans.angsuran) as total_angsuran, 
-    			sum(ma_saldo) as total_ma_saldo, 
     			sum(ma_anggota) as ma_anggota, 
     			sum(mb_anggota) as mb_anggota, 
-    			sum(ma_saldo) as total_ma_saldo, 
-    			sum(mb_saldo) as total_mb_saldo, 
+    			ma_saldo as total_ma_saldo, 
+    			mb_saldo as total_mb_saldo, 
     			sum(anggota_keluar) as total_anggota_keluar
     			')
     		->first();
@@ -266,13 +265,27 @@ class AngsuranKemacetanController extends Controller
     			return back();
     		}
     		$angsuran_kemacetan->update($angsuran);
+    		// dd($angsuran_kemacetan);
+    		$dataAngsuran = AngsuranKemacetan::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $angsuran_kemacetan->resort_id)
+    		->where('pasaran', $angsuran_kemacetan->pasaran)
+    		->where('kemacetan_id', $angsuran_kemacetan->kemacetan_id)
+    		->selectRaw('sum(angsuran) as totalAngsuran')
+    		->first();
+
+    		$dataKemacetan = Kemacetan::where('id', $angsuran_kemacetan->kemacetan_id)->first();
+    		$dataKemacetan->update([
+    			'sisa_angsuran' => $dataKemacetan->total_saldo - $dataAngsuran->totalAngsuran
+    		]);
 
     	} catch (\Exception $e) {
     		DB::rollback();
+    		dd($e->getMessage());
     		toastr()->error($e->getMessage(), 'Error');
     		return back();
     	}catch (\Throwable $e) {
     		DB::rollback();
+    		dd('sd');
     		toastr()->error($e->getMessage(), 'Error');
     		throw $e;
     	}

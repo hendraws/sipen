@@ -19,6 +19,7 @@
 					</tr>
 				</thead>
 				<tbody>
+					@php $sirkulasiCalonMacet = $evaluasiCalonMacet = [];  @endphp
 					@forelse($groupCalonMacet as $resort => $data)
 					@php
 					$cma_anggota = $cma_pinjaman = $cma_target = $cma_saldo = 0;
@@ -53,11 +54,28 @@
 						<td class="text-right">{{ number_format($cma_saldo) }}</td>
 						<td class="text-right">{{ number_format($cma_saldo) }}</td>
 					</tr>
+					@php
+					$sirkulasiCalonMacet['cma_anggota'][] = $cma_anggota;
+					$sirkulasiCalonMacet['cma_pinjaman'][] = $cma_pinjaman;
+					$sirkulasiCalonMacet['cma_target'][] = $cma_target;
+					$sirkulasiCalonMacet['cma_saldo'][] = $cma_saldo;
+					$sirkulasiCalonMacet['cma_saldo'][] = $cma_saldo;
+					@endphp
 					@empty
 					<tr>
 						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
 					</tr>
 					@endforelse
+					@if(count($groupCalonMacet) > 0)
+					<tr class="bg-danger">
+						<td colspan="2" class="text-center"><b>Jumlah</b></td>
+						<td class="text-right">{{ array_sum($sirkulasiCalonMacet['cma_anggota']) }}</td>
+						<td class="text-right">{{ number_format(array_sum($sirkulasiCalonMacet['cma_pinjaman'])) }}</td>
+						<td class="text-right">{{ number_format(array_sum($sirkulasiCalonMacet['cma_target'])) }}</td>
+						<td class="text-right">{{ number_format(array_sum($sirkulasiCalonMacet['cma_saldo'])) }}</td>
+						<td class="text-right">{{ number_format(array_sum($sirkulasiCalonMacet['cma_saldo'])) }}</td>
+					</tr>
+					@endif
 				</tbody>
 			</table>
 		</div>
@@ -90,7 +108,7 @@
 					@endphp
 					<tr class="bg-warning"><td colspan="8"><b>Resort {{ ucfirst($resort) }}</b></td></tr>
 					@forelse ($data as $key => $val)
-										{{-- {{ dd($val) }} --}}
+					{{-- {{ dd($val) }} --}}
 					<tr class="text-right">
 						@if($loop->index == 0)
 						<td rowspan="3" class="align-middle text-center"> {{ $data->sum('hk') }} </td>
@@ -125,11 +143,31 @@
 						<td> {{ number_format($angsuran_masuk)  }} </td>
 						<td class=""> {{ number_format($macet_kini)  }} </td>
 					</tr>
+					@php
+					$evaluasiCalonMacet['anggota'][] = $anggota;
+					$evaluasiCalonMacet['anggota_keluar'][] = $anggota_keluar;
+					$evaluasiCalonMacet['anggota_kini'][] = $anggota_kini;
+					$evaluasiCalonMacet['saldo_macet'][] = $saldo_macet;
+					$evaluasiCalonMacet['angsuran_masuk'][] = $angsuran_masuk;
+					$evaluasiCalonMacet['macet_kini'][] = $macet_kini;
+					@endphp
 					@empty
 					<tr>
 						<td colspan="12" class="text-center bg-secondary"><h5>Tidak Ada Data</h5>	</td>
 					</tr>
 					@endforelse
+					@if(count($evaluasiBerjalan)> 0)
+					<tr class="text-right bg-danger">
+						<td colspan="2" class="align-middle text-center"> JUMLAH </td>
+						<td class="text-center"> {{ array_sum($evaluasiCalonMacet['anggota'])  }} </td>
+						<td class="text-center"> {{ array_sum($evaluasiCalonMacet['anggota_keluar'])  }} </td>
+						<td class="text-center"> {{ array_sum($evaluasiCalonMacet['anggota_kini'])  }} </td>
+						<td> {{ number_format(array_sum($evaluasiCalonMacet['saldo_macet']))  }} </td>
+						<td> {{ number_format(array_sum($evaluasiCalonMacet['angsuran_masuk']))  }} </td>
+						<td class=""> {{ number_format(array_sum($evaluasiCalonMacet['macet_kini']))  }} </td>
+					</tr>
+					@endif
+
 				</tbody>
 			</table>
 		</div>

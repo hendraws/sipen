@@ -183,7 +183,6 @@ class KemacetanController extends Controller
     	toastr()->success('Data telah diubah', 'Berhasil');
     	return redirect()->action('KemacetanController@index');
 
-    	dd($kemacetan, $request);
     }
 
     /**

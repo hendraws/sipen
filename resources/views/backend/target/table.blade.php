@@ -37,8 +37,8 @@
 					
 					// $jumlahLalu = $jumlahLama = $jumlahBaru = 0;
 					@endphp
+					{{-- {{ dd($data) }} --}}
 					@forelse ($data as $key => $val)
-					{{-- {{ dd($val) }} --}}
 					<?php $anggota_lalu = $target_lalu = 0;  ?>
 					<tr>
 							{{-- <td class="text-center">{{ 'Ke - '. $val->count() }}</td> --}}
@@ -46,6 +46,7 @@
 							@foreach($val as $v)
 							@php
 							if(!array_key_exists($key, $target)){
+								
 								$target[$key]['anggota_lalu'] = $v['anggota_lalu'];
 								$target[$key]['anggota_lama'] = $v['anggota_lama'];
 								$target[$key]['anggota_baru'] = $v['anggota_baru'];

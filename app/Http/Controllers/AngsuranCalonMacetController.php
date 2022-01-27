@@ -33,7 +33,7 @@ class AngsuranCalonMacetController extends Controller
     		->whereMonth('calon_macets.tanggal',$bulan )
     		->where('calon_macets.cabang_id', auth()->user()->cabang_id)
     		->where('calon_macets.resort_id', $request->resort)
-    		->selectRaw('calon_macets.pasaran as pasaran, sum(cma_saldo) as cma_saldo,sum(angsuran) as angsuran, sum(cma_anggota) as cma_anggota, sum(anggota_keluar) as anggota_keluar')
+    		->selectRaw('calon_macets.pasaran as pasaran, cma_saldo as cma_saldo,angsuran as angsuran, cma_anggota as cma_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('calon_macets.pasaran')
     		->groupBy('calon_macets.pasaran')
     		->get();
@@ -225,6 +225,7 @@ class AngsuranCalonMacetController extends Controller
      */
     public function update(Request $request, AngsuranCalonMacet $angsuran_calon_macet)
     {
+
         $angsuran = $request->validate([
     		'pasaran' => 'required',
     		'anggota_keluar' => 'required',
@@ -262,6 +263,19 @@ class AngsuranCalonMacetController extends Controller
     			return back();
     		}
    			$angsuran_calon_macet->update($angsuran);
+
+   			$dataAngsuran = AngsuranCalonMacet::where('cabang_id', auth()->user()->cabang_id)
+    		->where('resort_id', $angsuran_calon_macet->resort_id)
+    		->where('pasaran', $angsuran_calon_macet->pasaran)
+    		->where('calon_macet_id', $angsuran_calon_macet->calon_macet_id)
+    		->selectRaw('sum(angsuran) as totalAngsuran')
+    		->first();
+    		
+    		$dataCalonMacet = CalonMacet::find($angsuran_calon_macet->calon_macet_id);
+   			
+    		$dataCalonMacet->update([
+    			'sisa_angsuran' => $dataCalonMacet->total_saldo - $dataAngsuran->totalAngsuran
+    		]);
     	} catch (\Exception $e) {
     		DB::rollback();
     		toastr()->error($e->getMessage(), 'Error');
