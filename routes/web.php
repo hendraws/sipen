@@ -81,13 +81,20 @@ Route::group(['middleware' => 'auth'], function () {
 			$dataAngsuran = AngsuranKemacetan::where('cabang_id', $data->cabang_id)
 	    		->where('resort_id', $data->resort_id)
 	    		->where('pasaran', $data->pasaran)
-	    		->where('kemacetan_id', $data->kemacetan_id)
+	    		->where('kemacetan_id', $data->id)
 	    		->selectRaw('sum(angsuran) as totalAngsuran')
+	    		// ->groupBy('kemacetan_id')
 	    		->first();
-	    		
-	    	$data->update([
-    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
-    		]);
+	    	// dd($dataAngsuran);
+	    	if(!empty($dataAngsuran)){
+		    	$data->update([
+	    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
+	    		]);
+	    	}else{
+	    		$data->update([
+	    			'sisa_angsuran' => $data->total_saldo - 0
+	    		]);
+	    	}
 		}
 	});
 
@@ -99,13 +106,19 @@ Route::group(['middleware' => 'auth'], function () {
 			$dataAngsuran = AngsuranCalonMacet::where('cabang_id', $data->cabang_id)
 	    		->where('resort_id', $data->resort_id)
 	    		->where('pasaran', $data->pasaran)
-	    		->where('calon_macet_id', $data->kemacetan_id)
+	    		->where('calon_macet_id', $data->id)
 	    		->selectRaw('sum(angsuran) as totalAngsuran')
 	    		->first();
-	    		
-	    	$data->update([
-    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
-    		]);
+
+	    		if(!empty($dataAngsuran)){
+		    	$data->update([
+	    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
+	    		]);
+	    	}else{
+	    		$data->update([
+	    			'sisa_angsuran' => $data->total_saldo - 0
+	    		]);
+	    	}
 		}
 	});
 	// command
