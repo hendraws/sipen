@@ -59,7 +59,6 @@
 					$sirkulasiCalonMacet['cma_pinjaman'][] = $cma_pinjaman;
 					$sirkulasiCalonMacet['cma_target'][] = $cma_target;
 					$sirkulasiCalonMacet['cma_saldo'][] = $cma_saldo;
-					$sirkulasiCalonMacet['cma_saldo'][] = $cma_saldo;
 					@endphp
 					@empty
 					<tr>
