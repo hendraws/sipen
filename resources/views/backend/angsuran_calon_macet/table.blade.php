@@ -58,6 +58,7 @@
 						<tbody>
 							@php $total = []; @endphp
 							@forelse ($calonMacet as $key => $val)
+
 							<tr>
 								<td class="text-center"> {{ optional($val->getPasaran)->hari  }} </td>
 								<td class="text-right"> {{ number_format($val->cma_anggota)  }} </td>

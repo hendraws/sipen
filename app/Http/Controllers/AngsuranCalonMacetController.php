@@ -33,7 +33,7 @@ class AngsuranCalonMacetController extends Controller
     		->whereMonth('calon_macets.tanggal',$bulan )
     		->where('calon_macets.cabang_id', auth()->user()->cabang_id)
     		->where('calon_macets.resort_id', $request->resort)
-    		->selectRaw('calon_macets.pasaran as pasaran, cma_saldo as cma_saldo,angsuran as angsuran, cma_anggota as cma_anggota, sum(anggota_keluar) as anggota_keluar')
+    		->selectRaw('calon_macets.pasaran as pasaran, cma_saldo as cma_saldo,sum(angsuran) as angsuran, cma_anggota as cma_anggota, sum(anggota_keluar) as anggota_keluar')
     		->orderBy('calon_macets.pasaran')
     		->groupBy('calon_macets.pasaran')
     		->get();

@@ -1,6 +1,10 @@
 <?php
 
+use App\AngsuranCalonMacet;
+use App\AngsuranKemacetan;
+use App\CalonMacet;
 use App\KantorCabang;
+use App\Kemacetan;
 use App\Perkembangan;
 use App\ProgramKerja;
 use Illuminate\Support\Carbon;
@@ -69,6 +73,41 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('sirkulasi-perkembangan', 'TargetController@report');
 	// Route::get('report/sirkulasi-perkembangan', 'PerkembanganController@')
 
+	Route::get('sinkronisasi-kemacetan', function(){
+		$kemacetan = Kemacetan::get();
+
+		foreach ($kemacetan as $data) {
+			# code...
+			$dataAngsuran = AngsuranKemacetan::where('cabang_id', $data->cabang_id)
+	    		->where('resort_id', $data->resort_id)
+	    		->where('pasaran', $data->pasaran)
+	    		->where('kemacetan_id', $data->kemacetan_id)
+	    		->selectRaw('sum(angsuran) as totalAngsuran')
+	    		->first();
+	    		
+	    	$data->update([
+    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
+    		]);
+		}
+	});
+
+	Route::get('sinkronisasi-calon-macet', function(){
+		$calonMacet = CalonMacet::get();
+
+		foreach ($calonMacet as $data) {
+			# code...
+			$dataAngsuran = AngsuranCalonMacet::where('cabang_id', $data->cabang_id)
+	    		->where('resort_id', $data->resort_id)
+	    		->where('pasaran', $data->pasaran)
+	    		->where('calon_macet_id', $data->kemacetan_id)
+	    		->selectRaw('sum(angsuran) as totalAngsuran')
+	    		->first();
+	    		
+	    	$data->update([
+    			'sisa_angsuran' => $data->total_saldo - $dataAngsuran->totalAngsuran
+    		]);
+		}
+	});
 	// command
 	Route::group(['prefix'=>'/command/artisan','as'=>'account.'], function(){ 
 		Route::get('/migrate', function(){
